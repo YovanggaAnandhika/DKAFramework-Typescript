@@ -4,10 +4,10 @@
     <exclude-output />
     <content url="file://$MODULE_DIR$">
       <excludeFolder url="file://$MODULE_DIR$/packages/Database/dist" />
-      <excludeFolder url="file://$MODULE_DIR$/packages/Encryption/dist" />
-      <excludeFolder url="file://$MODULE_DIR$/packages/Encryption/test" />
       <excludeFolder url="file://$MODULE_DIR$/packages/Server/dist" />
       <excludeFolder url="file://$MODULE_DIR$/packages/Utils/dist" />
+      <excludeFolder url="file://$MODULE_DIR$/packages/Security/test" />
+      <excludeFolder url="file://$MODULE_DIR$/packages/Security/dist" />
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
