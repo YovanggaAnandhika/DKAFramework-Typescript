@@ -1,7 +1,7 @@
 {
   "name": "@dkaframework/utils",
   "main": "dist/index.js",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "scripts": {
     "clean": "rimraf dist",
     "start": "ts-node test/index.ts",
