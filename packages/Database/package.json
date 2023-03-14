@@ -1,6 +1,6 @@
 {
   "name": "@dkaframework/database",
-  "version": "1.0.135",
+  "version": "1.0.136",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "author": {
@@ -17,7 +17,7 @@
     "build": "yarn run clean && yarn run compile"
   },
   "dependencies": {
-    "@dkaframework/encryption": "^1.0.135",
+    "@dkaframework/encryption": "^1.0.136",
     "@journeyapps/sqlcipher": "^5.3.1",
     "@types/jsbn": "^1.2.30",
     "@types/lodash": "^4.0.0",
