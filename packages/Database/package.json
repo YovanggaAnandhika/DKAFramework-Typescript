@@ -18,7 +18,7 @@
     "publish": "yarn run build && npm publish"
   },
   "dependencies": {
-    "@dkaframework/encryption": "^1.0.131",
+    "@dkaframework/encryption": "^1.0.132",
     "@journeyapps/sqlcipher": "^5.3.1",
     "@types/jsbn": "^1.2.30",
     "@types/lodash": "^4.0.0",
