@@ -7,7 +7,7 @@ import {
     CallbackSelect,
     CallbackUpdate
 } from "./Callback";
-import {ConfigConstructor} from "@dkaframework/encryption/dist/Interfaces/Config";
+import {ConfigConstructor} from "@dkaframework/security/dist/Interfaces/Config";
 
 export interface Rules {
     as? : false | string,

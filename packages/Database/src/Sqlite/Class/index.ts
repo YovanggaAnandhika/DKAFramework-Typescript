@@ -1,6 +1,6 @@
 import {SqliteFunctionConfiguration} from "../Interfaces/Class";
 import Databases, {Database, OPEN_READWRITE} from "@journeyapps/sqlcipher";
-import Security from "@dkaframework/encryption";
+import Security from "@dkaframework/security";
 import {
     OptionsCreateTableDKASqlite,
     OptionsDeleteDKASqlite,

@@ -31,7 +31,7 @@ import EXPRESS from "./Component/EXPRESS";
 import path from "path";
 import {existsSync} from "fs";
 import * as dotEnv from "dotenv";
-import Encryption from "@dkaframework/encryption";
+import Encryption from "@dkaframework/security";
 import moment from "moment-timezone";
 import {FastifyInstance} from "fastify";
 import {Server as HTTPServer} from "http";

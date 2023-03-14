@@ -28,7 +28,7 @@ import {Instance, Method} from "./Type/types";
 import { DumpReturn } from "mysqldump/dist/mysqldump";
 import {Database, sqlite3} from "sqlite3";
 import * as fs from "fs";
-import {default as mEncryption} from "@dkaframework/encryption";
+import {default as mEncryption} from "@dkaframework/security";
 
 
 /**
@@ -152,8 +152,8 @@ export class MariaDB implements MariaDBClassInterfaces {
             let characterSet = (mRules.character !== undefined) ? `CHARACTER SET ${mRules.character}` : ``;
             let collation = (mRules.collation !== undefined) ? `COLLATE ${mRules.collation}` : ``;
             if (mRules.encryption !== undefined){
-                if (require.resolve("@dkaframework/encryption")){
-                    let mEncryption = require("@dkaframework/encryption").default;
+                if (require.resolve("@dkaframework/security")){
+                    let mEncryption = require("@dkaframework/security").default;
                     let mDatabase = new mEncryption(mRules.encryption).encodeIvSync(DatabaseName);
                     mQuery = `CREATE DATABASE ${ifNotExists} \`${mDatabase}\` ${characterSet} ${collation};`;
                     this.mMethod = "CREATE_DB";
@@ -164,7 +164,7 @@ export class MariaDB implements MariaDBClassInterfaces {
                             await rejected(<CallbackError>error);
                         });
                 }else{
-                    rejected(<CallbackError>{ status : false, code : 500, msg : `Encryption Module is Declare. but module not installed, please installed first "@dkaframework/encryption" `});
+                    rejected(<CallbackError>{ status : false, code : 500, msg : `Encryption Module is Declare. but module not installed, please installed first "@dkaframework/security" `});
                 }
             }else{
                 mQuery = `CREATE DATABASE ${ifNotExists} \`${DatabaseName}\` ${characterSet} ${collation};`;
@@ -199,13 +199,13 @@ export class MariaDB implements MariaDBClassInterfaces {
                     case "PRIMARY_KEY" :
                         let autoIncrement = (value.autoIncrement) ? "AUTO_INCREMENT" : "";
                         if (mRules.encryption !== undefined) {
-                            if (require.resolve("@dkaframework/encryption")) {
-                                let mEncryption = require("@dkaframework/encryption").default;
+                            if (require.resolve("@dkaframework/security")) {
+                                let mEncryption = require("@dkaframework/security").default;
                                 let mColoumnName = new mEncryption(mRules.encryption).encodeIvSync(value.coloumn);
                                 let mTableNameEncrypt = (mRules.settings?.coloumn) ? mColoumnName : value.coloumn;
                                 mQuery += ` \`${mTableNameEncrypt}\` BIGINT PRIMARY KEY ${autoIncrement}`;
                             }else{
-                                return { status : false, code : 500, msg : `Encryption Module is Declare. but module not installed, please installed first "@dkaframework/encryption" `};
+                                return { status : false, code : 500, msg : `Encryption Module is Declare. but module not installed, please installed first "@dkaframework/security" `};
                             }
                         }else{
                             mQuery += ` \`${value.coloumn}\` BIGINT PRIMARY KEY ${autoIncrement}`;
@@ -220,13 +220,13 @@ export class MariaDB implements MariaDBClassInterfaces {
                     case "LONGTEXT" :
                         mDefault = (value.default === null) ? `DEFAULT NULL` : `NOT NULL`;
                         if (mRules.encryption !== undefined) {
-                            if (require.resolve("@dkaframework/encryption")) {
-                                let mEncryption = require("@dkaframework/encryption").default;
+                            if (require.resolve("@dkaframework/security")) {
+                                let mEncryption = require("@dkaframework/security").default;
                                 let mColoumnName = new mEncryption(mRules.encryption).encodeIvSync(value.coloumn);
                                 let mTableNameEncrypt = (mRules.settings?.coloumn) ? mColoumnName : value.coloumn;
                                 mQuery += ` \`${mTableNameEncrypt}\` LONGTEXT ${mDefault}`;
                             }else{
-                                return { status : false, code : 500, msg : `Encryption Module is Declare. but module not installed, please installed first "@dkaframework/encryption" `};
+                                return { status : false, code : 500, msg : `Encryption Module is Declare. but module not installed, please installed first "@dkaframework/security" `};
                             }
                         }else{
                             mQuery += ` \`${value.coloumn}\` LONGTEXT ${mDefault}`;
@@ -250,8 +250,8 @@ export class MariaDB implements MariaDBClassInterfaces {
             let mEngine = (mRules.engine !== undefined) ? `ENGINE ${mRules.engine}` : ``;
 
             if (mRules.encryption !== undefined) {
-                if (require.resolve("@dkaframework/encryption")) {
-                    let mEncryption = require("@dkaframework/encryption").default;
+                if (require.resolve("@dkaframework/security")) {
+                    let mEncryption = require("@dkaframework/security").default;
 
                     let mTableName = new mEncryption(mRules.encryption).encodeIvSync(TableName);
                     let mTableNameEncrypt = (mRules.settings?.table) ? mTableName : TableName;
@@ -270,7 +270,7 @@ export class MariaDB implements MariaDBClassInterfaces {
                         });
 
                 }else{
-                    await rejected(<CallbackError>{ status : false, code : 500, msg : `Encryption Module is Declare. but module not installed, please installed first "@dkaframework/encryption" `});
+                    await rejected(<CallbackError>{ status : false, code : 500, msg : `Encryption Module is Declare. but module not installed, please installed first "@dkaframework/security" `});
                 }
             }else{
                 mFinalQuery = `CREATE TABLE ${mIfNotExist}\`${TableName}\`(${mQuery}) ${mEngine};`;
@@ -320,8 +320,8 @@ export class MariaDB implements MariaDBClassInterfaces {
                 this.mVal = [];
                 /** Check Module Encryption Declaration **/
                 if (Rules.encryption !== undefined) {
-                    if (require.resolve("@dkaframework/encryption")) {
-                        let mEncryption = require("@dkaframework/encryption").default;
+                    if (require.resolve("@dkaframework/security")) {
+                        let mEncryption = require("@dkaframework/security").default;
 
                         /** Refactor Table Name to Encryption **/
                         let mTableName = new mEncryption(Rules.encryption).encodeIvSync(TableName);
@@ -348,7 +348,7 @@ export class MariaDB implements MariaDBClassInterfaces {
                         this.SqlScript = `INSERT INTO ${mConvertToScript}\`${mTableNameEncrypt}\` (${this.mKey})VALUES (${this.mVal}) `;
 
                     }else{
-                        return { status : false, code : 500, msg : `Encryption Module is Declare. but module not installed, please installed first "@dkaframework/encryption" `};
+                        return { status : false, code : 500, msg : `Encryption Module is Declare. but module not installed, please installed first "@dkaframework/security" `};
                     }
                 }else{
                     await Object.keys(Rules.data).forEach((key) => {
@@ -770,8 +770,8 @@ export class MariaDB implements MariaDBClassInterfaces {
                                         case "READ":
                                             if (rows.length > 0) {
                                                 if (ExtendsOptions?.encryption !== undefined){
-                                                    if (require.resolve("@dkaframework/encryption")) {
-                                                        let mEncryption = require("@dkaframework/encryption").default;
+                                                    if (require.resolve("@dkaframework/security")) {
+                                                        let mEncryption = require("@dkaframework/security").default;
                                                         let mEncryptInst = await new mEncryption(ExtendsOptions.encryption);
                                                         let mFinalRows : any[] = [];
                                                         await rows.map(async (data : any) =>{
@@ -794,7 +794,7 @@ export class MariaDB implements MariaDBClassInterfaces {
                                                         });
                                                         await PoolConnection.release();
                                                     }else{
-                                                        await rejected({ status : false, code : 500, msg : `Encryption Module is Declare. but module not installed, please installed first "@dkaframework/encryption" `});
+                                                        await rejected({ status : false, code : 500, msg : `Encryption Module is Declare. but module not installed, please installed first "@dkaframework/security" `});
                                                         await PoolConnection.release();
                                                     }
                                                 }else{
