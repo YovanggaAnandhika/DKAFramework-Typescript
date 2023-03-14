@@ -532,6 +532,7 @@ const checkLicence = (config: ConfigFastify | ConfigSocketIOClient | ConfigSocke
             secretKey: `OICJo9eufjg4kjli4gjligj4igj4i`
         });
 
+
         if (config?.licence !== undefined) {
             switch (config?.licence.method) {
                 case "LICENCE_KEY_OFFLINE" :
