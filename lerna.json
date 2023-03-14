@@ -2,8 +2,8 @@
   "packages": [
     "packages/*"
   ],
-  "boostrap" : true,
+  "boostrap": true,
   "npmClient": "yarn",
-  "version": "2.0.6",
+  "version": "2.0.7",
   "useWorkspaces": true
 }
