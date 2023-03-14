@@ -1,6 +1,6 @@
 {
   "name": "@dkaframework/database",
-  "version": "1.0.130",
+  "version": "1.0.131",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "author": {
@@ -14,8 +14,8 @@
     "dev-test": "nodemon --watch src --watch test --exec ts-node test/index.ts",
     "clean": "rimraf dist",
     "compile": "tsc --build",
-    "build": "yarn run clean & yarn run compile",
-    "publish": "yarn run clean && yarn run compile && npm pulish"
+    "build": "yarn run clean && yarn run compile",
+    "publish": "yarn run build && npm publish"
   },
   "dependencies": {
     "@dkaframework/encryption": "^1.0.130",
@@ -49,5 +49,6 @@
     "rm": "^0.1.8",
     "ts-node": "^10.9.1",
     "typescript-cp": "^0.1.7"
-  }
+  },
+  "gitHead": "b3b00cdd84553a9a9748520735ab4d1aca93fc01"
 }

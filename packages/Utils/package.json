@@ -8,7 +8,7 @@
     "compile": "tsc --build",
     "build": "yarn run clean && yarn run compile",
     "login": "npm login",
-    "publish": "yarn run clean && yarn run compile & npm publish"
+    "publish": "yarn run build && npm publish"
   },
   "devDependencies": {
     "@types/lodash": "^4.14.190",
@@ -22,5 +22,6 @@
   "dependencies": {
     "lodash": "^4.17.21",
     "telnet": "^0.0.1"
-  }
+  },
+  "gitHead": "b3b00cdd84553a9a9748520735ab4d1aca93fc01"
 }
