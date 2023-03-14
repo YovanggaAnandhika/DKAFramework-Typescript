@@ -1,4 +1,6 @@
 node_modules/
-.idea
-yarn.lock
-yarn-error.log
+/**/*/dist
+/**/*/.idea
+/**/*/yarn.lock
+/**/*/yarn-error.log
+/**/*/dka.env

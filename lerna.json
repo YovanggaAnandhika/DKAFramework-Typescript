@@ -3,6 +3,7 @@
   "packages": [
     "packages/*"
   ],
+  "bootstrap": true,
   "npmClient": "yarn",
   "version": "0.0.1",
   "useWorkspaces": true

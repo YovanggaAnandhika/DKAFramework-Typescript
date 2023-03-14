@@ -2,13 +2,15 @@
   "name": "root",
   "version": "1.0.0",
   "main": "index.js",
-  "private": false,
+  "private": true,
   "author": "Yovangga Anandhika",
   "license": "MIT",
   "workspaces": [
     "packages/*"
   ],
+  "scripts": {},
   "devDependencies": {
+    "@nrwl/nx-cloud": "^15.2.1",
     "lerna": "^6.5.1"
   }
 }
