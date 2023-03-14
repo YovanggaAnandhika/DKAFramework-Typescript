@@ -27,6 +27,41 @@ good one.
 * **Without Installing WebServer.** Using the main JS language that is suitable in terms of data efficiency.
 * **More Other Features.** 🐈
 
+##Available Module
+
+
+![GitHub version](https://img.shields.io/badge/%40dkaframework%2Fserver-v.2.0.6-green)
+<br/>
+The Function Create a server or client program. like reactjs, fastify, socket.io, and another servicing server
+
+![GitHub version](https://img.shields.io/badge/%40dkaframework%2Fdatabase-v.2.0.6-green)
+<br/>
+The Function Create a DBMS Connector. like MARIADB, Sqlite, MongoDB and another DBMS Connector
+
+![GitHub version](https://img.shields.io/badge/%40dkaframework%2Fsecurity-v.2.0.6-green)
+<br/>
+The Function Create a security function, like firewall, encryption, decription
+
+![GitHub version](https://img.shields.io/badge/%40dkaframework%2Futils-v.2.0.6-green)
+<br/>
+The Function is costum. general function for the method practice
+
+
+
+## Installing DKA DKAFramework-Typescript Module
+
+Simple Installation
+
+with npm
+``` npm install @dkaframework/<packagename>@<version>```<br/>
+with yarn install
+``` yarn add -D @dkaframework/<packagename>@<version> ```
+
+
+Read More About [Installation Guide](https://github.com/YovanggaAnandhika/Server/blob/master/INSTALL.md) On the Website
+Us For More Information.
+
+
 **I'm a Night 🦉**
 
 ```text
@@ -69,26 +104,6 @@ XML                      4 mins              ░░░░░░░░░░░�
 </p>
 
 ---
-
-## Installing DKA DKAFramework-Typescript-Server Module
-
-Simple Installation
-
-with npm
-``` npm install @dkaframework/<packagename>@<version>```<br/>
-with yarn install
-``` yarn add -D @dkaframework/<packagename>@<version> ```
-
-
-Read More About [Installation Guide](https://github.com/YovanggaAnandhika/Server/blob/master/INSTALL.md) On the Website
-Us For More Information.
-
-##Available Module
-![GitHub version](https://img.shields.io/badge/%40dkaframework%2Fserver-v.2.0.6-green) <br/>
-
-![GitHub version](https://img.shields.io/badge/%40dkaframework%2Fdatabase-v.2.0.6-green) <br/>
-![GitHub version](https://img.shields.io/badge/%40dkaframework%2Fsecurity-v.2.0.6-green) <br/>
-![GitHub version](https://img.shields.io/badge/%40dkaframework%2Fsecurity-v.2.0.6-green) <br/>
 
 
 Read About : </b>[LICENCE](https://github.com/YovanggaAnandhika/Server/blob/master/LICENSE.md)
