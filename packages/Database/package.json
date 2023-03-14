@@ -17,7 +17,7 @@
     "build": "yarn run clean && yarn run compile"
   },
   "dependencies": {
-    "@dkaframework/encryption": "^1.0.136",
+    "@dkaframework/encryption": "^1.0.1",
     "@journeyapps/sqlcipher": "^5.3.1",
     "@types/jsbn": "^1.2.30",
     "@types/lodash": "^4.0.0",
