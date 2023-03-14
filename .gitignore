@@ -2,6 +2,7 @@ node_modules/
 lerna-debug.log
 /**/*/dist
 /**/*/.idea
+/.idea
 /**/*/yarn.lock
 /**/*/yarn-error.log
 /**/*/dka.env
