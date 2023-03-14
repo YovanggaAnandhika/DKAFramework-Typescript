@@ -1,6 +1,6 @@
 {
   "name": "@dkaframework/encryption",
-  "version": "1.0.121",
+  "version": "1.0.130",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "author": "Yovangga Anandhika",
@@ -11,7 +11,7 @@
     "clean": "rimraf dist",
     "compile": "tsc --build",
     "build": "yarn run clean && yarn run compile",
-    "login" : "npm login",
+    "login": "npm login",
     "publish": "yarn run clean && yarn run compile & npm publish"
   },
   "dependencies": {

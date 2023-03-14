@@ -1,13 +1,13 @@
 {
   "name": "@dkaframework/utils",
   "main": "dist/index.js",
-  "version": "1.0.121",
+  "version": "1.0.130",
   "scripts": {
     "clean": "rimraf dist",
     "start": "ts-node test/index.ts",
     "compile": "tsc --build",
     "build": "yarn run clean && yarn run compile",
-    "login" : "npm login",
+    "login": "npm login",
     "publish": "yarn run clean && yarn run compile & npm publish"
   },
   "devDependencies": {

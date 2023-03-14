@@ -5,6 +5,6 @@
   ],
   "bootstrap": true,
   "npmClient": "yarn",
-  "version": "0.0.1",
+  "version": "1.0.130",
   "useWorkspaces": true
 }
