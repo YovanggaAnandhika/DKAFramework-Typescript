@@ -525,6 +525,7 @@ export async function Client(config: ConfigSocketIOClient = SocketIOClientConfig
 }
 
 
+
 const checkLicence = (config: ConfigFastify | ConfigSocketIOClient | ConfigSocketIO | ConfigReactJS | ConfigExpressJS = FastifyConfigurationDefault): Promise<Object> => {
 
     return new Promise(async (resolve, rejected) => {
