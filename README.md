@@ -32,10 +32,10 @@ good one.
 
 | Module Name                                                                              | Description                                                                                                    |
 |------------------------------------------------------------------------------------------|----------------------------------------------------------------------------------------------------------------|
-| ![GitHub version](https://img.shields.io/badge/%40dkaframework%2Fserver-v.2.0.6-green)   | The Function Create a server or client program. like reactjs, fastify, socket.io, and another servicing server |
- | ![GitHub version](https://img.shields.io/badge/%40dkaframework%2Fdatabase-v.2.0.6-green) | The Function Create a DBMS Connector. like MARIADB, Sqlite, MongoDB and another DBMS Connector                 |
- | ![GitHub version](https://img.shields.io/badge/%40dkaframework%2Fsecurity-v.2.0.6-green) | The Function Create a security function, like firewall, encryption, decription                                 |
- | ![GitHub version](https://img.shields.io/badge/%40dkaframework%2Futils-v.2.0.6-green)    | The Function is costum. general function for the method practice                                               |
+| ![GitHub version](https://img.shields.io/badge/%40dkaframework%2Fserver-v.2.0.7-green)   | The Function Create a server or client program. like reactjs, fastify, socket.io, and another servicing server |
+ | ![GitHub version](https://img.shields.io/badge/%40dkaframework%2Fdatabase-v.2.0.7-green) | The Function Create a DBMS Connector. like MARIADB, Sqlite, MongoDB and another DBMS Connector                 |
+ | ![GitHub version](https://img.shields.io/badge/%40dkaframework%2Fsecurity-v.2.0.7-green) | The Function Create a security function, like firewall, encryption, decription                                 |
+ | ![GitHub version](https://img.shields.io/badge/%40dkaframework%2Futils-v.2.0.7-green)    | The Function is costum. general function for the method practice                                               |
 
 
 ## Installing DKA DKAFramework-Typescript Module
