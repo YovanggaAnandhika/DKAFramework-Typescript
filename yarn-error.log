@@ -1,0 +1,39 @@
+Arguments: 
+  C:\Program Files\nodejs\node.exe C:\Users\ARA\AppData\Roaming\npm\node_modules\yarn\bin\yarn.js install
+
+PATH: 
+  C:\Program Files (x86)\Common Files\Intel\Shared Files\cpp\bin\Intel64;C:\Windows\system32;C:\Windows;C:\Windows\System32\Wbem;C:\Windows\System32\WindowsPowerShell\v1.0\;C:\Windows\System32\OpenSSH\;C:\Program Files (x86)\NVIDIA Corporation\PhysX\Common;C:\Program Files\NVIDIA Corporation\NVIDIA NvDLISR;C:\WINDOWS\system32;C:\WINDOWS;C:\WINDOWS\System32\Wbem;C:\WINDOWS\System32\WindowsPowerShell\v1.0\;C:\WINDOWS\System32\OpenSSH\;C:\Program Files\Git\cmd;C:\Program Files\PuTTY\;C:\Users\ARA\AppData\Local\Yarn\bin;C:\xampp\php;C:\ProgramData\ComposerSetup\bin;C:\FFMPEG\bin;C:\Program Files\OpenSSL-Win64\bin;C:\Users\ARA\AppData\Roaming\nvm;C:\Program Files\nodejs;C:\Program Files\Docker\Docker\resources\bin;C:\Users\ARA\AppData\Local\Programs\Python\Python311\Scripts\;C:\Users\ARA\AppData\Local\Programs\Python\Python311\;%PNPM_HOME%;C:\Users\ARA\AppData\Local\Microsoft\WindowsApps;C:\Users\ARA\AppData\Local\Yarn\bin;C:\Users\ARA\AppData\Roaming\Composer\vendor\bin;C:\Users\ARA\AppData\Roaming\npm;C:\FFMPEG\bin;C:\Users\ARA\AppData\Local\Programs\Microsoft VS Code\bin;C:\Program Files (x86)\Nmap;C:\Program Files\OpenSSL-Win64\bin;C:\Users\ARA\AppData\Roaming\nvm;C:\Program Files\nodejs;D:\PEKERJAAN\DKA\Framework\V3\node_modules\.bin
+
+Yarn version: 
+  1.22.19
+
+Node version: 
+  18.0.0
+
+Platform: 
+  win32 x64
+
+Trace: 
+  Error: ENOENT: no such file or directory, stat 'D:\PEKERJAAN\DKA\Framework\V3\node_modules\@dkaframework\server'
+
+npm manifest: 
+  {
+    "name": "@dkaframework/root",
+    "version": "1.0.0",
+    "main": "index.js",
+    "private": true,
+    "author": "Yovangga Anandhika",
+    "license": "MIT",
+    "workspaces": [
+      "packages/*"
+    ],
+    "devDependencies": {
+      "lerna": "^6.5.1"
+    }
+  }
+
+yarn manifest: 
+  No manifest
+
+Lockfile: 
+  No lockfile
