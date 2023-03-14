@@ -57,10 +57,10 @@ export async function Server(config: ConfigFastify | ConfigSocketIO | ConfigReac
 
     return new Promise(async (resolve, rejected) => {
         let enc = new Encryption({
-            secretKey: `Cyberhack2010`
+            secretKey: `INFKE#fh3fh3ifjhKCJN38u8J#O*FOF`
         });
 
-        async function Runner(licenceInfo: any) {
+        async function Runner(licenceInfo ?: any) {
             switch (config.engine) {
                 case Options.Server.Engine.FASTIFY :
                     //## Set Configuration merger
@@ -111,7 +111,7 @@ export async function Server(config: ConfigFastify | ConfigSocketIO | ConfigReac
                                     }, async (error) => {
                                         if (!error) {
                                             logger.info(`engine fastify fully start done. all green`);
-                                            logger.warn(`licence key activated by ${licenceInfo.name} until ${moment.unix(licenceInfo.expiresTo).format(`DD-MM-YYYY`)}`)
+                                            //logger.warn(`licence key activated by ${licenceInfo.name} until ${moment.unix(licenceInfo.expiresTo).format(`DD-MM-YYYY`)}`)
                                             await resolve({
                                                 status: true,
                                                 code: 200,
@@ -210,7 +210,7 @@ export async function Server(config: ConfigFastify | ConfigSocketIO | ConfigReac
                                         port: config.port as number,
                                     }, async (error, address) => {
                                         if (!error) {
-                                            logger.warn(`licence key activated by ${licenceInfo.name} until ${moment.unix(licenceInfo.expiresTo).format(`DD-MM-YYYY`)}`)
+                                            //logger.warn(`licence key activated by ${licenceInfo.name} until ${moment.unix(licenceInfo.expiresTo).format(`DD-MM-YYYY`)}`)
                                             await resolve({
                                                 status: true,
                                                 code: 200,
@@ -236,7 +236,7 @@ export async function Server(config: ConfigFastify | ConfigSocketIO | ConfigReac
                                     break;
                                 case "HTTPS" :
                                     await (http as HTTPSServer).listen(mTempSocketIO.port, async () => {
-                                        logger.warn(`licence key activated by ${licenceInfo.name} until ${moment.unix(licenceInfo.expiresTo).format(`DD-MM-YYYY`)}`)
+                                        //logger.warn(`licence key activated by ${licenceInfo.name} until ${moment.unix(licenceInfo.expiresTo).format(`DD-MM-YYYY`)}`)
                                         await resolve({
                                             status: true,
                                             code: 200,
@@ -251,7 +251,7 @@ export async function Server(config: ConfigFastify | ConfigSocketIO | ConfigReac
                                     break;
                                 default :
                                     await (http as HTTPServer).listen(mTempSocketIO.port, async () => {
-                                        logger.warn(`licence key activated by ${licenceInfo.name} until ${moment.unix(licenceInfo.expiresTo).format(`DD-MM-YYYY`)}`)
+                                        //logger.warn(`licence key activated by ${licenceInfo.name} until ${moment.unix(licenceInfo.expiresTo).format(`DD-MM-YYYY`)}`)
                                         await resolve({
                                             status: true,
                                             code: 200,
@@ -419,13 +419,14 @@ export async function Server(config: ConfigFastify | ConfigSocketIO | ConfigReac
             }
         }
 
-        await checkLicence(config)
+        await Runner()
+       /* await checkLicence(config)
             .then(async (resultLicence) => {
                 await Runner(resultLicence)
             })
             .catch(async (error) => {
                 rejected(error)
-            });
+            });*/
 
 
     });
@@ -435,7 +436,7 @@ export async function Client(config: ConfigSocketIOClient = SocketIOClientConfig
     let logger: Logger;
     return new Promise(async (resolve, rejected) => {
         //Runner Apps
-        async function Runner(licenceInfo: any) {
+        async function Runner(licenceInfo ?: any) {
             switch (config.engine) {
                 case Options.Server.Engine.SOCKETIO.Client :
                     //## Set Configuration merger
@@ -474,7 +475,7 @@ export async function Client(config: ConfigSocketIOClient = SocketIOClientConfig
                     //$$$$$$$$$$$ DELETE GET CONFIG FUNCTION FOR GET CONFIG $$$$$$$$$$$$
                     await SOCKET_IO_CLIENT(mTempSocketIOClient, logger)
                         .then(async (io) => {
-                            logger.warn(`licence key activated by ${licenceInfo.name} until ${moment.unix(licenceInfo.expiresTo).format(`DD-MM-YYYY`)}`)
+                            //logger.warn(`licence key activated by ${licenceInfo.name} until ${moment.unix(licenceInfo.expiresTo).format(`DD-MM-YYYY`)}`)
                             let mCallback: DKAClientCallback = {
                                 status: true,
                                 code: 200,
@@ -511,13 +512,14 @@ export async function Client(config: ConfigSocketIOClient = SocketIOClientConfig
         }
 
         //Checking This Licence Program
-        await checkLicence(config)
+        await Runner()
+        /*await checkLicence(config)
             .then(async (resultLicence) => {
                 await Runner(resultLicence)
             })
             .catch(async (error) => {
                 await rejected(error)
-            });
+            });*/
 
     });
 }
@@ -527,7 +529,7 @@ const checkLicence = (config: ConfigFastify | ConfigSocketIOClient | ConfigSocke
 
     return new Promise(async (resolve, rejected) => {
         let enc = new Encryption({
-            secretKey: `Cyberhack2010`
+            secretKey: `OICJo9eufjg4kjli4gjligj4igj4i`
         });
 
         if (config?.licence !== undefined) {
