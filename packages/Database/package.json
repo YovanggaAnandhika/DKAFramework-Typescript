@@ -47,8 +47,8 @@
     "escpos-adapter": "^3.0.0-alpha.4",
     "nodemon": "^2.0.19",
     "rm": "^0.1.8",
-    "ts-node": "^10.9.1",
-    "typescript-cp": "^0.1.7"
+    "ts-node": "*",
+    "typescript-cp": "*"
   },
   "gitHead": "db0ed6e6f7a23b484c2789ee7725a4ffee9b37eb"
 }
