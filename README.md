@@ -3,11 +3,11 @@
 
 ## Status
 
-![GitHub last commit](https://img.shields.io/github/last-commit/YovanggaAnandhika/DKAFramework-Typescript-Server)
-![GitHub contributors](https://img.shields.io/github/contributors/YovanggaAnandhika/DKAFramework-Typescript-Server)
-![GitHub pull requests](https://img.shields.io/github/issues-pr/YovanggaAnandhika/DKAFramework-Typescript-Server)
-![GitHub issues](https://img.shields.io/github/issues/YovanggaAnandhika/DKAFramework-Typescript-Server)
-![GitHub repo size](https://img.shields.io/github/repo-size/YovanggaAnandhika/DKAFramework-Typescript-Server)
+![GitHub last commit](https://img.shields.io/github/last-commit/YovanggaAnandhika/DKAFramework-Typescript)
+![GitHub contributors](https://img.shields.io/github/contributors/YovanggaAnandhika/DKAFramework-Typescript)
+![GitHub pull requests](https://img.shields.io/github/issues-pr/YovanggaAnandhika/DKAFramework-Typescript)
+![GitHub issues](https://img.shields.io/github/issues/YovanggaAnandhika/DKAFramework-Typescript)
+![GitHub repo size](https://img.shields.io/github/repo-size/YovanggaAnandhika/DKAFramework-Typescript)
 
 
 ## Benefit
@@ -40,7 +40,7 @@ good one.
 
 ## Installing DKA DKAFramework-Typescript Module
 
-Simple Installation
+###Simple Installation
 
 with npm
 ``` npm install @dkaframework/<packagename>@<version>```<br/>
