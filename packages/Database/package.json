@@ -14,8 +14,7 @@
     "dev-test": "nodemon --watch src --watch test --exec ts-node test/index.ts",
     "clean": "rimraf dist",
     "compile": "tsc --build",
-    "build": "yarn run clean && yarn run compile",
-    "publish": "yarn run build && npm publish"
+    "build": "yarn run clean && yarn run compile"
   },
   "dependencies": {
     "@dkaframework/encryption": "^1.0.135",
@@ -50,5 +49,5 @@
     "ts-node": "*",
     "typescript-cp": "*"
   },
-  "gitHead": "db3b831d5d9a876f9a894faba841c653f5f70e62"
+  "gitHead": "aea992f273b9de8a7e962f7d0bf3152bd3382228"
 }

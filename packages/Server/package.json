@@ -46,8 +46,7 @@
     "action:copy": "tscp",
     "testd": "electron test/test-electron.js",
     "build": "yarn run action:clean && yarn run action:compile && yarn run action:copy",
-    "login": "npm login",
-    "publish": "yarn run build && npm publish"
+    "login": "npm login"
   },
   "dependencies": {
     "@babel/core": "^7.19.3",
@@ -116,5 +115,5 @@
     "nodemon": "^2.0.19",
     "typescript-cp": "^0.1.6"
   },
-  "gitHead": "db3b831d5d9a876f9a894faba841c653f5f70e62"
+  "gitHead": "aea992f273b9de8a7e962f7d0bf3152bd3382228"
 }

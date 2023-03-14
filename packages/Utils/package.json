@@ -7,8 +7,7 @@
     "start": "ts-node test/index.ts",
     "compile": "tsc --build",
     "build": "yarn run clean && yarn run compile",
-    "login": "npm login",
-    "publish": "yarn run build && npm publish"
+    "login": "npm login"
   },
   "devDependencies": {
     "@types/lodash": "^4.14.190",
@@ -23,5 +22,5 @@
     "lodash": "^4.17.21",
     "telnet": "^0.0.1"
   },
-  "gitHead": "db3b831d5d9a876f9a894faba841c653f5f70e62"
+  "gitHead": "aea992f273b9de8a7e962f7d0bf3152bd3382228"
 }
