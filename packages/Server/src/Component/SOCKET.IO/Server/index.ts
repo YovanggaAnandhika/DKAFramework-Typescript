@@ -11,6 +11,8 @@ import {Logger} from "winston";
 import {FastifyInstance} from "fastify";
 import FastifySocketIOEngine from "./Component/FASTIFY";
 import {Ngrok, NgrokClient, connect as NgrokConnect, getApi as NgrokGetApi, disconnect as NgrokDisconnect, kill as NgrokKill } from "ngrok";
+import {merge} from "lodash";
+import {MultiplePluginsServerNgrokSettings} from "../../../Interfaces/Global";
 
 const encryptSocket = require('socket.io-encrypt')
 
@@ -57,7 +59,9 @@ export const SOCKET_IO = async (config: ConfigSocketIO, logger: Logger): Promise
             await mFastify.server.on("listening", async () => {
                 if (config.plugins?.ngrok?.enabled){
                     try {
-                        mNgrokUrl = (config.plugins.ngrok.settings !== undefined) ? await NgrokConnect(config.plugins.ngrok.settings) : await NgrokConnect();
+                        let mDefaultNgrokSettings : MultiplePluginsServerNgrokSettings = { addr : Number(config.port) }
+                        let mMergeredNgrokSettings : MultiplePluginsServerNgrokSettings = merge(mDefaultNgrokSettings, config.plugins.ngrok.settings)
+                        mNgrokUrl = (config.plugins.ngrok.settings !== undefined) ? await NgrokConnect(mMergeredNgrokSettings) : await NgrokConnect();
                         mNgrokClient = await NgrokGetApi();
                         let de = await mNgrokClient?.listTunnels();
                         await logger.info(`socket.io server started ngrok binding services ${de?.tunnels[0].public_url} :: ${de?.tunnels[1].public_url}`);
@@ -80,7 +84,9 @@ export const SOCKET_IO = async (config: ConfigSocketIO, logger: Logger): Promise
             await mHttp.on("listening", async () => {
                 if (config.plugins?.ngrok?.enabled){
                     try {
-                        mNgrokUrl = (config.plugins.ngrok.settings !== undefined) ? await NgrokConnect(config.plugins.ngrok.settings) : await NgrokConnect();
+                        let mDefaultNgrokSettings : MultiplePluginsServerNgrokSettings = { addr : Number(config.port) }
+                        let mMergeredNgrokSettings : MultiplePluginsServerNgrokSettings = merge(mDefaultNgrokSettings, config.plugins.ngrok.settings)
+                        mNgrokUrl = (config.plugins.ngrok.settings !== undefined) ? await NgrokConnect(mMergeredNgrokSettings) : await NgrokConnect();
                         mNgrokClient = await NgrokGetApi();
                         let de = await mNgrokClient?.listTunnels();
                         await logger.info(`socket.io server started ngrok binding services ${de?.tunnels[0].public_url} :: ${de?.tunnels[1].public_url}`);
@@ -103,7 +109,9 @@ export const SOCKET_IO = async (config: ConfigSocketIO, logger: Logger): Promise
             await mHttp.on("listening", async () => {
                 if (config.plugins?.ngrok?.enabled){
                     try {
-                        mNgrokUrl = (config.plugins.ngrok.settings !== undefined) ? await NgrokConnect(config.plugins.ngrok.settings) : await NgrokConnect();
+                        let mDefaultNgrokSettings : MultiplePluginsServerNgrokSettings = { addr : Number(config.port) }
+                        let mMergeredNgrokSettings : MultiplePluginsServerNgrokSettings = merge(mDefaultNgrokSettings, config.plugins.ngrok.settings)
+                        mNgrokUrl = (config.plugins.ngrok.settings !== undefined) ? await NgrokConnect(mMergeredNgrokSettings) : await NgrokConnect();
                         mNgrokClient = await NgrokGetApi();
                         let de = await mNgrokClient?.listTunnels();
                         await logger.info(`socket.io server started ngrok binding services ${de?.tunnels[0].public_url} :: ${de?.tunnels[1].public_url}`);

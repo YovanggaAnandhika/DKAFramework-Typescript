@@ -7,6 +7,7 @@ import path from "path";
     let db = new MariaDB({
         encryption : {}
     })
+
         .Baca(`user`).then(async (res : any) => {
         console.log(res)
     }).catch(async (res) => {

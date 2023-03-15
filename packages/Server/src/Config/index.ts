@@ -65,6 +65,7 @@ export const SocketIOConfigurationDefault : ConfigSocketIO = {
             warning: path.join(require.main?.path!, "./Logs/warning.log")
         }
     },
+
     options: {
         socket: {
             perMessageDeflate: false,
