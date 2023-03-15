@@ -1,6 +1,6 @@
 {
   "name": "@dkaframework/database",
-  "version": "2.0.14",
+  "version": "2.0.15",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "author": {
@@ -18,7 +18,7 @@
     "prepublish": "yarn run clean && yarn run compile"
   },
   "dependencies": {
-    "@dkaframework/security": "^2.0.14",
+    "@dkaframework/security": "^2.0.15",
     "@journeyapps/sqlcipher": "^5.3.1",
     "@types/jsbn": "^1.2.30",
     "@types/lodash": "^4.0.0",
