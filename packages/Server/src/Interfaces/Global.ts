@@ -51,8 +51,7 @@ export interface ConfigSystemLogger {
 }
 
 export interface MultiplePluginsServerNgrokSettings extends Ngrok.Options {
-    authToken: string | undefined,
-    proto: "tcp" | "http" | "tls"
+
 }
 
 export interface MultiplePluginsServerNgrok {

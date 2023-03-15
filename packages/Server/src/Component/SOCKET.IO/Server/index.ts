@@ -10,7 +10,7 @@ import {DefaultEventsMap} from "socket.io/dist/typed-events";
 import {Logger} from "winston";
 import {FastifyInstance} from "fastify";
 import FastifySocketIOEngine from "./Component/FASTIFY";
-import {Ngrok, NgrokClient, connect as NgrokConnect, getApi as NgrokGetApi } from "ngrok";
+import {Ngrok, NgrokClient, connect as NgrokConnect, getApi as NgrokGetApi, disconnect as NgrokDisconnect, kill as NgrokKill } from "ngrok";
 
 const encryptSocket = require('socket.io-encrypt')
 
@@ -50,12 +50,20 @@ export const SOCKET_IO = async (config: ConfigSocketIO, logger: Logger): Promise
                 await mHttp.register(config?.options?.server?.app)
             }*/
             let mFastify = await FastifySocketIOEngine(config.options?.server, logger)
-            mFastify.server.on("listening", async () => {
+            await mFastify.server.on("close", async () => {
+                await NgrokDisconnect(); // stops all
+                await NgrokKill() // kills ngrok process
+            })
+            await mFastify.server.on("listening", async () => {
                 if (config.plugins?.ngrok?.enabled){
-                    mNgrokUrl = (config.plugins.ngrok.settings !== undefined) ? await NgrokConnect(config.plugins.ngrok.settings) : await NgrokConnect();
-                    mNgrokClient = await NgrokGetApi();
-                    let de = await mNgrokClient?.listTunnels();
-                    await logger.info(`socket.io server started ngrok binding services ${de?.tunnels[0].public_url} :: ${de?.tunnels[1].public_url}`);
+                    try {
+                        mNgrokUrl = (config.plugins.ngrok.settings !== undefined) ? await NgrokConnect(config.plugins.ngrok.settings) : await NgrokConnect();
+                        mNgrokClient = await NgrokGetApi();
+                        let de = await mNgrokClient?.listTunnels();
+                        await logger.info(`socket.io server started ngrok binding services ${de?.tunnels[0].public_url} :: ${de?.tunnels[1].public_url}`);
+                    }catch (e : any) {
+                        logger.error(`ngrok service failed to start. error_code : ${e.body.error_code}, status_code : ${e.body.status_code}, details : ${e.body.details.err}`);
+                    }
                 }
             });
             io = new Server(mFastify.server, config.options?.socket);
@@ -65,13 +73,20 @@ export const SOCKET_IO = async (config: ConfigSocketIO, logger: Logger): Promise
             mHttp = (config.options?.server?.settings !== undefined) ?
                 createSecureServer(config.options?.server?.settings) : createSecureServer();
             logger.info(`socket.io server binding to protocol server http or https`);
-
-            mHttp.on("listening", async () => {
+            await mHttp.on("close", async () => {
+                await NgrokDisconnect(); // stops all
+                await NgrokKill() // kills ngrok process
+            })
+            await mHttp.on("listening", async () => {
                 if (config.plugins?.ngrok?.enabled){
-                    mNgrokUrl = (config.plugins.ngrok.settings !== undefined) ? await NgrokConnect(config.plugins.ngrok.settings) : await NgrokConnect();
-                    mNgrokClient = await NgrokGetApi();
-                    let de = await mNgrokClient?.listTunnels();
-                    await logger.info(`socket.io server started ngrok binding services ${de?.tunnels[0].public_url} :: ${de?.tunnels[1].public_url}`);
+                    try {
+                        mNgrokUrl = (config.plugins.ngrok.settings !== undefined) ? await NgrokConnect(config.plugins.ngrok.settings) : await NgrokConnect();
+                        mNgrokClient = await NgrokGetApi();
+                        let de = await mNgrokClient?.listTunnels();
+                        await logger.info(`socket.io server started ngrok binding services ${de?.tunnels[0].public_url} :: ${de?.tunnels[1].public_url}`);
+                    }catch (e : any) {
+                        logger.error(`ngrok service failed to start. error_code : ${e.body.error_code}, status_code : ${e.body.status_code}, details : ${e.body.details.err}`);
+                    }
                 }
             });
             io = new Server(mHttp, config.options?.socket);
@@ -81,12 +96,20 @@ export const SOCKET_IO = async (config: ConfigSocketIO, logger: Logger): Promise
             mHttp = (config.options?.server?.settings !== undefined) ?
                 createServer(config.options?.server?.settings as mHTTPServerOptions) : createServer();
             logger.info(`socket.io server binding to protocol server http or https`);
-            mHttp.on("listening", async () => {
+            await mHttp.on("close", async () => {
+                await NgrokDisconnect(); // stops all
+                await NgrokKill() // kills ngrok process
+            });
+            await mHttp.on("listening", async () => {
                 if (config.plugins?.ngrok?.enabled){
-                    mNgrokUrl = (config.plugins.ngrok.settings !== undefined) ? await NgrokConnect(config.plugins.ngrok.settings) : await NgrokConnect();
-                    mNgrokClient = await NgrokGetApi();
-                    let de = await mNgrokClient?.listTunnels();
-                    await logger.info(`socket.io server started ngrok binding services ${de?.tunnels[0].public_url} :: ${de?.tunnels[1].public_url}`);
+                    try {
+                        mNgrokUrl = (config.plugins.ngrok.settings !== undefined) ? await NgrokConnect(config.plugins.ngrok.settings) : await NgrokConnect();
+                        mNgrokClient = await NgrokGetApi();
+                        let de = await mNgrokClient?.listTunnels();
+                        await logger.info(`socket.io server started ngrok binding services ${de?.tunnels[0].public_url} :: ${de?.tunnels[1].public_url}`);
+                    }catch (e : any) {
+                        logger.error(`ngrok service failed to start. error_code : ${e.body.error_code}, status_code : ${e.body.status_code}, details : ${e.body.details.err}`);
+                    }
                 }
             });
             io = new Server(mHttp, config.options?.socket);

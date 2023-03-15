@@ -10,6 +10,15 @@ import {SocketIOInstanceSocket} from "../../src/Type/types";
         onConnection : async (io) => {
           console.log(io.id)
         },
+        plugins : {
+            ngrok : {
+                enabled : true,
+                settings : {
+                    authtoken : "g3UD9sgpzrW41i6YGVWH_3w7oA58kHxKDgSNpmncba",
+                    proto : "http"
+                }
+            }
+        },
         licence: {
             method: "LICENCE_KEY_OFFLINE",
             key: "./dka.env"

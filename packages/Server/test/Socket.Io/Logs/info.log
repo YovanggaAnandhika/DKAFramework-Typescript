@@ -1197,3 +1197,127 @@ DKA | 12-03-2023 | 17:40:07:46 | DEVELOPMENT | V.1.0.117 | SOCKET.IO_SERVER | se
 DKA | 12-03-2023 | 17:40:07:47 | DEVELOPMENT | V.1.0.117 | SOCKET.IO_SERVER | licence key activated by Yovangga Anandhika until 25-11-2025
 DKA | 12-03-2023 | 17:40:07:78 | DEVELOPMENT | V.1.0.117 | SOCKET.IO_SERVER | server socket io become event "connected" with id sGIBTnfVZPeO_JYwAAAB
 DKA | 12-03-2023 | 17:40:18:42 | DEVELOPMENT | V.1.0.117 | SOCKET.IO_SERVER | server socket io become event "disconnected" sGIBTnfVZPeO_JYwAAAB
+
+DKA | 15-03-2023 | 14:53:31:32 | DEVELOPMENT | V.2.0.10 | SOCKET.IO_SERVER | starting socket.io server engine.
+DKA | 15-03-2023 | 14:53:31:32 | DEVELOPMENT | V.2.0.10 | SOCKET.IO_SERVER | checking server protocol
+DKA | 15-03-2023 | 14:53:31:32 | DEVELOPMENT | V.2.0.10 | SOCKET.IO_SERVER | server socket io with http protocol is selected
+DKA | 15-03-2023 | 14:53:31:32 | DEVELOPMENT | V.2.0.10 | SOCKET.IO_SERVER | socket.io server binding to protocol server http or https
+DKA | 15-03-2023 | 14:53:31:35 | DEVELOPMENT | V.2.0.10 | SOCKET.IO_SERVER | server socket io checking costum middleware
+DKA | 15-03-2023 | 14:53:31:35 | DEVELOPMENT | V.2.0.10 | SOCKET.IO_SERVER | server socket io costumMiddleware default config
+DKA | 15-03-2023 | 14:53:31:35 | DEVELOPMENT | V.2.0.10 | SOCKET.IO_SERVER | server socket io create event connection
+DKA | 15-03-2023 | 14:53:31:35 | DEVELOPMENT | V.2.0.10 | SOCKET.IO_SERVER | proccess binding SIGHUP registering ...
+DKA | 15-03-2023 | 14:53:31:35 | DEVELOPMENT | V.2.0.10 | SOCKET.IO_SERVER | server socket io checking pointing defined or not
+
+DKA | 15-03-2023 | 14:56:25:56 | DEVELOPMENT | V.2.0.10 | SOCKET.IO_SERVER | starting socket.io server engine.
+DKA | 15-03-2023 | 14:56:25:56 | DEVELOPMENT | V.2.0.10 | SOCKET.IO_SERVER | checking server protocol
+DKA | 15-03-2023 | 14:56:25:56 | DEVELOPMENT | V.2.0.10 | SOCKET.IO_SERVER | server socket io with http protocol is selected
+DKA | 15-03-2023 | 14:56:25:56 | DEVELOPMENT | V.2.0.10 | SOCKET.IO_SERVER | socket.io server binding to protocol server http or https
+DKA | 15-03-2023 | 14:56:25:57 | DEVELOPMENT | V.2.0.10 | SOCKET.IO_SERVER | server socket io checking costum middleware
+DKA | 15-03-2023 | 14:56:25:57 | DEVELOPMENT | V.2.0.10 | SOCKET.IO_SERVER | server socket io costumMiddleware default config
+DKA | 15-03-2023 | 14:56:25:57 | DEVELOPMENT | V.2.0.10 | SOCKET.IO_SERVER | server socket io create event connection
+DKA | 15-03-2023 | 14:56:25:57 | DEVELOPMENT | V.2.0.10 | SOCKET.IO_SERVER | proccess binding SIGHUP registering ...
+DKA | 15-03-2023 | 14:56:25:57 | DEVELOPMENT | V.2.0.10 | SOCKET.IO_SERVER | server socket io checking pointing defined or not
+
+DKA | 15-03-2023 | 14:59:38:63 | DEVELOPMENT | V.2.0.10 | SOCKET.IO_SERVER | starting socket.io server engine.
+DKA | 15-03-2023 | 14:59:38:63 | DEVELOPMENT | V.2.0.10 | SOCKET.IO_SERVER | checking server protocol
+DKA | 15-03-2023 | 14:59:38:63 | DEVELOPMENT | V.2.0.10 | SOCKET.IO_SERVER | server socket io with http protocol is selected
+DKA | 15-03-2023 | 14:59:38:63 | DEVELOPMENT | V.2.0.10 | SOCKET.IO_SERVER | socket.io server binding to protocol server http or https
+DKA | 15-03-2023 | 14:59:38:63 | DEVELOPMENT | V.2.0.10 | SOCKET.IO_SERVER | server socket io checking costum middleware
+DKA | 15-03-2023 | 14:59:38:63 | DEVELOPMENT | V.2.0.10 | SOCKET.IO_SERVER | server socket io costumMiddleware default config
+DKA | 15-03-2023 | 14:59:38:63 | DEVELOPMENT | V.2.0.10 | SOCKET.IO_SERVER | server socket io create event connection
+DKA | 15-03-2023 | 14:59:38:63 | DEVELOPMENT | V.2.0.10 | SOCKET.IO_SERVER | proccess binding SIGHUP registering ...
+DKA | 15-03-2023 | 14:59:38:63 | DEVELOPMENT | V.2.0.10 | SOCKET.IO_SERVER | server socket io checking pointing defined or not
+DKA | 15-03-2023 | 14:59:40:40 | DEVELOPMENT | V.2.0.10 | SOCKET.IO_SERVER | socket.io server started ngrok binding services https://7e47-125-162-215-179.ngrok.io :: http://7e47-125-162-215-179.ngrok.io
+
+DKA | 15-03-2023 | 15:03:31:47 | DEVELOPMENT | V.2.0.10 | SOCKET.IO_SERVER | starting socket.io server engine.
+DKA | 15-03-2023 | 15:03:31:47 | DEVELOPMENT | V.2.0.10 | SOCKET.IO_SERVER | checking server protocol
+DKA | 15-03-2023 | 15:03:31:47 | DEVELOPMENT | V.2.0.10 | SOCKET.IO_SERVER | server socket io with http protocol is selected
+DKA | 15-03-2023 | 15:03:31:47 | DEVELOPMENT | V.2.0.10 | SOCKET.IO_SERVER | socket.io server binding to protocol server http or https
+DKA | 15-03-2023 | 15:03:31:48 | DEVELOPMENT | V.2.0.10 | SOCKET.IO_SERVER | server socket io checking costum middleware
+DKA | 15-03-2023 | 15:03:31:48 | DEVELOPMENT | V.2.0.10 | SOCKET.IO_SERVER | server socket io costumMiddleware default config
+DKA | 15-03-2023 | 15:03:31:48 | DEVELOPMENT | V.2.0.10 | SOCKET.IO_SERVER | server socket io create event connection
+DKA | 15-03-2023 | 15:03:31:48 | DEVELOPMENT | V.2.0.10 | SOCKET.IO_SERVER | proccess binding SIGHUP registering ...
+DKA | 15-03-2023 | 15:03:31:48 | DEVELOPMENT | V.2.0.10 | SOCKET.IO_SERVER | server socket io checking pointing defined or not
+
+DKA | 15-03-2023 | 15:04:43:26 | DEVELOPMENT | V.2.0.10 | SOCKET.IO_SERVER | starting socket.io server engine.
+DKA | 15-03-2023 | 15:04:43:27 | DEVELOPMENT | V.2.0.10 | SOCKET.IO_SERVER | checking server protocol
+DKA | 15-03-2023 | 15:04:43:27 | DEVELOPMENT | V.2.0.10 | SOCKET.IO_SERVER | server socket io with http protocol is selected
+DKA | 15-03-2023 | 15:04:43:27 | DEVELOPMENT | V.2.0.10 | SOCKET.IO_SERVER | socket.io server binding to protocol server http or https
+DKA | 15-03-2023 | 15:04:43:27 | DEVELOPMENT | V.2.0.10 | SOCKET.IO_SERVER | server socket io checking costum middleware
+DKA | 15-03-2023 | 15:04:43:27 | DEVELOPMENT | V.2.0.10 | SOCKET.IO_SERVER | server socket io costumMiddleware default config
+DKA | 15-03-2023 | 15:04:43:27 | DEVELOPMENT | V.2.0.10 | SOCKET.IO_SERVER | server socket io create event connection
+DKA | 15-03-2023 | 15:04:43:27 | DEVELOPMENT | V.2.0.10 | SOCKET.IO_SERVER | proccess binding SIGHUP registering ...
+DKA | 15-03-2023 | 15:04:43:27 | DEVELOPMENT | V.2.0.10 | SOCKET.IO_SERVER | server socket io checking pointing defined or not
+
+DKA | 15-03-2023 | 15:05:14:81 | DEVELOPMENT | V.2.0.10 | SOCKET.IO_SERVER | starting socket.io server engine.
+DKA | 15-03-2023 | 15:05:14:81 | DEVELOPMENT | V.2.0.10 | SOCKET.IO_SERVER | checking server protocol
+DKA | 15-03-2023 | 15:05:14:81 | DEVELOPMENT | V.2.0.10 | SOCKET.IO_SERVER | server socket io with http protocol is selected
+DKA | 15-03-2023 | 15:05:14:81 | DEVELOPMENT | V.2.0.10 | SOCKET.IO_SERVER | socket.io server binding to protocol server http or https
+DKA | 15-03-2023 | 15:05:14:82 | DEVELOPMENT | V.2.0.10 | SOCKET.IO_SERVER | server socket io checking costum middleware
+DKA | 15-03-2023 | 15:05:14:82 | DEVELOPMENT | V.2.0.10 | SOCKET.IO_SERVER | server socket io costumMiddleware default config
+DKA | 15-03-2023 | 15:05:14:82 | DEVELOPMENT | V.2.0.10 | SOCKET.IO_SERVER | server socket io create event connection
+DKA | 15-03-2023 | 15:05:14:82 | DEVELOPMENT | V.2.0.10 | SOCKET.IO_SERVER | proccess binding SIGHUP registering ...
+DKA | 15-03-2023 | 15:05:14:82 | DEVELOPMENT | V.2.0.10 | SOCKET.IO_SERVER | server socket io checking pointing defined or not
+
+DKA | 15-03-2023 | 15:07:19:77 | DEVELOPMENT | V.2.0.10 | SOCKET.IO_SERVER | starting socket.io server engine.
+DKA | 15-03-2023 | 15:07:19:77 | DEVELOPMENT | V.2.0.10 | SOCKET.IO_SERVER | checking server protocol
+DKA | 15-03-2023 | 15:07:19:77 | DEVELOPMENT | V.2.0.10 | SOCKET.IO_SERVER | server socket io with http protocol is selected
+DKA | 15-03-2023 | 15:07:19:77 | DEVELOPMENT | V.2.0.10 | SOCKET.IO_SERVER | socket.io server binding to protocol server http or https
+DKA | 15-03-2023 | 15:07:19:78 | DEVELOPMENT | V.2.0.10 | SOCKET.IO_SERVER | server socket io checking costum middleware
+DKA | 15-03-2023 | 15:07:19:78 | DEVELOPMENT | V.2.0.10 | SOCKET.IO_SERVER | server socket io costumMiddleware default config
+DKA | 15-03-2023 | 15:07:19:78 | DEVELOPMENT | V.2.0.10 | SOCKET.IO_SERVER | server socket io create event connection
+DKA | 15-03-2023 | 15:07:19:78 | DEVELOPMENT | V.2.0.10 | SOCKET.IO_SERVER | proccess binding SIGHUP registering ...
+DKA | 15-03-2023 | 15:07:19:78 | DEVELOPMENT | V.2.0.10 | SOCKET.IO_SERVER | server socket io checking pointing defined or not
+
+DKA | 15-03-2023 | 15:07:48:20 | DEVELOPMENT | V.2.0.10 | SOCKET.IO_SERVER | starting socket.io server engine.
+DKA | 15-03-2023 | 15:07:48:21 | DEVELOPMENT | V.2.0.10 | SOCKET.IO_SERVER | checking server protocol
+DKA | 15-03-2023 | 15:07:48:21 | DEVELOPMENT | V.2.0.10 | SOCKET.IO_SERVER | server socket io with http protocol is selected
+DKA | 15-03-2023 | 15:07:48:21 | DEVELOPMENT | V.2.0.10 | SOCKET.IO_SERVER | socket.io server binding to protocol server http or https
+DKA | 15-03-2023 | 15:07:48:21 | DEVELOPMENT | V.2.0.10 | SOCKET.IO_SERVER | server socket io checking costum middleware
+DKA | 15-03-2023 | 15:07:48:21 | DEVELOPMENT | V.2.0.10 | SOCKET.IO_SERVER | server socket io costumMiddleware default config
+DKA | 15-03-2023 | 15:07:48:21 | DEVELOPMENT | V.2.0.10 | SOCKET.IO_SERVER | server socket io create event connection
+DKA | 15-03-2023 | 15:07:48:21 | DEVELOPMENT | V.2.0.10 | SOCKET.IO_SERVER | proccess binding SIGHUP registering ...
+DKA | 15-03-2023 | 15:07:48:21 | DEVELOPMENT | V.2.0.10 | SOCKET.IO_SERVER | server socket io checking pointing defined or not
+
+DKA | 15-03-2023 | 15:08:22:58 | DEVELOPMENT | V.2.0.10 | SOCKET.IO_SERVER | starting socket.io server engine.
+DKA | 15-03-2023 | 15:08:22:58 | DEVELOPMENT | V.2.0.10 | SOCKET.IO_SERVER | checking server protocol
+DKA | 15-03-2023 | 15:08:22:58 | DEVELOPMENT | V.2.0.10 | SOCKET.IO_SERVER | server socket io with http protocol is selected
+DKA | 15-03-2023 | 15:08:22:59 | DEVELOPMENT | V.2.0.10 | SOCKET.IO_SERVER | socket.io server binding to protocol server http or https
+DKA | 15-03-2023 | 15:08:22:59 | DEVELOPMENT | V.2.0.10 | SOCKET.IO_SERVER | server socket io checking costum middleware
+DKA | 15-03-2023 | 15:08:22:59 | DEVELOPMENT | V.2.0.10 | SOCKET.IO_SERVER | server socket io costumMiddleware default config
+DKA | 15-03-2023 | 15:08:22:59 | DEVELOPMENT | V.2.0.10 | SOCKET.IO_SERVER | server socket io create event connection
+DKA | 15-03-2023 | 15:08:22:59 | DEVELOPMENT | V.2.0.10 | SOCKET.IO_SERVER | proccess binding SIGHUP registering ...
+DKA | 15-03-2023 | 15:08:22:59 | DEVELOPMENT | V.2.0.10 | SOCKET.IO_SERVER | server socket io checking pointing defined or not
+
+DKA | 15-03-2023 | 15:10:41:33 | DEVELOPMENT | V.2.0.10 | SOCKET.IO_SERVER | starting socket.io server engine.
+DKA | 15-03-2023 | 15:10:41:33 | DEVELOPMENT | V.2.0.10 | SOCKET.IO_SERVER | checking server protocol
+DKA | 15-03-2023 | 15:10:41:33 | DEVELOPMENT | V.2.0.10 | SOCKET.IO_SERVER | server socket io with http protocol is selected
+DKA | 15-03-2023 | 15:10:41:33 | DEVELOPMENT | V.2.0.10 | SOCKET.IO_SERVER | socket.io server binding to protocol server http or https
+DKA | 15-03-2023 | 15:10:41:34 | DEVELOPMENT | V.2.0.10 | SOCKET.IO_SERVER | server socket io checking costum middleware
+DKA | 15-03-2023 | 15:10:41:34 | DEVELOPMENT | V.2.0.10 | SOCKET.IO_SERVER | server socket io costumMiddleware default config
+DKA | 15-03-2023 | 15:10:41:34 | DEVELOPMENT | V.2.0.10 | SOCKET.IO_SERVER | server socket io create event connection
+DKA | 15-03-2023 | 15:10:41:34 | DEVELOPMENT | V.2.0.10 | SOCKET.IO_SERVER | proccess binding SIGHUP registering ...
+DKA | 15-03-2023 | 15:10:41:34 | DEVELOPMENT | V.2.0.10 | SOCKET.IO_SERVER | server socket io checking pointing defined or not
+DKA | 15-03-2023 | 15:10:42:63 | DEVELOPMENT | V.2.0.10 | SOCKET.IO_SERVER | ngrok service failed to start. error_code : 103, status_code : 502, details : session closed
+
+DKA | 15-03-2023 | 15:10:55:84 | DEVELOPMENT | V.2.0.10 | SOCKET.IO_SERVER | starting socket.io server engine.
+DKA | 15-03-2023 | 15:10:55:84 | DEVELOPMENT | V.2.0.10 | SOCKET.IO_SERVER | checking server protocol
+DKA | 15-03-2023 | 15:10:55:84 | DEVELOPMENT | V.2.0.10 | SOCKET.IO_SERVER | server socket io with http protocol is selected
+DKA | 15-03-2023 | 15:10:55:84 | DEVELOPMENT | V.2.0.10 | SOCKET.IO_SERVER | socket.io server binding to protocol server http or https
+DKA | 15-03-2023 | 15:10:55:85 | DEVELOPMENT | V.2.0.10 | SOCKET.IO_SERVER | server socket io checking costum middleware
+DKA | 15-03-2023 | 15:10:55:85 | DEVELOPMENT | V.2.0.10 | SOCKET.IO_SERVER | server socket io costumMiddleware default config
+DKA | 15-03-2023 | 15:10:55:85 | DEVELOPMENT | V.2.0.10 | SOCKET.IO_SERVER | server socket io create event connection
+DKA | 15-03-2023 | 15:10:55:85 | DEVELOPMENT | V.2.0.10 | SOCKET.IO_SERVER | proccess binding SIGHUP registering ...
+DKA | 15-03-2023 | 15:10:55:85 | DEVELOPMENT | V.2.0.10 | SOCKET.IO_SERVER | server socket io checking pointing defined or not
+DKA | 15-03-2023 | 15:10:56:93 | DEVELOPMENT | V.2.0.10 | SOCKET.IO_SERVER | ngrok service failed to start. error_code : 103, status_code : 502, details : remote gone away
+
+DKA | 15-03-2023 | 15:14:03:44 | DEVELOPMENT | V.2.0.10 | SOCKET.IO_SERVER | starting socket.io server engine.
+DKA | 15-03-2023 | 15:14:03:44 | DEVELOPMENT | V.2.0.10 | SOCKET.IO_SERVER | checking server protocol
+DKA | 15-03-2023 | 15:14:03:44 | DEVELOPMENT | V.2.0.10 | SOCKET.IO_SERVER | server socket io with http protocol is selected
+DKA | 15-03-2023 | 15:14:03:44 | DEVELOPMENT | V.2.0.10 | SOCKET.IO_SERVER | socket.io server binding to protocol server http or https
+DKA | 15-03-2023 | 15:14:03:45 | DEVELOPMENT | V.2.0.10 | SOCKET.IO_SERVER | server socket io checking costum middleware
+DKA | 15-03-2023 | 15:14:03:45 | DEVELOPMENT | V.2.0.10 | SOCKET.IO_SERVER | server socket io costumMiddleware default config
+DKA | 15-03-2023 | 15:14:03:45 | DEVELOPMENT | V.2.0.10 | SOCKET.IO_SERVER | server socket io create event connection
+DKA | 15-03-2023 | 15:14:03:45 | DEVELOPMENT | V.2.0.10 | SOCKET.IO_SERVER | proccess binding SIGHUP registering ...
+DKA | 15-03-2023 | 15:14:03:45 | DEVELOPMENT | V.2.0.10 | SOCKET.IO_SERVER | server socket io checking pointing defined or not
+DKA | 15-03-2023 | 15:14:05:07 | DEVELOPMENT | V.2.0.10 | SOCKET.IO_SERVER | socket.io server started ngrok binding services http://615c-125-162-215-179.ngrok.io :: https://615c-125-162-215-179.ngrok.io
