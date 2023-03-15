@@ -1,5 +1,4 @@
 import Database, {Firestore, MariaDB, MongoDB} from "./../src";
-import path from "path";
 
 
 (async () => {
