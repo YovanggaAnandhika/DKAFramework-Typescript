@@ -1,7 +1,7 @@
-import {estimationCostFromTime} from "../src";
+import utils from "../src";
 
 /** **/
-let data = estimationCostFromTime({
+let data = utils.Functions.Component.TimeManagement.estimationCostFromTime({
     data : {
         hours : 2,
         days : 4
