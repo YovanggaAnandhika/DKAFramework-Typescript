@@ -1,5 +1,6 @@
 import {estimationCostFromTime} from "../src";
 
+/** **/
 let data = estimationCostFromTime({
     data : {
         hours : 2,

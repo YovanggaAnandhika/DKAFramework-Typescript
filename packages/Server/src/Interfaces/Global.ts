@@ -51,7 +51,7 @@ export interface ConfigSystemLogger {
 }
 
 export interface MultiplePluginsServerNgrokSettings extends Ngrok.Options {
-
+    onComplete ?: (status : "connected" | "closed", tunnels  ?: Ngrok.Tunnel[]) => Promise<void> | void | undefined
 }
 
 export interface MultiplePluginsServerNgrok {

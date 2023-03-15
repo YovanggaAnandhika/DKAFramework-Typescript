@@ -64,6 +64,7 @@ export const SOCKET_IO = async (config: ConfigSocketIO, logger: Logger): Promise
                         mNgrokUrl = (config.plugins.ngrok.settings !== undefined) ? await NgrokConnect(mMergeredNgrokSettings) : await NgrokConnect();
                         mNgrokClient = await NgrokGetApi();
                         let de = await mNgrokClient?.listTunnels();
+                        await config.plugins.ngrok.settings?.onComplete?.("connected", de?.tunnels)
                         await logger.info(`socket.io server started ngrok binding services ${de?.tunnels[0].public_url} :: ${de?.tunnels[1].public_url}`);
                     }catch (e : any) {
                         logger.error(`ngrok service failed to start. error_code : ${e.body.error_code}, status_code : ${e.body.status_code}, details : ${e.body.details.err}`);
@@ -89,6 +90,7 @@ export const SOCKET_IO = async (config: ConfigSocketIO, logger: Logger): Promise
                         mNgrokUrl = (config.plugins.ngrok.settings !== undefined) ? await NgrokConnect(mMergeredNgrokSettings) : await NgrokConnect();
                         mNgrokClient = await NgrokGetApi();
                         let de = await mNgrokClient?.listTunnels();
+                        await config.plugins.ngrok.settings?.onComplete?.("connected", de?.tunnels)
                         await logger.info(`socket.io server started ngrok binding services ${de?.tunnels[0].public_url} :: ${de?.tunnels[1].public_url}`);
                     }catch (e : any) {
                         logger.error(`ngrok service failed to start. error_code : ${e.body.error_code}, status_code : ${e.body.status_code}, details : ${e.body.details.err}`);
@@ -114,6 +116,7 @@ export const SOCKET_IO = async (config: ConfigSocketIO, logger: Logger): Promise
                         mNgrokUrl = (config.plugins.ngrok.settings !== undefined) ? await NgrokConnect(mMergeredNgrokSettings) : await NgrokConnect();
                         mNgrokClient = await NgrokGetApi();
                         let de = await mNgrokClient?.listTunnels();
+                        await config.plugins.ngrok.settings?.onComplete?.("connected", de?.tunnels)
                         await logger.info(`socket.io server started ngrok binding services ${de?.tunnels[0].public_url} :: ${de?.tunnels[1].public_url}`);
                     }catch (e : any) {
                         logger.error(`ngrok service failed to start. error_code : ${e.body.error_code}, status_code : ${e.body.status_code}, details : ${e.body.details.err}`);

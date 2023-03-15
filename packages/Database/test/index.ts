@@ -3,6 +3,7 @@ import Database, {Firestore, MariaDB, MongoDB} from "./../src";
 
 (async () => {
 
+    /** **/
     let db = new MariaDB({
         encryption : {}
     })
