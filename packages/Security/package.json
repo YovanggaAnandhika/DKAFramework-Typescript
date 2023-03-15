@@ -10,6 +10,7 @@
     "test": "nodemon --watch src --watch test --exec ts-node test/index.ts",
     "clean": "rimraf dist",
     "compile": "tsc --build",
+    "build": "yarn run clean && yarn run compile",
     "prepublish": "yarn run clean && yarn run compile",
     "login": "npm login"
   },
