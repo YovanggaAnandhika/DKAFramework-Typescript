@@ -1,4 +1,5 @@
 import http from "http";
+import { Ngrok } from "ngrok";
 
 import {EngineFastify, EngineReactJS, EngineSocketIO, EngineSocketIOClient, LOGGER_LEVEL,} from "../Type/types";
 
@@ -49,7 +50,7 @@ export interface ConfigSystemLogger {
     path?: ConfigSystemLoggerPath
 }
 
-export interface MultiplePluginsServerNgrokSettings {
+export interface MultiplePluginsServerNgrokSettings extends Ngrok.Options {
     authToken: string | undefined,
     proto: "tcp" | "http" | "tls"
 }

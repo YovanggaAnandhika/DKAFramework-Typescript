@@ -46,6 +46,7 @@
     "action:copy": "tscp",
     "testd": "electron test/test-electron.js",
     "build": "yarn run action:clean && yarn run action:compile && yarn run action:copy",
+    "prepublish": "yarn run action:clean && yarn run action:compile && yarn run action:copy",
     "login": "npm login"
   },
   "dependencies": {

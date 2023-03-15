@@ -14,7 +14,7 @@
     "dev-test": "nodemon --watch src --watch test --exec ts-node test/index.ts",
     "clean": "rimraf dist",
     "compile": "tsc --build",
-    "build": "yarn run clean && yarn run compile"
+    "prepublish": "yarn run clean && yarn run compile"
   },
   "dependencies": {
     "@dkaframework/security": "^2.0.8",

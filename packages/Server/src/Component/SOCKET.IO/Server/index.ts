@@ -10,6 +10,8 @@ import {DefaultEventsMap} from "socket.io/dist/typed-events";
 import {Logger} from "winston";
 import {FastifyInstance} from "fastify";
 import FastifySocketIOEngine from "./Component/FASTIFY";
+import {Ngrok, NgrokClient} from "ngrok";
+const ngrok = require("ngrok")
 
 const encryptSocket = require('socket.io-encrypt')
 
@@ -24,6 +26,8 @@ const encryptSocket = require('socket.io-encrypt')
 
 let mClientList: Array<Socket<DefaultEventsMap, DefaultEventsMap, any>> = [];
 let mAllClientListTotal: number = 0;
+let mNgrokUrl : string = ``;
+let mNgrokClient : NgrokClient;
 let io: Server<DefaultEventsMap, DefaultEventsMap, DefaultEventsMap, any>;
 let mScopeSocket: ConfigSocketIONamespaceGetClientConnected = {};
 
@@ -47,20 +51,44 @@ export const SOCKET_IO = async (config: ConfigSocketIO, logger: Logger): Promise
                 await mHttp.register(config?.options?.server?.app)
             }*/
             let mFastify = await FastifySocketIOEngine(config.options?.server, logger)
+            mFastify.server.on("listening", async () => {
+                if (config.plugins?.ngrok?.enabled){
+                    mNgrokUrl = (config.plugins.ngrok.settings !== undefined) ? ngrok.connect(config.plugins.ngrok.settings) : await ngrok.connect();
+                    mNgrokClient = await ngrok.getApi();
+                    let de = await mNgrokClient.listTunnels();
+                    await logger.info(`socket.io server started ngrok binding services ${de.tunnels[0].public_url} :: ${de.tunnels[1].public_url}`);
+                }
+            });
             io = new Server(mFastify.server, config.options?.socket);
             break;
         case "HTTPS" :
             logger.info(`server socket io with https protocol is selected`)
             mHttp = (config.options?.server?.settings !== undefined) ?
                 createSecureServer(config.options?.server?.settings) : createSecureServer();
-            logger.info(`socket.io server binding to protocol server http or https`)
+            logger.info(`socket.io server binding to protocol server http or https`);
+            mHttp.on("listening", async () => {
+                if (config.plugins?.ngrok?.enabled){
+                    mNgrokUrl = (config.plugins.ngrok.settings !== undefined) ? ngrok.connect(config.plugins.ngrok.settings) : await ngrok.connect();
+                    mNgrokClient = await ngrok.getApi();
+                    let de = await mNgrokClient.listTunnels();
+                    await logger.info(`socket.io server started ngrok binding services ${de.tunnels[0].public_url} :: ${de.tunnels[1].public_url}`);
+                }
+            });
             io = new Server(mHttp, config.options?.socket);
             break;
         default :
             logger.info(`server socket io with http protocol is selected`)
             mHttp = (config.options?.server?.settings !== undefined) ?
                 createServer(config.options?.server?.settings as mHTTPServerOptions) : createServer();
-            logger.info(`socket.io server binding to protocol server http or https`)
+            logger.info(`socket.io server binding to protocol server http or https`);
+            mHttp.on("listening", async () => {
+                if (config.plugins?.ngrok?.enabled){
+                    mNgrokUrl = (config.plugins.ngrok.settings !== undefined) ? ngrok.connect(config.plugins.ngrok.settings) : await ngrok.connect();
+                    mNgrokClient = await ngrok.getApi();
+                    let de = await mNgrokClient.listTunnels();
+                    await logger.info(`socket.io server started ngrok binding services ${de.tunnels[0].public_url} :: ${de.tunnels[1].public_url}`);
+                }
+            });
             io = new Server(mHttp, config.options?.socket);
 
     }
