@@ -10,8 +10,7 @@ import {DefaultEventsMap} from "socket.io/dist/typed-events";
 import {Logger} from "winston";
 import {FastifyInstance} from "fastify";
 import FastifySocketIOEngine from "./Component/FASTIFY";
-import {Ngrok, NgrokClient} from "ngrok";
-const ngrok = require("ngrok")
+import {Ngrok, NgrokClient, connect as NgrokConnect, getApi as NgrokGetApi } from "ngrok";
 
 const encryptSocket = require('socket.io-encrypt')
 
@@ -26,8 +25,8 @@ const encryptSocket = require('socket.io-encrypt')
 
 let mClientList: Array<Socket<DefaultEventsMap, DefaultEventsMap, any>> = [];
 let mAllClientListTotal: number = 0;
-let mNgrokUrl : string = ``;
-let mNgrokClient : NgrokClient;
+let mNgrokUrl : string;
+let mNgrokClient : NgrokClient | null = null;
 let io: Server<DefaultEventsMap, DefaultEventsMap, DefaultEventsMap, any>;
 let mScopeSocket: ConfigSocketIONamespaceGetClientConnected = {};
 
@@ -53,10 +52,10 @@ export const SOCKET_IO = async (config: ConfigSocketIO, logger: Logger): Promise
             let mFastify = await FastifySocketIOEngine(config.options?.server, logger)
             mFastify.server.on("listening", async () => {
                 if (config.plugins?.ngrok?.enabled){
-                    mNgrokUrl = (config.plugins.ngrok.settings !== undefined) ? ngrok.connect(config.plugins.ngrok.settings) : await ngrok.connect();
-                    mNgrokClient = await ngrok.getApi();
-                    let de = await mNgrokClient.listTunnels();
-                    await logger.info(`socket.io server started ngrok binding services ${de.tunnels[0].public_url} :: ${de.tunnels[1].public_url}`);
+                    mNgrokUrl = (config.plugins.ngrok.settings !== undefined) ? await NgrokConnect(config.plugins.ngrok.settings) : await NgrokConnect();
+                    mNgrokClient = await NgrokGetApi();
+                    let de = await mNgrokClient?.listTunnels();
+                    await logger.info(`socket.io server started ngrok binding services ${de?.tunnels[0].public_url} :: ${de?.tunnels[1].public_url}`);
                 }
             });
             io = new Server(mFastify.server, config.options?.socket);
@@ -66,12 +65,13 @@ export const SOCKET_IO = async (config: ConfigSocketIO, logger: Logger): Promise
             mHttp = (config.options?.server?.settings !== undefined) ?
                 createSecureServer(config.options?.server?.settings) : createSecureServer();
             logger.info(`socket.io server binding to protocol server http or https`);
+
             mHttp.on("listening", async () => {
                 if (config.plugins?.ngrok?.enabled){
-                    mNgrokUrl = (config.plugins.ngrok.settings !== undefined) ? ngrok.connect(config.plugins.ngrok.settings) : await ngrok.connect();
-                    mNgrokClient = await ngrok.getApi();
-                    let de = await mNgrokClient.listTunnels();
-                    await logger.info(`socket.io server started ngrok binding services ${de.tunnels[0].public_url} :: ${de.tunnels[1].public_url}`);
+                    mNgrokUrl = (config.plugins.ngrok.settings !== undefined) ? await NgrokConnect(config.plugins.ngrok.settings) : await NgrokConnect();
+                    mNgrokClient = await NgrokGetApi();
+                    let de = await mNgrokClient?.listTunnels();
+                    await logger.info(`socket.io server started ngrok binding services ${de?.tunnels[0].public_url} :: ${de?.tunnels[1].public_url}`);
                 }
             });
             io = new Server(mHttp, config.options?.socket);
@@ -83,10 +83,10 @@ export const SOCKET_IO = async (config: ConfigSocketIO, logger: Logger): Promise
             logger.info(`socket.io server binding to protocol server http or https`);
             mHttp.on("listening", async () => {
                 if (config.plugins?.ngrok?.enabled){
-                    mNgrokUrl = (config.plugins.ngrok.settings !== undefined) ? ngrok.connect(config.plugins.ngrok.settings) : await ngrok.connect();
-                    mNgrokClient = await ngrok.getApi();
-                    let de = await mNgrokClient.listTunnels();
-                    await logger.info(`socket.io server started ngrok binding services ${de.tunnels[0].public_url} :: ${de.tunnels[1].public_url}`);
+                    mNgrokUrl = (config.plugins.ngrok.settings !== undefined) ? await NgrokConnect(config.plugins.ngrok.settings) : await NgrokConnect();
+                    mNgrokClient = await NgrokGetApi();
+                    let de = await mNgrokClient?.listTunnels();
+                    await logger.info(`socket.io server started ngrok binding services ${de?.tunnels[0].public_url} :: ${de?.tunnels[1].public_url}`);
                 }
             });
             io = new Server(mHttp, config.options?.socket);
