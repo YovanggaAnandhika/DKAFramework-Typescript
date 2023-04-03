@@ -5,6 +5,7 @@ import http from "http";
 import {FastifyBaseLogger} from "fastify/types/logger";
 import {GlobalConfig} from "./Global";
 import {FastifyServerOptions} from "fastify";
+import {ServerOptions} from "socket.io";
 
 export interface ConfigServerFastifySettingsNodemon {
     enabled?: boolean,
@@ -58,10 +59,19 @@ export interface ConfigServerFastifyPluginsFormBody {
     settings?: ConfigServerFastifyPluginsFormBodySettings
 }
 
+export interface ConfigServerFastifyPluginsSocketIOServerSettings extends Partial<ServerOptions> {
+
+}
+export interface ConfigServerFastifyPluginsSocketIOServer {
+    enabled ?: boolean,
+    settings ?: ConfigServerFastifyPluginsSocketIOServerSettings
+}
+
 export interface ConfigServerFastifyPlugins extends MultiplePluginsServer {
     pointOfView?: ConfigServerFastifyPluginsPointOfView,
     static?: ConfigServerFastifyPluginsStatic,
-    formBody?: ConfigServerFastifyPluginsFormBody
+    formBody?: ConfigServerFastifyPluginsFormBody,
+    socketIO ?: ConfigServerFastifyPluginsSocketIOServer
 }
 
 export interface ConfigFastify extends GlobalConfig {

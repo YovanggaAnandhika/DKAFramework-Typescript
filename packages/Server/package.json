@@ -33,7 +33,6 @@
   "private": false,
   "scripts": {
     "test:socketio:client": "nodemon --watch src --watch test/Socket.Io/client.ts --exec ts-node test/Socket.Io/client.ts",
-    "test:socketio:client2": "ts-node test/Socket.Io/client2.ts",
     "test:socketio:server": "ts-node test/Socket.Io/server.ts",
     "test:react": "ts-node test/REACT/index.ts",
     "test:fastify": "ts-node test/FASTIFY/index.ts",
@@ -65,6 +64,7 @@
     "@types/react": "^18.0.20",
     "@types/react-dom": "^18.0.6",
     "@types/tcp-port-used": "^1.0.1",
+    "@types/ws": "^8.5.4",
     "ansi-colors": "^4.1.3",
     "babel-loader": "^8.2.5",
     "cli-progress": "^3.11.2",
@@ -107,7 +107,8 @@
     "universal-cookie": "^4.0.4",
     "webpack": "^5.74.0",
     "webpack-dev-server": "^4.11.0",
-    "winston": "^3.8.1"
+    "winston": "^3.8.1",
+    "ws": "^8.13.0"
   },
   "devDependencies": {
     "@fastify/view": "^7.1.0",

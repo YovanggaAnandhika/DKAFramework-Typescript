@@ -1,6 +1,8 @@
 import {FastifyInstance} from "fastify";
 import {ConfigFastify} from "../../../Interfaces/Config/Fastify";
 import {Logger} from "winston";
+import ngrok from "ngrok";
+import {Server} from "socket.io";
 
 function checkModuleExist(name : string){
     try {
@@ -237,6 +239,49 @@ export async function ServerNgrokTunnelingInstance(config: ConfigFastify, logger
             }
         } else {
             logger.info(`ngrok plugin not undefined. skipped module register`)
+            await resolve(app);
+        }
+    })
+}
+
+export async function ServerSocketIOInstance(config: ConfigFastify, logger: Logger, app: FastifyInstance): Promise<FastifyInstance> {
+    return new Promise(async (resolve, rejected) => {
+        if (config.plugins?.socketIO !== undefined) {
+            logger.info("socket.io server undefined not undefined. start checking `ngrok` module resolution.")
+            if (config.plugins?.socketIO?.enabled) {
+                /** ================= DEBUG CONSOLE ======================= **/
+                logger.info("plugin socket.io server is enabled. start checking `socket.io` module resolution.")
+                /** ================= DEBUG CONSOLE ======================= **/
+                if (checkModuleExist("socket.io")) {
+                    logger.info("plugins socket.io is enabled. socket.io module is exist.")
+                    if (config.plugins.socketIO.settings) {
+                        logger.info("plugins socket.io is enabled. socket.io module is exist. settings is exist")
+                        const socketIO = new Server(app.server, config.plugins.socketIO.settings)
+                        let m = await app.decorate("socketIO", socketIO);
+                    } else {
+                        logger.warning("plugins socket.io is enabled. socket.io module is exist. settings not declaration")
+                        await rejected({
+                            status: false,
+                            code: 500,
+                            msg: `socket.io is Enabled, but plugins.socketIO.settings. not declare`
+                        });
+                    }
+                } else {
+                    /** ================= DEBUG CONSOLE ======================= **/
+                    logger.warning("plugin socket.io is enabled. but module `socket.io` is not found. skipped")
+                    /** ================= DEBUG CONSOLE ======================= **/
+                    await rejected({
+                        status: false,
+                        code: 500,
+                        msg: `plugin socket.io enabled. but module not found. skipped`
+                    })
+                }
+            } else {
+                logger.info(`socket.io plugin not enabled. skipped module register`)
+                await resolve(app);
+            }
+        } else {
+            logger.info(`socket.io plugin not undefined. skipped module register`)
             await resolve(app);
         }
     })

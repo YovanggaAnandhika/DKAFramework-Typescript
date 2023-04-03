@@ -6,7 +6,7 @@ import {attempt, merge, reject, size} from "lodash";
 import {Logger} from "winston";
 import ping from "ping";
 
-const encryptSocket = require('socket.io-encrypt')
+const encryptSocket = require('socket.io-encrypt');
 
 export const SOCKET_IO_CLIENT = async (config: ConfigSocketIOClient, logger: Logger): Promise<Socket> => {
 

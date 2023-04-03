@@ -4,7 +4,13 @@ import {Options, Server} from "../src";
     await Server({
         engine : "FASTIFY",
         port : 381,
+        app : async (app, opts, next) => {
+
+        },
         plugins : {
+            socketIO : {
+
+            },
             ngrok : {
                 enabled : true,
                 settings : {
@@ -14,7 +20,7 @@ import {Options, Server} from "../src";
             }
         }
     }).then(async (result) => {
-        console.log(result)
+
     }).catch(async (e) => {
         console.error(e);
     })
