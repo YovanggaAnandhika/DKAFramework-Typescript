@@ -9,6 +9,4 @@ export interface GlobalConfigInterfaces extends Object {
     port ?: number | undefined
 }
 
-export interface ConfigServerInterfaces<engine extends FASTIFY_ENGINE | SOCKET_ENGINE = SOCKET_ENGINE> extends GlobalConfigInterfaces {
-    engine ?: engine
-}
+export type ConfigServerInterfaces = ConfigSocketIOServer | ConfigFastifyServer

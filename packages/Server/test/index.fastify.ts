@@ -1,9 +1,9 @@
-import { Server } from "../src";
+import { Server, Options} from "../src";
 
 (async () => {
     await Server({
-        engine :
+        engine : Options.ENGINE.SOCKETIO,
     }).then(async (result) => {
-
+        result
     })
 })();
