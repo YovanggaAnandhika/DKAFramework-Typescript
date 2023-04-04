@@ -2,7 +2,7 @@ import { Server } from "../src";
 
 (async () => {
     await Server({
-        engine : "SOCKET.IO"
+        engine :
     }).then(async (result) => {
 
     })
