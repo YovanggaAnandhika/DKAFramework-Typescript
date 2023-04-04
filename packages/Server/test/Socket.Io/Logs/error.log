@@ -1,2 +1,0 @@
-DKA | 15-03-2023 | 15:10:42:63 | DEVELOPMENT | V.2.0.10 | SOCKET.IO_SERVER | ngrok service failed to start. error_code : 103, status_code : 502, details : session closed
-DKA | 15-03-2023 | 15:10:56:93 | DEVELOPMENT | V.2.0.10 | SOCKET.IO_SERVER | ngrok service failed to start. error_code : 103, status_code : 502, details : remote gone away
