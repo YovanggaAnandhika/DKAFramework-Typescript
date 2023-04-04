@@ -60,375 +60,362 @@ export async function Server(config: ConfigFastify | ConfigSocketIO | ConfigReac
             secretKey: `INFKE#fh3fh3ifjhKCJN38u8J#O*FOF`
         });
 
-        async function Runner(licenceInfo ?: any) {
-            switch (config.engine) {
-                case Options.Server.Engine.FASTIFY :
-                    //## Set Configuration merger
-                    mTempFastify = await merge(FastifyConfigurationDefault, config);
-                    //$$$$$$$$$$$ DELETE GET CONFIG FUNCTION FOR GET CONFIG $$$$$$$$$$$$
-                    delete mTempFastify.getConfig;
-                    // Separator
-                    await config.getConfig?.(mTempFastify as ConfigFastify);
-                    //$$$$$$$$$$$ DELETE GET CONFIG FUNCTION FOR GET CONFIG $$$$$$$$$$$$
-                    logger = winston.createLogger({
-                        format: winston.format.combine(
-                            winston.format.label({label: `FASTIFY`}),
-                            timestamp({format: "DD-MM-YYYY | HH:mm:ss:SS"}),
-                            printf(({message, timestamp, label, separatorNewProccess}) => {
-                                if (separatorNewProccess !== undefined && separatorNewProccess === true) {
-                                    return ``;
-                                } else {
-                                    return `DKA | ${timestamp} | ${mTempFastify.state?.toLocaleUpperCase()} | V.${BaseFramework.Options.Information.version} | ${label} | ${message}`;
-                                }
+        switch (config.engine) {
+            case Options.Server.Engine.FASTIFY :
+                //## Set Configuration merger
+                mTempFastify = await merge(FastifyConfigurationDefault, config);
+                //$$$$$$$$$$$ DELETE GET CONFIG FUNCTION FOR GET CONFIG $$$$$$$$$$$$
+                delete mTempFastify.getConfig;
+                // Separator
+                await config.getConfig?.(mTempFastify as ConfigFastify);
+                //$$$$$$$$$$$ DELETE GET CONFIG FUNCTION FOR GET CONFIG $$$$$$$$$$$$
+                logger = winston.createLogger({
+                    format: winston.format.combine(
+                        winston.format.label({label: `FASTIFY`}),
+                        timestamp({format: "DD-MM-YYYY | HH:mm:ss:SS"}),
+                        printf(({message, timestamp, label, separatorNewProccess}) => {
+                            if (separatorNewProccess !== undefined && separatorNewProccess === true) {
+                                return ``;
+                            } else {
+                                return `DKA | ${timestamp} | ${mTempFastify.state?.toLocaleUpperCase()} | V.${BaseFramework.Options.Information.version} | ${label} | ${message}`;
+                            }
 
-                            })
-                        ),
-                        transports: (mTempFastify.logger?.enabled === true) ? [
-                            new winston.transports.File({filename: mTempFastify.logger?.path?.error, level: 'error'}),
-                            new winston.transports.File({filename: mTempFastify.logger?.path?.info, level: 'info'}),
-                            new winston.transports.File({
-                                filename: mTempFastify.logger?.path?.warning,
-                                level: "warning"
-                            })
-                        ] : [new winston.transports.Console()],
-                    });
-                    logger.info("", {separatorNewProccess: true});
-                    //$$$$$$$$$$$ CALL TYPE ENGINE FASTIFY $$$$$$$$$$$$
-                    await FASTIFY(mTempFastify, logger)
-                        .then(async (app) => {
-                            logger.info(`finished to processing fastify engine instance. checking port used`)
-                            //$$$$$$$$$$$ CHECK PORT USED $$$$$$$$$$$$
-                            await tcpPortUsed.check({
-                                host: mTempFastify.host,
-                                port: mTempFastify.port as number,
-                            }).then(async (inUse) => {
-                                if (!inUse) {
-                                    logger.info(`port not in use. port is available`);
-                                    //$$$$$$$$$$$ ACTION LISTEN SERVER IF PORT NOT USED $$$$$$$$$$$$
-                                    await app.listen({
-                                        host: mTempFastify.host,
-                                        port: mTempFastify.port as number,
-                                    }, async (error) => {
-                                        if (!error) {
-                                            logger.info(`engine fastify fully start done. all green`);
-                                            //logger.warn(`licence key activated by ${licenceInfo.name} until ${moment.unix(licenceInfo.expiresTo).format(`DD-MM-YYYY`)}`)
-                                            await resolve({
-                                                status: true,
-                                                code: 200,
-                                                msg: `Server "FASTIFY" Running Successfully`,
-                                                settings: mTempFastify,
-                                                metadata: {
-                                                    author: Options.Information.author,
-                                                    version: Options.Information.version
-                                                }
-                                            });
-                                        } else {
-                                            logger.info(`engine fastify failed to listen | ${error}`);
-                                            await rejected({
-                                                status: false,
-                                                code: 500,
-                                                msg: `Server "FASTIFY" Running Failed`,
-                                                error: {errorNames: "DKA_SERVER_LISTEN_FAILED", raw: error}
-                                            });
-                                            setTimeout(async () => {
-                                                await process.exit(0)
-                                            }, 2000);
-                                        }
-                                    });
-                                    //$$$$$$$$$$$ END ACTION LISTEN SERVER IF PORT NOT USED $$$$$$$$$$$$
-                                } else {
-                                    logger.error(`port in use. port is not available. stopped proccess`);
-                                    await rejected({
-                                        status: false,
-                                        code: 500,
-                                        msg: `Server "FASTIFY" Running Failed`,
-                                        error: {errorNames: "DKA_PORT_SERVER_IN_USE"}
-                                    });
-                                    setTimeout(async () => {
-                                        await process.exit(0)
-                                    }, 2000)
-                                }
-                            }, async (err) => {
-                                logger.error(`port checking failed | ${err}`);
+                        })
+                    ),
+                    transports: (mTempFastify.logger?.enabled === true) ? [
+                        new winston.transports.File({filename: mTempFastify.logger?.path?.error, level: 'error'}),
+                        new winston.transports.File({filename: mTempFastify.logger?.path?.info, level: 'info'}),
+                        new winston.transports.File({
+                            filename: mTempFastify.logger?.path?.warning,
+                            level: "warning"
+                        })
+                    ] : [new winston.transports.Console()],
+                });
+                logger.info("", {separatorNewProccess: true});
+                //$$$$$$$$$$$ CALL TYPE ENGINE FASTIFY $$$$$$$$$$$$
+                await FASTIFY(mTempFastify, logger)
+                    .then(async (app) => {
+                        logger.info(`finished to processing fastify engine instance. checking port used`)
+                        //$$$$$$$$$$$ CHECK PORT USED $$$$$$$$$$$$
+                        await tcpPortUsed.check({
+                            host: mTempFastify.host,
+                            port: mTempFastify.port as number,
+                        }).then(async (inUse) => {
+                            if (!inUse) {
+                                logger.info(`port not in use. port is available`);
+                                //$$$$$$$$$$$ ACTION LISTEN SERVER IF PORT NOT USED $$$$$$$$$$$$
+                                await app.listen({
+                                    host: mTempFastify.host,
+                                    port: mTempFastify.port as number,
+                                }, async (error) => {
+                                    if (!error) {
+                                        logger.info(`engine fastify fully start done. all green`);
+                                        //logger.warn(`licence key activated by ${licenceInfo.name} until ${moment.unix(licenceInfo.expiresTo).format(`DD-MM-YYYY`)}`)
+                                        await resolve({
+                                            status: true,
+                                            code: 200,
+                                            msg: `Server "FASTIFY" Running Successfully`,
+                                            settings: mTempFastify,
+                                            metadata: {
+                                                author: Options.Information.author,
+                                                version: Options.Information.version
+                                            }
+                                        });
+                                    } else {
+                                        logger.info(`engine fastify failed to listen | ${error}`);
+                                        await rejected({
+                                            status: false,
+                                            code: 500,
+                                            msg: `Server "FASTIFY" Running Failed`,
+                                            error: {errorNames: "DKA_SERVER_LISTEN_FAILED", raw: error}
+                                        });
+                                        setTimeout(async () => {
+                                            await process.exit(0)
+                                        }, 2000);
+                                    }
+                                });
+                                //$$$$$$$$$$$ END ACTION LISTEN SERVER IF PORT NOT USED $$$$$$$$$$$$
+                            } else {
+                                logger.error(`port in use. port is not available. stopped proccess`);
                                 await rejected({
                                     status: false,
                                     code: 500,
-                                    msg: `Failed, to Check Port Server`,
-                                    error: {errorNames: "DKA_PORT_SERVER_FAILED_CHECK", raw: err}
+                                    msg: `Server "FASTIFY" Running Failed`,
+                                    error: {errorNames: "DKA_PORT_SERVER_IN_USE"}
                                 });
                                 setTimeout(async () => {
                                     await process.exit(0)
                                 }, 2000)
-                            });
-                            //$$$$$$$$$$$ END CHECK PORT USED $$$$$$$$$$$$
-                        })
-                        .catch(async (e) => {
-                            logger.error(`fastify engine instance error detected | ${e}`);
-                            await rejected(e)
-                        });
-                    //$$$$$$$$$$$ END CALL TYPE ENGINE FASTIFY $$$$$$$$$$$$
-                    break;
-                case Options.Server.Engine.SOCKETIO.Server :
-                    //## Set Configuration merger
-                    mTempSocketIO = await merge(SocketIOConfigurationDefault, config);
-                    //$$$$$$$$$$$ DELETE GET CONFIG FUNCTION FOR GET CONFIG $$$$$$$$$$$$
-                    delete mTempSocketIO.getConfig;
-                    await config.getConfig?.(mTempSocketIO as ConfigSocketIO);
-                    //$$$$$$$$$$$ DELETE GET CONFIG FUNCTION FOR GET CONFIG $$$$$$$$$$$$
-                    logger = winston.createLogger({
-                        format: winston.format.combine(
-                            winston.format.label({label: `SOCKET.IO_SERVER`}),
-                            timestamp({format: "DD-MM-YYYY | HH:mm:ss:SS"}),
-                            printf(({message, timestamp, label, separatorNewProccess}) => {
-                                if (separatorNewProccess !== undefined && separatorNewProccess === true) {
-                                    return ``;
-                                } else {
-                                    return `DKA | ${timestamp} | ${mTempSocketIO.state?.toLocaleUpperCase()} | V.${BaseFramework.Options.Information.version} | ${label} | ${message}`;
-                                }
-
-                            })
-                        ),
-                        transports: (mTempSocketIO.logger?.enabled === true) ? [
-                            new winston.transports.File({filename: mTempSocketIO.logger?.path?.error, level: 'error'}),
-                            new winston.transports.File({filename: mTempSocketIO.logger?.path?.info, level: 'info'}),
-                            new winston.transports.File({
-                                filename: mTempSocketIO.logger?.path?.warning,
-                                level: "warning"
-                            }),
-                            new winston.transports.Console()
-                        ] : [new winston.transports.Console()],
-                    });
-                    logger.info("", {separatorNewProccess: true});
-                    //##################################################################
-                    logger.info("starting socket.io server engine.")
-                    await SOCKET_IO(mTempSocketIO, logger)
-                        .then(async (http) => {
-                            switch (config.options?.server?.protocol) {
-                                case "FASTIFY" :
-                                    (http as FastifyInstance).listen({
-                                        host: (config.host !== undefined) ? config.host : "localhost",
-                                        port: config.port as number,
-                                    }, async (error, address) => {
-                                        if (!error) {
-                                            //logger.warn(`licence key activated by ${licenceInfo.name} until ${moment.unix(licenceInfo.expiresTo).format(`DD-MM-YYYY`)}`)
-                                            await resolve({
-                                                status: true,
-                                                code: 200,
-                                                msg: `Server "SOCKET.IO" Running Successfully`,
-                                                settings: mTempSocketIO,
-                                                metadata: {
-                                                    author: Options.Information.author,
-                                                    version: Options.Information.version
-                                                }
-                                            });
-                                        } else {
-                                            await rejected({
-                                                status: false,
-                                                code: 500,
-                                                msg: `Server Running Failed`,
-                                                error: {
-                                                    errorNames: "DKA_SERVER_FASTIFY_SOCKET_IO_ERROR",
-                                                    raw: error
-                                                }
-                                            });
-                                        }
-                                    })
-                                    break;
-                                case "HTTPS" :
-                                    await (http as HTTPSServer).listen(mTempSocketIO.port, async () => {
-                                        //logger.warn(`licence key activated by ${licenceInfo.name} until ${moment.unix(licenceInfo.expiresTo).format(`DD-MM-YYYY`)}`)
-                                        await resolve({
-                                            status: true,
-                                            code: 200,
-                                            msg: `Server "SOCKET.IO" Running Successfully`,
-                                            settings: mTempSocketIO,
-                                            metadata: {
-                                                author: Options.Information.author,
-                                                version: Options.Information.version
-                                            }
-                                        });
-                                    });
-                                    break;
-                                default :
-                                    await (http as HTTPServer).listen(mTempSocketIO.port, async () => {
-                                        //logger.warn(`licence key activated by ${licenceInfo.name} until ${moment.unix(licenceInfo.expiresTo).format(`DD-MM-YYYY`)}`)
-                                        await resolve({
-                                            status: true,
-                                            code: 200,
-                                            msg: `Server "SOCKET.IO" Running Successfully`,
-                                            settings: mTempSocketIO,
-                                            metadata: {
-                                                author: Options.Information.author,
-                                                version: Options.Information.version
-                                            }
-                                        });
-                                    });
-                                    break;
                             }
-
-                        }).catch(async (error) => {
+                        }, async (err) => {
+                            logger.error(`port checking failed | ${err}`);
                             await rejected({
                                 status: false,
                                 code: 500,
-                                msg: `Server Running Failed`,
-                                error: {
-                                    errorNames: "DKA_SERVER_HTTP_SOCKET_IO_ERROR",
-                                    raw: error
-                                }
+                                msg: `Failed, to Check Port Server`,
+                                error: {errorNames: "DKA_PORT_SERVER_FAILED_CHECK", raw: err}
                             });
                             setTimeout(async () => {
-                                await process.exit(0);
-                            }, 2000);
+                                await process.exit(0)
+                            }, 2000)
                         });
-                    break;
-                case Options.Server.Engine.REACTJS :
-                    //## Set Configuration merger
-                    mTempReactJS = await merge(ReactJSConfigurationDefault, config);
-                    //$$$$$$$$$$$ DELETE GET CONFIG FUNCTION FOR GET CONFIG $$$$$$$$$$$$
-                    delete mTempReactJS.getConfig;
-                    await config.getConfig?.(mTempReactJS as ConfigReactJS);
-                    //$$$$$$$$$$$ DELETE GET CONFIG FUNCTION FOR GET CONFIG $$$$$$$$$$$$
-                    logger = winston.createLogger({
-                        format: winston.format.combine(
-                            winston.format.label({label: `SOCKET.IO_SERVER`}),
-                            timestamp({format: "DD-MM-YYYY | HH:mm:ss:SS"}),
-                            printf(({message, timestamp, label, separatorNewProccess}) => {
-                                if (separatorNewProccess !== undefined && separatorNewProccess === true) {
-                                    return ``;
-                                } else {
-                                    return `DKA | ${timestamp} | ${mTempSocketIO.state?.toLocaleUpperCase()} | V.${BaseFramework.Options.Information.version} | ${label} | ${message}`;
-                                }
-
-                            })
-                        ),
-                        transports: (mTempSocketIO.logger?.enabled === true) ? [
-                            new winston.transports.File({filename: mTempSocketIO.logger?.path?.error, level: 'error'}),
-                            new winston.transports.File({filename: mTempSocketIO.logger?.path?.info, level: 'info'}),
-                            new winston.transports.File({
-                                filename: mTempSocketIO.logger?.path?.warning,
-                                level: "warning"
-                            })
-                        ] : [new winston.transports.Console()],
+                        //$$$$$$$$$$$ END CHECK PORT USED $$$$$$$$$$$$
+                    })
+                    .catch(async (e) => {
+                        logger.error(`fastify engine instance error detected | ${e}`);
+                        await rejected(e)
                     });
-                    logger.info("", {separatorNewProccess: true});
-                    //##################################################################
-                    //$$$$$$$$$$$ DELETE GET CONFIG FUNCTION FOR GET CONFIG $$$$$$$$$$$$
-                    await REACTJS(mTempReactJS, logger)
-                        .then(async (REACTJS_CALLBACK) => {
-                            await REACTJS_CALLBACK.WebpackDev.start()
-                                .then(async () => {
+                //$$$$$$$$$$$ END CALL TYPE ENGINE FASTIFY $$$$$$$$$$$$
+                break;
+            case Options.Server.Engine.SOCKETIO.Server :
+                //## Set Configuration merger
+                mTempSocketIO = await merge(SocketIOConfigurationDefault, config);
+                //$$$$$$$$$$$ DELETE GET CONFIG FUNCTION FOR GET CONFIG $$$$$$$$$$$$
+                delete mTempSocketIO.getConfig;
+                await config.getConfig?.(mTempSocketIO as ConfigSocketIO);
+                //$$$$$$$$$$$ DELETE GET CONFIG FUNCTION FOR GET CONFIG $$$$$$$$$$$$
+                logger = winston.createLogger({
+                    format: winston.format.combine(
+                        winston.format.label({label: `SOCKET.IO_SERVER`}),
+                        timestamp({format: "DD-MM-YYYY | HH:mm:ss:SS"}),
+                        printf(({message, timestamp, label, separatorNewProccess}) => {
+                            if (separatorNewProccess !== undefined && separatorNewProccess === true) {
+                                return ``;
+                            } else {
+                                return `DKA | ${timestamp} | ${mTempSocketIO.state?.toLocaleUpperCase()} | V.${BaseFramework.Options.Information.version} | ${label} | ${message}`;
+                            }
+
+                        })
+                    ),
+                    transports: (mTempSocketIO.logger?.enabled === true) ? [
+                        new winston.transports.File({filename: mTempSocketIO.logger?.path?.error, level: 'error'}),
+                        new winston.transports.File({filename: mTempSocketIO.logger?.path?.info, level: 'info'}),
+                        new winston.transports.File({
+                            filename: mTempSocketIO.logger?.path?.warning,
+                            level: "warning"
+                        }),
+                        new winston.transports.Console()
+                    ] : [new winston.transports.Console()],
+                });
+                logger.info("", {separatorNewProccess: true});
+                //##################################################################
+                logger.info("starting socket.io server engine.")
+                await SOCKET_IO(mTempSocketIO, logger)
+                    .then(async (http) => {
+                        switch (config.options?.server?.protocol) {
+                            case "FASTIFY" :
+                                (http as FastifyInstance).listen({
+                                    host: (config.host !== undefined) ? config.host : "localhost",
+                                    port: config.port as number,
+                                }, async (error, address) => {
+                                    if (!error) {
+                                        //logger.warn(`licence key activated by ${licenceInfo.name} until ${moment.unix(licenceInfo.expiresTo).format(`DD-MM-YYYY`)}`)
+                                        await resolve({
+                                            status: true,
+                                            code: 200,
+                                            msg: `Server "SOCKET.IO" Running Successfully`,
+                                            settings: mTempSocketIO,
+                                            metadata: {
+                                                author: Options.Information.author,
+                                                version: Options.Information.version
+                                            }
+                                        });
+                                    } else {
+                                        await rejected({
+                                            status: false,
+                                            code: 500,
+                                            msg: `Server Running Failed`,
+                                            error: {
+                                                errorNames: "DKA_SERVER_FASTIFY_SOCKET_IO_ERROR",
+                                                raw: error
+                                            }
+                                        });
+                                    }
+                                })
+                                break;
+                            case "HTTPS" :
+                                await (http as HTTPSServer).listen(mTempSocketIO.port, async () => {
+                                    //logger.warn(`licence key activated by ${licenceInfo.name} until ${moment.unix(licenceInfo.expiresTo).format(`DD-MM-YYYY`)}`)
                                     await resolve({
                                         status: true,
                                         code: 200,
-                                        msg: `Server "REACT" Running Successfully`,
-                                        settings: mTempReactJS,
+                                        msg: `Server "SOCKET.IO" Running Successfully`,
+                                        settings: mTempSocketIO,
+                                        metadata: {
+                                            author: Options.Information.author,
+                                            version: Options.Information.version
+                                        }
+                                    });
+                                });
+                                break;
+                            default :
+                                await (http as HTTPServer).listen(mTempSocketIO.port, async () => {
+                                    //logger.warn(`licence key activated by ${licenceInfo.name} until ${moment.unix(licenceInfo.expiresTo).format(`DD-MM-YYYY`)}`)
+                                    await resolve({
+                                        status: true,
+                                        code: 200,
+                                        msg: `Server "SOCKET.IO" Running Successfully`,
+                                        settings: mTempSocketIO,
+                                        metadata: {
+                                            author: Options.Information.author,
+                                            version: Options.Information.version
+                                        }
+                                    });
+                                });
+                                break;
+                        }
+
+                    }).catch(async (error) => {
+                        await rejected({
+                            status: false,
+                            code: 500,
+                            msg: `Server Running Failed`,
+                            error: {
+                                errorNames: "DKA_SERVER_HTTP_SOCKET_IO_ERROR",
+                                raw: error
+                            }
+                        });
+                        setTimeout(async () => {
+                            await process.exit(0);
+                        }, 2000);
+                    });
+                break;
+            case Options.Server.Engine.REACTJS :
+                //## Set Configuration merger
+                mTempReactJS = await merge(ReactJSConfigurationDefault, config);
+                //$$$$$$$$$$$ DELETE GET CONFIG FUNCTION FOR GET CONFIG $$$$$$$$$$$$
+                delete mTempReactJS.getConfig;
+                await config.getConfig?.(mTempReactJS as ConfigReactJS);
+                //$$$$$$$$$$$ DELETE GET CONFIG FUNCTION FOR GET CONFIG $$$$$$$$$$$$
+                logger = winston.createLogger({
+                    format: winston.format.combine(
+                        winston.format.label({label: `SOCKET.IO_SERVER`}),
+                        timestamp({format: "DD-MM-YYYY | HH:mm:ss:SS"}),
+                        printf(({message, timestamp, label, separatorNewProccess}) => {
+                            if (separatorNewProccess !== undefined && separatorNewProccess === true) {
+                                return ``;
+                            } else {
+                                return `DKA | ${timestamp} | ${mTempSocketIO.state?.toLocaleUpperCase()} | V.${BaseFramework.Options.Information.version} | ${label} | ${message}`;
+                            }
+
+                        })
+                    ),
+                    transports: (mTempSocketIO.logger?.enabled === true) ? [
+                        new winston.transports.File({filename: mTempSocketIO.logger?.path?.error, level: 'error'}),
+                        new winston.transports.File({filename: mTempSocketIO.logger?.path?.info, level: 'info'}),
+                        new winston.transports.File({
+                            filename: mTempSocketIO.logger?.path?.warning,
+                            level: "warning"
+                        })
+                    ] : [new winston.transports.Console()],
+                });
+                logger.info("", {separatorNewProccess: true});
+                //##################################################################
+                //$$$$$$$$$$$ DELETE GET CONFIG FUNCTION FOR GET CONFIG $$$$$$$$$$$$
+                await REACTJS(mTempReactJS, logger)
+                    .then(async (REACTJS_CALLBACK) => {
+                        await REACTJS_CALLBACK.WebpackDev.start()
+                            .then(async () => {
+                                await resolve({
+                                    status: true,
+                                    code: 200,
+                                    msg: `Server "REACT" Running Successfully`,
+                                    settings: mTempReactJS,
+                                    metadata: {
+                                        author: Options.Information.author,
+                                        version: Options.Information.version
+                                    }
+                                });
+                            })
+                            .catch(async (error) => {
+                                await rejected({
+                                    status: false,
+                                    code: 500,
+                                    msg: `Server Listenning Failed`,
+                                    error: {
+                                        errorNames: "DKA_SERVER_REACT_JS_LISTENING_ERROR",
+                                        raw: error
+                                    }
+                                });
+                                setTimeout(async () => {
+                                    await process.exit(0);
+                                }, 2000);
+                            });
+                    })
+                    .catch(async (error) => {
+                        await rejected({
+                            status: false,
+                            code: 500,
+                            msg: `Server Running Failed`,
+                            error: {
+                                errorNames: "DKA_SERVER_REACT_JS_ERROR",
+                                raw: error
+                            }
+                        });
+                        setTimeout(async () => {
+                            await process.exit(0);
+                        }, 2000);
+                    });
+                break;
+            case Options.Server.Engine.EXPRESSSJS :
+                //## Set Configuration merger
+                mTempExpressJS = await merge(ExpressJSConfigurationDefault, config);
+                //$$$$$$$$$$$ DELETE GET CONFIG FUNCTION FOR GET CONFIG $$$$$$$$$$$$
+                delete mTempExpressJS.getConfig;
+                await config.getConfig?.(mTempExpressJS as ConfigExpressJS);
+                //$$$$$$$$$$$ DELETE GET CONFIG FUNCTION FOR GET CONFIG $$$$$$$$$$$$
+                await EXPRESS(mTempExpressJS)
+                    .then(async (server) => {
+                        //$$$$$$$$$$$ CHECK PORT USED $$$$$$$$$$$$
+                        await tcpPortUsed.check({
+                            host: mTempExpressJS.host,
+                            port: mTempExpressJS.port as number,
+                        }).then(async (inUse: boolean) => {
+                            if (!inUse) {
+                                await server.listen(mTempExpressJS.port as number, mTempExpressJS.host as string, async () => {
+                                    await resolve({
+                                        status: true,
+                                        code: 200,
+                                        msg: `Server "Express" Running Successfully`,
+                                        settings: mTempExpressJS,
                                         metadata: {
                                             author: Options.Information.author,
                                             version: Options.Information.version
                                         }
                                     });
                                 })
-                                .catch(async (error) => {
-                                    await rejected({
-                                        status: false,
-                                        code: 500,
-                                        msg: `Server Listenning Failed`,
-                                        error: {
-                                            errorNames: "DKA_SERVER_REACT_JS_LISTENING_ERROR",
-                                            raw: error
-                                        }
-                                    });
-                                    setTimeout(async () => {
-                                        await process.exit(0);
-                                    }, 2000);
-                                });
-                        })
-                        .catch(async (error) => {
-                            await rejected({
-                                status: false,
-                                code: 500,
-                                msg: `Server Running Failed`,
-                                error: {
-                                    errorNames: "DKA_SERVER_REACT_JS_ERROR",
-                                    raw: error
-                                }
-                            });
-                            setTimeout(async () => {
-                                await process.exit(0);
-                            }, 2000);
-                        });
-                    break;
-                case Options.Server.Engine.EXPRESSSJS :
-                    //## Set Configuration merger
-                    mTempExpressJS = await merge(ExpressJSConfigurationDefault, config);
-                    //$$$$$$$$$$$ DELETE GET CONFIG FUNCTION FOR GET CONFIG $$$$$$$$$$$$
-                    delete mTempExpressJS.getConfig;
-                    await config.getConfig?.(mTempExpressJS as ConfigExpressJS);
-                    //$$$$$$$$$$$ DELETE GET CONFIG FUNCTION FOR GET CONFIG $$$$$$$$$$$$
-                    await EXPRESS(mTempExpressJS)
-                        .then(async (server) => {
-                            //$$$$$$$$$$$ CHECK PORT USED $$$$$$$$$$$$
-                            await tcpPortUsed.check({
-                                host: mTempExpressJS.host,
-                                port: mTempExpressJS.port as number,
-                            }).then(async (inUse: boolean) => {
-                                if (!inUse) {
-                                    await server.listen(mTempExpressJS.port as number, mTempExpressJS.host as string, async () => {
-                                        await resolve({
-                                            status: true,
-                                            code: 200,
-                                            msg: `Server "Express" Running Successfully`,
-                                            settings: mTempExpressJS,
-                                            metadata: {
-                                                author: Options.Information.author,
-                                                version: Options.Information.version
-                                            }
-                                        });
-                                    })
-                                } else {
-                                    await rejected({
-                                        status: false,
-                                        code: 500,
-                                        msg: `Server "FASTIFY" Running Failed`,
-                                        error: {errorNames: "DKA_PORT_SERVER_IN_USE"}
-                                    });
-                                    setTimeout(async () => {
-                                        await process.exit(0)
-                                    }, 2000)
-                                }
-                            }).catch(async (error: Error | any) => {
+                            } else {
                                 await rejected({
                                     status: false,
                                     code: 500,
-                                    msg: `Failed, to Check Port Server`,
-                                    error: {errorNames: "DKA_PORT_SERVER_FAILED_CHECK", raw: error}
+                                    msg: `Server "FASTIFY" Running Failed`,
+                                    error: {errorNames: "DKA_PORT_SERVER_IN_USE"}
                                 });
                                 setTimeout(async () => {
                                     await process.exit(0)
                                 }, 2000)
-                            })
+                            }
+                        }).catch(async (error: Error | any) => {
+                            await rejected({
+                                status: false,
+                                code: 500,
+                                msg: `Failed, to Check Port Server`,
+                                error: {errorNames: "DKA_PORT_SERVER_FAILED_CHECK", raw: error}
+                            });
+                            setTimeout(async () => {
+                                await process.exit(0)
+                            }, 2000)
                         })
-                        .catch(async (error) => {
+                    })
+                    .catch(async (error) => {
 
-                        })
-                    break;
-                default :
-                    await rejected({status: false, code: 500, msg: `illegal method unknown or not available`});
-                    //await process.exit(0)
-                    break;
-            }
+                    })
+                break;
+            default :
+                await rejected({status: false, code: 500, msg: `illegal method unknown or not available`});
+                //await process.exit(0)
+                break;
         }
-
-        await Runner()
-       /* await checkLicence(config)
-            .then(async (resultLicence) => {
-                await Runner(resultLicence)
-            })
-            .catch(async (error) => {
-                rejected(error)
-            });*/
-
-
     });
 }
 
