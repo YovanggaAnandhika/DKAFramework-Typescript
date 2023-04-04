@@ -1,3 +1,4 @@
 
 
 export type FASTIFY_ENGINE = "FASTIFY"
+export const FASTIFY_ENGINE : FASTIFY_ENGINE = "FASTIFY"

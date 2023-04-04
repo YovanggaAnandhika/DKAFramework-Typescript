@@ -1,6 +1,7 @@
-import { Socket } from "socket.io"
 
 
 export interface CallbackSocketIOServer {
-    io : number
+    status ?: boolean,
+    code ?: 200 | 404 | 203 | 300,
+    msg ?: string
 }
