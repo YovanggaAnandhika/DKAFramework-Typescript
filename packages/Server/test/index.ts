@@ -5,7 +5,13 @@ import { Server, Options} from "../src";
         engine : Options.ENGINE.SOCKETIO,
         port : 3822,
         settings : {
-            protocol : "FASTIFY"
+            engine : {
+                protocol : "HTTP",
+                autoListen : true,
+            },
+            socket : {
+
+            }
         }
     }).then(async (result) => {
         console.log(result)

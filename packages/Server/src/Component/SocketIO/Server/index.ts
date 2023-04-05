@@ -1,25 +1,28 @@
 import {ConfigSocketIOServer} from "./Interfaces/ConfigSocketIOServer";
 import {SOCKET_TYPE_FASTIFY, SOCKET_TYPE_HTTP} from "./Types/TypesSocketIOServer";
 import { Server } from "socket.io";
+import { Server as HTTPServer, ServerOptions as HTTPServerOptions } from "http";
 import errorToJSON from 'error-to-json'
 import DefaultConfigSocketIOServer from "./Config/DefaultConfigSocketIOServer";
 import {merge} from "lodash";
 import Fastify, { FastifyInstance } from "fastify";
 import {PRODUCTION} from "../../../Types/ConfigServerTypes";
 
-
 export async function SERVER(config : ConfigSocketIOServer) : Promise<Server> {
     let SocketIO : Server;
     let FastifyServer : FastifyInstance;
+    let mHTTP : HTTPServer;
     return new Promise(async (resolve, rejected) => {
         let mConfig = merge(DefaultConfigSocketIOServer, config);
         //#######################################################
         let { createServer } = await import("http");
-        let mHTTP = createServer({})
+
         //#######################################################
-        switch (mConfig.settings?.protocol) {
+        switch (mConfig.settings?.engine?.protocol) {
             case SOCKET_TYPE_HTTP :
-                SocketIO = await new Server(mHTTP)
+                mHTTP = createServer(mConfig.settings?.engine)
+                SocketIO = await new Server(mHTTP, mConfig.settings?.socket);
+
                 await mHTTP.on("listening", async () => {
                     await resolve(SocketIO)
                 })
@@ -32,8 +35,8 @@ export async function SERVER(config : ConfigSocketIOServer) : Promise<Server> {
                 //** force Set host to Wildcard if state production **/
                 mConfig.host = (mConfig.state == PRODUCTION) ? "0.0.0.0" : mConfig.host;
 
-                if (mConfig.settings?.autoListen){
-                    await mHTTP.listen(mConfig.port, mConfig.host)
+                if (mConfig.settings?.engine?.autoListen){
+                    await mHTTP.listen(mConfig.port, mConfig.host);
                 }
                 break;
             case SOCKET_TYPE_FASTIFY :
@@ -51,7 +54,8 @@ export async function SERVER(config : ConfigSocketIOServer) : Promise<Server> {
                 FastifyServer.listen({ port : mConfig.port, host : mConfig.host })
                 break;
             default :
-                SocketIO = await new Server(mHTTP)
+                mHTTP = createServer(mConfig.settings?.engine as HTTPServerOptions)
+                SocketIO = await new Server(mHTTP,mConfig.settings?.socket)
 
                 await mHTTP.on("listening", async () => {
                     await resolve(SocketIO)
@@ -65,7 +69,7 @@ export async function SERVER(config : ConfigSocketIOServer) : Promise<Server> {
                 //** force Set host to Wildcard if state production **/
                 mConfig.host = (mConfig.state == PRODUCTION) ? "0.0.0.0" : mConfig.host;
 
-                if (mConfig.settings?.autoListen){
+                if (mConfig.settings?.engine?.autoListen){
                     await mHTTP.listen(mConfig.port, mConfig.host)
                 }
                 break;
