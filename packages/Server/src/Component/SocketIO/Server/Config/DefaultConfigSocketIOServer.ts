@@ -1,15 +1,19 @@
+import { readFileSync } from "fs";
+import path from "path"
 import {ConfigSocketIOServer} from "../Interfaces/ConfigSocketIOServer";
-import {SOCKET_ENGINE} from "../Types/TypesSocketIOServer";
 import {Options} from "../../../../index";
 
 export const DefaultConfigSocketIOServer : ConfigSocketIOServer = {
     engine : Options.ENGINE.SOCKETIO,
-    host : "127.0.0.1",
-    port : 8832,
+    host : Options.HOST.LOCALHOST,
+    port : Options.PORT.DEFAULT,
     settings : {
         engine : {
             protocol : "HTTP",
-            autoListen : true
+            autoListen : true,
+        },
+        socket : {
+            transports : ['websocket','polling']
         }
     }
 }

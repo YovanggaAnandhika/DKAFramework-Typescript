@@ -32,7 +32,9 @@
   "license": "MIT",
   "private": false,
   "scripts": {
-    "test": "nodemon --watch src --watch test --exec ts-node test/index.ts",
+    "test:fastify": "nodemon --watch src --watch test/Server.ts --exec ts-node test/index.ts",
+    "test:server": "nodemon --watch src --watch test/Server.ts --exec ts-node test/Server.ts",
+    "test:client": "nodemon --watch src --watch test/Client.ts --exec ts-node test/Client.ts",
     "action:clean": "tsc --build --clean",
     "action:compile": "tsc --build",
     "action:copy": "tscp",
@@ -77,6 +79,7 @@
     "moment-timezone": "^0.5.37",
     "ngrok": "^4.3.3",
     "node-schedule": "^2.1.1",
+    "node-tcp-relay": "^0.0.18",
     "ping": "^0.4.4",
     "react": "^18.2.0",
     "react-cookie": "^4.1.1",

@@ -1,0 +1,20 @@
+{
+  "name": "@dkaframework/client",
+  "version": "1.0.0",
+  "main": "index.js",
+  "author": "Yovangga Anandhika",
+  "license": "MIT",
+  "private": false,
+  "scripts": {
+    "action:clean": "tsc --build --clean",
+    "action:compile": "tsc --build",
+    "action:copy": "tscp",
+    "build": "yarn run action:clean && yarn run action:compile && yarn run action:copy",
+    "prepublish": "yarn run action:clean && yarn run action:compile && yarn run action:copy",
+    "login": "npm login"
+  },
+  "dependencies": {
+    "socket.io-client": "^4.6.1",
+    "web-pingjs": "^1.0.1"
+  }
+}

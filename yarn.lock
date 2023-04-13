@@ -4618,7 +4618,7 @@ combined-stream@^1.0.6, combined-stream@^1.0.8, combined-stream@~1.0.6:
   dependencies:
     delayed-stream "~1.0.0"
 
-commander@^2.20.0:
+commander@^2.19.0, commander@^2.20.0:
   version "2.20.3"
   resolved "https://registry.npmjs.org/commander/-/commander-2.20.3.tgz"
   integrity sha512-GpVkmM8vF2vQUkj2LvZmD35JxeJOLCwJ9cUkugyk2nuhbv3+mJvpLYYt+0+USMxE+oj+ey/lJEnhZw75x/OMcQ==
@@ -8592,6 +8592,13 @@ node-schedule@^2.1.1:
     long-timeout "0.1.1"
     sorted-array-functions "^1.3.0"
 
+node-tcp-relay@^0.0.18:
+  version "0.0.18"
+  resolved "https://registry.yarnpkg.com/node-tcp-relay/-/node-tcp-relay-0.0.18.tgz#ace6b47f629dfa2b47918599e6abfc84ac89d98a"
+  integrity sha512-rIdSXsHMs17bwYTsS5c86tdtDGNrptJicax3wWGDdntk9FBXl04m9Rex2QYolWyOiyDy9PqrGMGLCqAoFca1Yw==
+  dependencies:
+    commander "^2.19.0"
+
 nodemon@^2.0.19:
   version "2.0.21"
   resolved "https://registry.npmjs.org/nodemon/-/nodemon-2.0.21.tgz"
@@ -11535,6 +11542,11 @@ wcwidth@^1.0.0, wcwidth@^1.0.1:
   integrity sha512-XHPEwS0q6TaxcvG85+8EYkbiCux2XtWG2mkc47Ng2A77BQu9+DqIOJldST4HgPkuea7dvKSj5VgX3P1d4rW8Tg==
   dependencies:
     defaults "^1.0.3"
+
+web-pingjs@^1.0.1:
+  version "1.0.1"
+  resolved "https://registry.yarnpkg.com/web-pingjs/-/web-pingjs-1.0.1.tgz#4de7d3c678482571a4faba9872d189d908fe83af"
+  integrity sha512-rlAeWwOWLYpFUAzi1edajOm6iWsP4EVnjl7qXsyXglVt8Wuwxo1d8GQgeyZ6Ze3gRf0xtvQCmb2eQ1OOAGbN1A==
 
 webidl-conversions@^3.0.0:
   version "3.0.1"
