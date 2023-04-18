@@ -1,7 +1,12 @@
 import {FASTIFY_ENGINE} from "../Component/Fastify/Types/TypesFastifyServer";
-import {SOCKET_ENGINE} from "../Component/SocketIO/Server/Types/TypesSocketIOServer";
+import {
+    SOCKET_ENGINE, SOCKET_TYPE_FASTIFY,
+    SOCKET_TYPE_HTTP, SOCKET_TYPE_HTTP2,
+    SOCKET_TYPE_HTTPS
+} from "../Component/SocketIO/Server/Types/TypesSocketIOServer";
 import {DEVELOPMENT, PRODUCTION} from "../Types/ConfigServerTypes";
 import {UDP_ENGINE} from "../Component/UDP/Types/TypesUDPServer";
+import {ConfigSocketIOServerSettings} from "../Component/SocketIO/Server/Interfaces/ConfigSocketIOServer";
 
 
 export const ConfigServerEngineFastify : FASTIFY_ENGINE = "FASTIFY"
@@ -27,11 +32,27 @@ export const ConfigServerHost = {
 export const ConfigServerPort = {
     DEFAULT : 51397
 }
+
+
+export const ConfigServerSettingsProtocol = {
+    HTTP : SOCKET_TYPE_HTTP,
+    HTTPS : SOCKET_TYPE_HTTPS,
+    HTTP2 : SOCKET_TYPE_HTTP2,
+    FASTIFY : SOCKET_TYPE_FASTIFY
+}
+export const ConfigServerSettingsEngine = {
+    PROTOCOL : ConfigServerSettingsProtocol
+}
+
+export const ConfigServerSettings = {
+    ENGINE : ConfigServerSettingsEngine
+}
 export const ConfigServer = {
     STATE : ConfigServerState,
     HOST : ConfigServerHost,
     PORT : ConfigServerPort,
-    ENGINE : ConfigServerEngine
+    ENGINE : ConfigServerEngine,
+    SETTINGS : ConfigServerSettings
 }
 
 export default ConfigServer;

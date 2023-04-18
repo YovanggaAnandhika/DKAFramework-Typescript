@@ -3394,7 +3394,7 @@
 
 "@types/socket.io@^3.0.2":
   version "3.0.2"
-  resolved "https://registry.npmjs.org/@types/socket.io/-/socket.io-3.0.2.tgz"
+  resolved "https://registry.yarnpkg.com/@types/socket.io/-/socket.io-3.0.2.tgz#606c9639e3f93bb8454cba8f5f0a283d47917759"
   integrity sha512-pu0sN9m5VjCxBZVK8hW37ZcMe8rjn4HHggBN5CbaRTvFwv5jOmuIRZEuddsBPa9Th0ts0SIo3Niukq+95cMBbQ==
   dependencies:
     socket.io "*"

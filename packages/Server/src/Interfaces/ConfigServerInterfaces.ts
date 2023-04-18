@@ -11,3 +11,7 @@ export interface GlobalServerConfigInterfaces extends Object {
 }
 
 export type ConfigServerInterfaces = ConfigSocketIOServer | ConfigFastifyServer | ConfigUDPServer
+
+export interface ExtendedError extends Error {
+    data?: any;
+}

@@ -1,6 +1,6 @@
 import {FASTIFY_ENGINE} from "../Types/TypesFastifyServer";
-import {ConfigServerInterfaces, GlobalConfigInterfaces} from "../../../Interfaces/ConfigServerInterfaces";
+import {ConfigServerInterfaces, GlobalServerConfigInterfaces } from "../../../Interfaces/ConfigServerInterfaces";
 
-export interface ConfigFastifyServer extends GlobalConfigInterfaces {
+export interface ConfigFastifyServer extends GlobalServerConfigInterfaces {
     engine ?: FASTIFY_ENGINE | undefined
 }

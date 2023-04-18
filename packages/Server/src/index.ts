@@ -18,7 +18,16 @@ export async function Server<Config extends ConfigServerInterfaces> (serverConfi
                 await SERVER(serverConfig)
                     .then(async (mServerCallbackInstance) => {
                         //################################################################
-                        await resolve({ status : true, code : 200, msg : `Server Berhasil Dijalankan` } as ServerSelector<Config>);
+                        await resolve({
+                            status : true,
+                            code : 200,
+                            msg : `Server Berhasil Dijalankan`,
+                            getConfig : mServerCallbackInstance.config,
+                            engine : {
+                                socket : mServerCallbackInstance.socket,
+                                server : mServerCallbackInstance.server
+                            }
+                        } as ServerSelector<Config>);
                         //################################################################
                     })
                     .catch(async (error) => {
