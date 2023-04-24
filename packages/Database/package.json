@@ -1,6 +1,6 @@
 {
   "name": "@dkaframework/database",
-  "version": "2.0.17",
+  "version": "2.0.18",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "author": {
@@ -18,7 +18,7 @@
     "prepublish": "yarn run clean && yarn run compile"
   },
   "dependencies": {
-    "@dkaframework/security": "^2.0.17",
+    "@dkaframework/security": "^2.0.18",
     "@types/jsbn": "^1.2.30",
     "@types/lodash": "^4.0.0",
     "@types/mysql": "^2.15.21",
