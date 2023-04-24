@@ -7,6 +7,7 @@ import path from "path";
 export const DefaultConfigSocketIOHTTPServer : ConfigFastifyServer = {
     engine : Options.ENGINE.FASTIFY,
     host : Options.HOST.LOCALHOST,
+
     port : 3000,
     settings : {
         engine : {
