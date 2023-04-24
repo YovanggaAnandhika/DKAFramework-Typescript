@@ -16,5 +16,6 @@
   "dependencies": {
     "socket.io-client": "^4.6.1",
     "web-pingjs": "^1.0.1"
-  }
+  },
+  "gitHead": "b67422ff8d7ca8c9a35bacbf9469b449c1e57818"
 }
