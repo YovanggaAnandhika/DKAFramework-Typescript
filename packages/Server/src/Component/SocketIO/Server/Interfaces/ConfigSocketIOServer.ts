@@ -7,7 +7,7 @@ import {
     SOCKET_TYPE_HTTPS
 } from "../Types/TypesSocketIOServer";
 import {ServerOptions as SocketServerOptions, Socket} from "socket.io";
-import {ServerOptions as HTTPServerOptions} from "http";
+import {RequestListener, ServerOptions as HTTPServerOptions} from "http";
 import {Http2SecureServer, SecureServerOptions as HTTP2SecureServerOptions} from "http2"
 import {ServerOptions as HTTPSServerOptions} from "https"
 import {DefaultEventsMap} from "socket.io/dist/typed-events";
@@ -16,7 +16,8 @@ import {SocketIOMiddlewareUse, SocketIOSocketIO} from "../../../../Types/ConfigS
 
 export interface ConfigSocketIOServerSettingsHTTP extends HTTPServerOptions {
     protocol ?: SOCKET_TYPE_HTTP,
-    autoListen ?: boolean | undefined
+    autoListen ?: boolean | undefined,
+    requestListeners ?: RequestListener
 }
 
 export interface ConfigSocketIOServerSettingsHTTPS extends HTTPSServerOptions {

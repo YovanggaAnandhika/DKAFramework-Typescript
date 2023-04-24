@@ -10,10 +10,14 @@ export const DefaultConfigSocketIOHTTPServer : ConfigSocketIOServer = {
     settings : {
         engine : {
             protocol : Options.SETTINGS.ENGINE.PROTOCOL.HTTP,
-            autoListen : true,
+            autoListen : true
         },
         socket : {
-            transports : ['websocket','polling']
+            transports : ['websocket','polling'],
+            cors : {
+                origin : "*",
+
+            }
         }
     }
 }

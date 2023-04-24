@@ -25,6 +25,7 @@ import Fastify, { FastifyInstance } from "fastify";
 import {PRODUCTION} from "../../../Types/ConfigServerTypes";
 import {Options} from "../../../index";
 import {CallbackServerSocketIOComponent} from "../../../Interfaces/CallbackServerInterfaces";
+import SocketIOEngineHeaders from "./Component/SocketIOEngineHeaders";
 
 export async function SERVER<Config extends ConfigSocketIOServer>(config : Config) : Promise<CallbackServerSocketIOComponent> {
     //################ Declaration Variable ###########################
@@ -33,7 +34,6 @@ export async function SERVER<Config extends ConfigSocketIOServer>(config : Confi
     let mHTTP : HTTPServer;
     let mHTTP2 : HTTP2SecureServer;
     let mHTTPS : HTTPSServer;
-
     //################ Declaration Variable ###########################
     return new Promise(async (resolve, rejected) => {
         config = await merge(DefaultConfigSocketIOHTTPServer, config);
@@ -41,8 +41,10 @@ export async function SERVER<Config extends ConfigSocketIOServer>(config : Confi
         switch (config.settings?.engine?.protocol) {
             case SOCKET_TYPE_HTTP :
                 config = await merge(DefaultConfigSocketIOHTTPServer, config);
-                mHTTP = createServerHTTP(config.settings?.engine as HTTPServerOptions);
+                mHTTP = createServerHTTP(config.settings?.engine as HTTPServerOptions, (config.settings?.engine as ConfigSocketIOServerSettingsHTTP)?.requestListeners);
                 SocketIO = await new Server(mHTTP, config.settings?.socket);
+                //** Header Set
+                SocketIO = SocketIOEngineHeaders(SocketIO);
                 if (config.use !== undefined){
                     await SocketIO.use(config.use)
                 }
@@ -88,6 +90,8 @@ export async function SERVER<Config extends ConfigSocketIOServer>(config : Confi
                 config = await merge(DefaultConfigSocketIOHTTP2Server, config);
                 mHTTP2 = createSecureServerHTTP2(config.settings?.engine  as HTTP2ServerOptions)
                 SocketIO = await new Server(mHTTP2, config.settings?.socket);
+                //** Header Set
+                SocketIO = SocketIOEngineHeaders(SocketIO);
                 if (config.use !== undefined){
                     await SocketIO.use(config.use)
                 }
@@ -133,6 +137,8 @@ export async function SERVER<Config extends ConfigSocketIOServer>(config : Confi
                 config = await merge(DefaultConfigSocketIOHTTPSServer, config);
                 mHTTPS = createServerHTTPS(config.settings?.engine  as HTTPSServerOptions);
                 SocketIO = await new Server(mHTTPS, config.settings?.socket);
+                //** Header Set
+                SocketIO = SocketIOEngineHeaders(SocketIO);
                 if (config.use !== undefined){
                     await SocketIO.use(config.use)
                 }
@@ -185,6 +191,8 @@ export async function SERVER<Config extends ConfigSocketIOServer>(config : Confi
             case SOCKET_TYPE_FASTIFY :
                 FastifyServer = await Fastify();
                 SocketIO = await new Server(FastifyServer.server)
+                //** Header Set
+                SocketIO = SocketIOEngineHeaders(SocketIO);
                 if (config.use !== undefined){
                     await SocketIO.use(config.use)
                 }
@@ -226,6 +234,8 @@ export async function SERVER<Config extends ConfigSocketIOServer>(config : Confi
                 config = await merge(DefaultConfigSocketIOHTTPServer, config);
                 mHTTP = createServerHTTP(config.settings?.engine as HTTPServerOptions);
                 SocketIO = await new Server(mHTTP,config.settings?.socket);
+                //** Header Set
+                SocketIO = SocketIOEngineHeaders(SocketIO);
                 if (config.use !== undefined){
                     await SocketIO.use(config.use)
                 }

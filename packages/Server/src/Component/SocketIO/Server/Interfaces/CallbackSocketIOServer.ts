@@ -22,6 +22,7 @@ export type CallbackSocketIOServerChecked<Config> =
             Config extends { settings : { engine : { protocol : SOCKET_TYPE_HTTP2 }}} ? HTTP2Server :
                 Config extends { settings : { engine : { protocol : SOCKET_TYPE_FASTIFY }}} ? FastifyInstance :
         never;
+
 export interface CallbackSocketIOServer<Config> {
     status : boolean,
     code : number,
