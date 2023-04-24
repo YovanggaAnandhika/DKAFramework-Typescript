@@ -1,6 +1,6 @@
 {
   "name": "@dkaframework/server",
-  "version": "3.0.5",
+  "version": "3.0.6",
   "homepage": ".",
   "description": "The Multi Framework Server Function. Part Module Of DKAFramework",
   "keywords": [
@@ -47,7 +47,7 @@
     "@babel/preset-env": "^7.19.1",
     "@babel/preset-react": "^7.18.6",
     "@babel/preset-typescript": "^7.18.6",
-    "@dkaframework/security": "^2.0.18",
+    "@dkaframework/security": "^2.0.19",
     "@fastify/cors": "^8.2.1",
     "@fastify/formbody": "^7.4.0",
     "@types/cli-progress": "^3.11.0",
