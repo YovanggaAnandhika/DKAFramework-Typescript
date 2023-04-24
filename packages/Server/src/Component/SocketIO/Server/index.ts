@@ -26,7 +26,7 @@ import {PRODUCTION} from "../../../Types/ConfigServerTypes";
 import {Options} from "../../../index";
 import {CallbackServerSocketIOComponent} from "../../../Interfaces/CallbackServerInterfaces";
 
-export async function SERVER(config : ConfigSocketIOServer) : Promise<CallbackServerSocketIOComponent> {
+export async function SERVER<Config extends ConfigSocketIOServer>(config : Config) : Promise<CallbackServerSocketIOComponent> {
     //################ Declaration Variable ###########################
     let SocketIO : Server;
     let FastifyServer : FastifyInstance;
@@ -140,6 +140,12 @@ export async function SERVER(config : ConfigSocketIOServer) : Promise<CallbackSe
                     // if you need the certificate details (it is no longer available once the handshake is completed)
                     rawSocket.peerCertificate = rawSocket.request.client.getPeerCertificate();
                 });
+                await process.on("SIGINT", async () => {
+                    mHTTPS.close();
+                    SocketIO.close();
+                    process.exit();
+                    process.kill(process.pid)
+                });
                 /** Event on Connection Data **/
                 if (config.events?.socket?.onConnection !== undefined){
                     await SocketIO.on("connection", async (io) => {
@@ -170,10 +176,10 @@ export async function SERVER(config : ConfigSocketIOServer) : Promise<CallbackSe
                         await config.events?.server?.onListening?.();
                     })
                     await mHTTPS.listen(config.port, config.host, async () => {
-                        await resolve({ socket : SocketIO, server : mHTTPS, config : config })
+                        await resolve({ socket : SocketIO, server : mHTTPS, config : config as ConfigSocketIOServer })
                     });
                 }else{
-                    await resolve({ socket : SocketIO, server : mHTTPS, config : config })
+                    await resolve({ socket : SocketIO, server : mHTTPS, config : config as ConfigSocketIOServer })
                 }
                 break;
             case SOCKET_TYPE_FASTIFY :

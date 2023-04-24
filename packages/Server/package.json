@@ -1,6 +1,6 @@
 {
   "name": "@dkaframework/server",
-  "version": "3.0.0",
+  "version": "3.0.2",
   "homepage": ".",
   "description": "The Multi Framework Server Function. Part Module Of DKAFramework",
   "keywords": [
@@ -32,7 +32,7 @@
   "license": "MIT",
   "private": false,
   "scripts": {
-    "test": "nodemon --watch src --watch test/index.ts --exec ts-node test/index.ts --max-old-space-size=8192",
+    "test": "ts-node test/index.ts --max-old-space-size=8192",
     "client": "nodemon --watch src --watch test/client.ts --exec ts-node test/client.ts",
     "action:clean": "tsc --build --clean",
     "action:compile": "tsc --build",
@@ -109,7 +109,6 @@
     "@fastify/view": "^7.1.0",
     "@types/socket.io": "^3.0.2",
     "ejs": "^3.1.8",
-    "electron": "^21.3.0",
     "nodemon": "^2.0.19",
     "typescript-cp": "^0.1.6"
   },

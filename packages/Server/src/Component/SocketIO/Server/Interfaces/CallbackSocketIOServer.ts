@@ -14,6 +14,7 @@ import {
 } from "../Types/TypesSocketIOServer";
 import { Server } from "socket.io";
 import {FastifyInstance} from "fastify";
+import {ConfigSocketIOServer} from "./ConfigSocketIOServer";
 
 export type CallbackSocketIOServerChecked<Config> =
     Config extends { settings : { engine : { protocol : SOCKET_TYPE_HTTP }}} ? HTTPServer :
@@ -25,7 +26,7 @@ export interface CallbackSocketIOServer<Config> {
     status : boolean,
     code : number,
     msg : string,
-    getConfig : Config,
+    getConfig : ConfigSocketIOServer,
     engine : {
         socket : Server
         server : CallbackSocketIOServerChecked<Config>

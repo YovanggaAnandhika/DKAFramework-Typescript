@@ -1,6 +1,11 @@
 import { Socket } from "socket.io"
+import {ConfigFastifyServer} from "./ConfigFastifyServer";
 
 
 export interface CallbackFastifyServer {
-    fastify : number
+    status ?: boolean,
+    code ?: number,
+    msg ?: string,
+    config ?: ConfigFastifyServer | undefined
+    error ?: undefined | Error
 }

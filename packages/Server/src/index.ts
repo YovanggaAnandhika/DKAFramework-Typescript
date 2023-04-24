@@ -12,6 +12,14 @@ export async function Server<Config extends ConfigServerInterfaces> (serverConfi
         switch (serverConfig.engine) {
             case FASTIFY_ENGINE :
 
+                let { FASTIFY } = await import("./Component/Fastify");
+                await FASTIFY(serverConfig)
+                    .then(async (mFastifyCallback) => {
+                        await resolve(mFastifyCallback as ServerSelector<Config>)
+                    })
+                    .catch(async (error) => {
+                        await rejected(error)
+                    })
                 break;
             case SOCKET_ENGINE :
                 let { SERVER } = await import("./Component/SocketIO/Server");

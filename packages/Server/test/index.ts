@@ -1,35 +1,20 @@
 import { Server, Options } from "../src";
-import {readFileSync} from "fs";
 
 (async () => {
     await Server({
-        engine : Options.ENGINE.SOCKETIO,
+        engine : Options.ENGINE.FASTIFY,
         host : Options.HOST.WILDCARD,
-        port : 2883,
-        use : async (io, next) => {
-            await next();
+        app : async (app, opts, next) => {
+            await app.get("/", async (req, res) => {
+                res.send({ halo : "dunia"})
+            })
+            await next()
         },
-        events : {
-            socket : {
-                onConnection : async (io) => {
-                    // @ts-ignore
-                    //console.log(io.conn.peerCertificate)
-                }
-              },
-            server : {
-              onListening : async () => {
-                  console.log("server berjalan")
-              }
-            }
-        },
-        settings : {
-            engine : {
-                protocol : Options.SETTINGS.ENGINE.PROTOCOL.HTTPS,
-                autoListen : true
-            }
+        getConfig : async (config) => {
+          console.log(config)
         }
     }).then(async (server) => {
-        //console.log(server)
+        console.log(server.config)
         //await server.engine.server.listen({ port : server.getConfig.port, host : server.getConfig.host})
     }).catch(async (error) => {
 
