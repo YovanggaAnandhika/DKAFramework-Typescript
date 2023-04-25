@@ -6,8 +6,8 @@ import {ConfigUDPServer} from "../Component/UDP/Interfaces/ConfigUDPServer";
 
 export interface GlobalServerConfigInterfaces extends Object {
     state ?: DEVELOPMENT | PRODUCTION
-    host ?: string,
-    port ?: number
+    host ?: string | undefined,
+    port ?: number | undefined
 }
 
 export type ConfigServerInterfaces = ConfigSocketIOServer | ConfigFastifyServer | ConfigUDPServer

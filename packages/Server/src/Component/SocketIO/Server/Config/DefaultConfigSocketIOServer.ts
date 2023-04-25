@@ -10,14 +10,17 @@ export const DefaultConfigSocketIOHTTPServer : ConfigSocketIOServer = {
     settings : {
         engine : {
             protocol : Options.SETTINGS.ENGINE.PROTOCOL.HTTP,
-            autoListen : true
+            autoListen : true,
         },
         socket : {
             transports : ['websocket','polling'],
+            maxHttpBufferSize : 1e8,
             cors : {
                 origin : "*",
-
-            }
+            },
+            pingInterval : 1000,
+            pingTimeout : 5000,
+            connectTimeout : 8000
         }
     }
 }
@@ -39,7 +42,11 @@ export const DefaultConfigSocketIOHTTPSServer : ConfigSocketIOServer = {
             autoListen : true,
         },
         socket : {
-            transports : ['websocket','polling']
+            transports : ['websocket','polling'],
+            maxHttpBufferSize : 1e8,
+            pingInterval : 1000,
+            pingTimeout : 5000,
+            connectTimeout : 8000
         }
     }
 }
@@ -52,6 +59,7 @@ export const DefaultConfigSocketIOHTTP2Server : ConfigSocketIOServer = {
         engine : {
             protocol : Options.SETTINGS.ENGINE.PROTOCOL.HTTP2,
             allowHTTP1 : true,
+
             cert : readFileSync(path.join(__dirname,"./Cert/Server/localhost.crt")),
             key : readFileSync(path.join(__dirname,"./Cert/Server/localhost.key")),
             ca : [
@@ -60,7 +68,14 @@ export const DefaultConfigSocketIOHTTP2Server : ConfigSocketIOServer = {
             autoListen : true,
         },
         socket : {
-            transports : ['websocket','polling']
+            transports : ['websocket','polling'],
+            maxHttpBufferSize : 1e8,
+            cors : {
+                origin : "*"
+            },
+            pingInterval : 1000,
+            pingTimeout : 5000,
+            connectTimeout : 8000
         }
     }
 }
@@ -82,7 +97,11 @@ export const DefaultConfigSocketIOFastifyServer : ConfigSocketIOServer = {
             autoListen : true,
         },
         socket : {
-            transports : ['websocket','polling']
+            maxHttpBufferSize : 1e8,
+            transports : ['websocket','polling'],
+            pingInterval : 1000,
+            pingTimeout : 5000,
+            connectTimeout : 8000
         }
     }
 }

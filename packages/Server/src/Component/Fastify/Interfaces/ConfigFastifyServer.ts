@@ -8,7 +8,7 @@ import {
 } from "fastify";
 
 export interface ConfigFastifyServerSettings {
-    engine : FastifyHttpsOptions<any> | FastifyHttpOptions<any> | FastifyHttp2Options<any> | FastifyHttp2SecureOptions<any>
+    engine ?: FastifyHttpsOptions<any> | FastifyHttpOptions<any> | FastifyHttp2Options<any> | FastifyHttp2SecureOptions<any>
 }
 
 export interface ConfigFastifyServerHooks {
@@ -19,5 +19,5 @@ export interface ConfigFastifyServer extends GlobalServerConfigInterfaces {
     app ?: ConfigFastifyServerRegister,
     hooks ?: ConfigFastifyServerHooks
     getConfig ?: (config : ConfigFastifyServer) => Promise<void> | void
-    settings ?: ConfigFastifyServerSettings
+    settings ?: ConfigFastifyServerSettings | undefined
 }

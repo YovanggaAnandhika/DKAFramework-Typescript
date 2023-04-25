@@ -6,12 +6,10 @@ import {SOCKET_ENGINE} from "./Component/SocketIO/Server/Types/TypesSocketIOServ
 import {UDP_ENGINE} from "./Component/UDP/Types/TypesUDPServer";
 import {isArray, isObject} from "lodash";
 
-
 export async function Server<Config extends ConfigServerInterfaces> (serverConfig : Config) : Promise<ServerSelector<Config>> {
     return new Promise(async (resolve, rejected) => {
         switch (serverConfig.engine) {
             case FASTIFY_ENGINE :
-
                 let { FASTIFY } = await import("./Component/Fastify");
                 await FASTIFY(serverConfig)
                     .then(async (mFastifyCallback) => {
@@ -22,8 +20,8 @@ export async function Server<Config extends ConfigServerInterfaces> (serverConfi
                     })
                 break;
             case SOCKET_ENGINE :
-                let { SERVER } = await import("./Component/SocketIO/Server");
-                await SERVER(serverConfig)
+                let { SocketIOServerInstances } = await import("./Component/SocketIO/Server");
+                await SocketIOServerInstances(serverConfig)
                     .then(async (mServerCallbackInstance) => {
                         //################################################################
                         await resolve({
@@ -55,11 +53,7 @@ export async function Server<Config extends ConfigServerInterfaces> (serverConfi
             default :
                 await rejected({ status : false, code : 500, msg : `server config unknown. you must declaration engine in config`})
         }
-
-
     });
 }
 
-export {
-    Options
-}
+export { Options };

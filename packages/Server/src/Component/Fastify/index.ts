@@ -13,11 +13,11 @@ export async function FASTIFY<Config extends ConfigFastifyServer>(configServer :
         mFastify = fastify(configServer.settings?.engine);
         await mFastify.register(cors, {
             origin : "*"
-        })
+        });
+
         mFastify = await FastifyHooks(mFastify, configServer);
-        if (configServer.app !== undefined){
-            await mFastify.register(configServer.app)
-        }
+        (configServer.app !== undefined) ? await mFastify.register(configServer.app) : null;
+
         mFastify.listen({ port : configServer.port, host : configServer.host }, async (error) => {
             if (!error){
                 (configServer.getConfig !== undefined) ? configServer.getConfig(configServer) : null;

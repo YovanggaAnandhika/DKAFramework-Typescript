@@ -26,8 +26,10 @@ import {PRODUCTION} from "../../../Types/ConfigServerTypes";
 import {Options} from "../../../index";
 import {CallbackServerSocketIOComponent} from "../../../Interfaces/CallbackServerInterfaces";
 import SocketIOEngineHeaders from "./Component/SocketIOEngineHeaders";
+import {SocketIOMiddleware} from "./Component/SocketIOMiddleware";
+import tcpPortUsed from "tcp-port-used";
 
-export async function SERVER<Config extends ConfigSocketIOServer>(config : Config) : Promise<CallbackServerSocketIOComponent> {
+async function ServerSelectedSocketIO<Config extends ConfigSocketIOServer>(config : Config) : Promise<CallbackServerSocketIOComponent> {
     //################ Declaration Variable ###########################
     let SocketIO : Server;
     let FastifyServer : FastifyInstance;
@@ -36,8 +38,6 @@ export async function SERVER<Config extends ConfigSocketIOServer>(config : Confi
     let mHTTPS : HTTPSServer;
     //################ Declaration Variable ###########################
     return new Promise(async (resolve, rejected) => {
-        config = await merge(DefaultConfigSocketIOHTTPServer, config);
-        //#######################################################
         switch (config.settings?.engine?.protocol) {
             case SOCKET_TYPE_HTTP :
                 config = await merge(DefaultConfigSocketIOHTTPServer, config);
@@ -45,14 +45,15 @@ export async function SERVER<Config extends ConfigSocketIOServer>(config : Confi
                 SocketIO = await new Server(mHTTP, config.settings?.socket);
                 //** Header Set
                 SocketIO = SocketIOEngineHeaders(SocketIO);
+                SocketIO.use(SocketIOMiddleware);
                 if (config.use !== undefined){
                     await SocketIO.use(config.use)
                 }
                 /** Event on Connection Data **/
                 if (config.events?.socket?.onConnection !== undefined){
                     await SocketIO.on("connection", async (io) => {
-                       await config.events?.socket?.onConnection?.(io);
-                       //** Event On Disconnection Data **/
+                        await config.events?.socket?.onConnection?.(io);
+                        //** Event On Disconnection Data **/
                         if (config.events?.socket?.onDisconnection !== undefined){
                             await io.on("disconnect", async (reason) => {
                                 await config.events?.socket?.onDisconnection?.(reason);
@@ -92,6 +93,7 @@ export async function SERVER<Config extends ConfigSocketIOServer>(config : Confi
                 SocketIO = await new Server(mHTTP2, config.settings?.socket);
                 //** Header Set
                 SocketIO = SocketIOEngineHeaders(SocketIO);
+                SocketIO.use(SocketIOMiddleware);
                 if (config.use !== undefined){
                     await SocketIO.use(config.use)
                 }
@@ -139,6 +141,7 @@ export async function SERVER<Config extends ConfigSocketIOServer>(config : Confi
                 SocketIO = await new Server(mHTTPS, config.settings?.socket);
                 //** Header Set
                 SocketIO = SocketIOEngineHeaders(SocketIO);
+                SocketIO.use(SocketIOMiddleware);
                 if (config.use !== undefined){
                     await SocketIO.use(config.use)
                 }
@@ -193,6 +196,7 @@ export async function SERVER<Config extends ConfigSocketIOServer>(config : Confi
                 SocketIO = await new Server(FastifyServer.server)
                 //** Header Set
                 SocketIO = SocketIOEngineHeaders(SocketIO);
+                SocketIO.use(SocketIOMiddleware);
                 if (config.use !== undefined){
                     await SocketIO.use(config.use)
                 }
@@ -236,6 +240,7 @@ export async function SERVER<Config extends ConfigSocketIOServer>(config : Confi
                 SocketIO = await new Server(mHTTP,config.settings?.socket);
                 //** Header Set
                 SocketIO = SocketIOEngineHeaders(SocketIO);
+                SocketIO.use(SocketIOMiddleware);
                 if (config.use !== undefined){
                     await SocketIO.use(config.use)
                 }
@@ -277,6 +282,29 @@ export async function SERVER<Config extends ConfigSocketIOServer>(config : Confi
                 }
                 break;
         }
+    })
+}
+export async function SocketIOServerInstances<Config extends ConfigSocketIOServer>(config : Config) : Promise<CallbackServerSocketIOComponent> {
+    return new Promise(async (resolve, rejected) => {
+        config = await merge(DefaultConfigSocketIOHTTPServer, config);
+        //#######################################################
+        await tcpPortUsed.check(config.port as number,config.host)
+            .then(async (inUse) => {
+                if (!inUse){
+                    await ServerSelectedSocketIO<Config>(config)
+                        .then(async (result) => {
+                            await resolve(result)
+                        })
+                        .catch(async (error) => {
+                            await rejected(error)
+                        })
+                }else{
+                    await rejected({ status : false, code : 502, msg : `Port in Used. Try another port. or kill process ${config.port} on this machine`})
+                }
+            })
+            .catch(async (error) => {
+                await rejected({ status : false, code : 500, msg : `error Check TCP Port Used`, error : error})
+            })
     })
 
 }

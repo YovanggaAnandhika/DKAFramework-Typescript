@@ -1,7 +1,7 @@
 import { Server, Options } from "../src";
 
 (async () => {
-    await Server({
+    /*await Server({
         engine : Options.ENGINE.FASTIFY,
         host : Options.HOST.WILDCARD,
         app : async (app, opts, next) => {
@@ -21,23 +21,23 @@ import { Server, Options } from "../src";
         //await server.engine.server.listen({ port : server.getConfig.port, host : server.getConfig.host})
     }).catch(async (error) => {
 
-    });
+    });*/
 
-    /*await Server({
+    await Server({
         engine : Options.ENGINE.SOCKETIO,
         host : Options.HOST.WILDCARD,
         port : 2888,
         settings : {
             engine : {
-                protocol : Options.SETTINGS.ENGINE.PROTOCOL.HTTPS
-            }
+                protocol : Options.SETTINGS.ENGINE.PROTOCOL.HTTP2
+            },
         }
     }).then(async (server) => {
-        console.log(server.getConfig.settings)
+        console.log(server)
         //await server.engine.server.listen({ port : server.getConfig.port, host : server.getConfig.host})
     }).catch(async (error) => {
-
-    });*/
+        console.error(error)
+    });
 
 
 
