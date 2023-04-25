@@ -7,10 +7,12 @@ export interface ConfigUDPServerOn {
     Listening ?: () => void,
     Message ?: ConfigUDPServerOnMessage | undefined
 }
-export interface ConfigUDPServer extends GlobalServerConfigInterfaces {
+export interface ConfigUDPServerInstance {
     engine ?: UDP_ENGINE | undefined,
     on ?: ConfigUDPServerOn | undefined
 }
+
+export type ConfigUDPServer = ConfigUDPServerInstance & GlobalServerConfigInterfaces
 
 export interface UDPList {
     [ name : string ] : Socket

@@ -4,11 +4,14 @@ import { default as Options } from "./Config";
 import {FASTIFY_ENGINE} from "./Component/Fastify/Types/TypesFastifyServer";
 import {SOCKET_ENGINE} from "./Component/SocketIO/Server/Types/TypesSocketIOServer";
 import {UDP_ENGINE} from "./Component/UDP/Types/TypesUDPServer";
-import {isArray, isObject} from "lodash";
+import {isArray, isObject, merge} from "lodash";
+import path from "path";
+//import {DefaultServerConfiguration} from "./Config/DefaultServerConfiguration";
 
-export async function Server<Config extends ConfigServerInterfaces> (serverConfig : Config) : Promise<ServerSelector<Config>> {
+export async function Server<Config extends ConfigServerInterfaces> (serverConfig ?: Config) : Promise<ServerSelector<Config>> {
+    //serverConfig = merge(DefaultServerConfiguration, serverConfig)
     return new Promise(async (resolve, rejected) => {
-        switch (serverConfig.engine) {
+        switch (serverConfig?.engine) {
             case FASTIFY_ENGINE :
                 let { FASTIFY } = await import("./Component/Fastify");
                 await FASTIFY(serverConfig)
@@ -20,6 +23,7 @@ export async function Server<Config extends ConfigServerInterfaces> (serverConfi
                     })
                 break;
             case SOCKET_ENGINE :
+
                 let { SocketIOServerInstances } = await import("./Component/SocketIO/Server");
                 await SocketIOServerInstances(serverConfig)
                     .then(async (mServerCallbackInstance) => {

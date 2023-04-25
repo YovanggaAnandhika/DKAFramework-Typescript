@@ -14,10 +14,12 @@ export interface ConfigFastifyServerSettings {
 export interface ConfigFastifyServerHooks {
     onRequest : (req : onRequestHookHandler) => Promise<void>
 }
-export interface ConfigFastifyServer extends GlobalServerConfigInterfaces {
+export interface ConfigFastifyServerInstances {
     engine ?: FASTIFY_ENGINE | undefined,
     app ?: ConfigFastifyServerRegister,
     hooks ?: ConfigFastifyServerHooks
     getConfig ?: (config : ConfigFastifyServer) => Promise<void> | void
     settings ?: ConfigFastifyServerSettings | undefined
 }
+
+export type ConfigFastifyServer = ConfigFastifyServerInstances & GlobalServerConfigInterfaces

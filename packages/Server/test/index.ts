@@ -1,6 +1,7 @@
 import { Server, Options } from "../src";
 
 (async () => {
+
     /*await Server({
         engine : Options.ENGINE.FASTIFY,
         host : Options.HOST.WILDCARD,
@@ -23,15 +24,9 @@ import { Server, Options } from "../src";
 
     });*/
 
-    await Server({
-        engine : Options.ENGINE.SOCKETIO,
-        host : Options.HOST.WILDCARD,
-        port : 2888,
-        settings : {
-            engine : {
-                protocol : Options.SETTINGS.ENGINE.PROTOCOL.HTTP2
-            },
-        }
+    Server({
+        engine : Options.ENGINE.FASTIFY,
+        port : 2811
     }).then(async (server) => {
         console.log(server)
         //await server.engine.server.listen({ port : server.getConfig.port, host : server.getConfig.host})

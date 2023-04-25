@@ -64,10 +64,12 @@ export interface ConfigSocketIOServerEvents {
 }
 
 
-export interface ConfigSocketIOServer extends GlobalServerConfigInterfaces {
+export interface ConfigSocketIOServerInstances {
     engine ?: SOCKET_ENGINE | undefined,
     events ?: ConfigSocketIOServerEvents,
     io ?: SocketIOSocketIO,
     use ?: SocketIOMiddlewareUse,
     settings ?: ConfigSocketIOServerSettings
 }
+
+export type ConfigSocketIOServer = ConfigSocketIOServerInstances & GlobalServerConfigInterfaces
