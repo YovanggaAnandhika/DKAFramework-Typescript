@@ -1,6 +1,6 @@
 {
   "name": "@dkaframework/client",
-  "version": "3.0.0",
+  "version": "1.0.138",
   "main": "index.js",
   "author": "Yovangga Anandhika",
   "license": "MIT",
@@ -17,5 +17,5 @@
     "socket.io-client": "^4.6.1",
     "web-pingjs": "^1.0.1"
   },
-  "gitHead": "b67422ff8d7ca8c9a35bacbf9469b449c1e57818"
+  "gitHead": "cc898430f19f04dd4a39d6a011b8cfd9092c461d"
 }

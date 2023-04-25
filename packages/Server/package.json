@@ -1,6 +1,6 @@
 {
   "name": "@dkaframework/server",
-  "version": "1.0.0",
+  "version": "1.0.138",
   "homepage": "https://github.com/YovanggaAnandhika/DKAFramework-Typescript-Server.git",
   "description": "The Multi Framework Server Function. Part Module Of DKAFramework",
   "keywords": [
@@ -113,5 +113,5 @@
     "nodemon": "^2.0.19",
     "typescript-cp": "^0.1.6"
   },
-  "gitHead": "b67422ff8d7ca8c9a35bacbf9469b449c1e57818"
+  "gitHead": "cc898430f19f04dd4a39d6a011b8cfd9092c461d"
 }
