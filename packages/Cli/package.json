@@ -1,6 +1,6 @@
 {
   "name": "@dkaframework/cli",
-  "version": "1.0.144",
+  "version": "1.0.145",
   "main": "dist/dka.js",
   "types": "dist/dka.d.ts",
   "author": "Yovangga Anandhika",
@@ -11,7 +11,7 @@
     "build": "tsc --build"
   },
   "bin": {
-    "dka" : "dist/dka.js"
+    "dka": "dist/dka.js"
   },
   "dependencies": {
     "@caporal/core": "^2.0.2",
@@ -35,5 +35,6 @@
   "devDependencies": {
     "nodemon": "^2.0.19",
     "ts-node": "^10.9.1"
-  }
+  },
+  "gitHead": "56b58b2fb5d929308fdb58761ca4c5b78568a9d1"
 }
