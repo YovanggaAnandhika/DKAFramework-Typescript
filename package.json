@@ -8,9 +8,14 @@
   "workspaces": [
     "packages/*"
   ],
-  "scripts": {},
+  "scripts": {
+    "test": "nodemon --watch test --exec ts-node test/index.ts"
+  },
   "devDependencies": {
     "@nrwl/nx-cloud": "^15.2.1",
-    "lerna": "^6.5.1"
+    "lerna": "^6.5.1",
+    "ts-node" : "latest",
+    "typescript": "latest",
+    "@types/node": "latest"
   }
 }

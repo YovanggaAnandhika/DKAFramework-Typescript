@@ -111,6 +111,7 @@
     "@types/socket.io": "^3.0.2",
     "ejs": "^3.1.8",
     "nodemon": "^2.0.19",
+    "ts-node": "^10.9.1",
     "typescript-cp": "^0.1.6"
   },
   "gitHead": "56b58b2fb5d929308fdb58761ca4c5b78568a9d1"
