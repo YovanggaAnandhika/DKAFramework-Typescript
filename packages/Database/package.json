@@ -18,7 +18,7 @@
     "prepublish": "yarn run clean && yarn run compile"
   },
   "dependencies": {
-    "@dkaframework/security": "^2.0.19",
+    "@dkaframework/security": "*",
     "@types/jsbn": "^1.2.30",
     "@types/lodash": "^4.0.0",
     "@types/mysql": "^2.15.21",
@@ -49,5 +49,5 @@
     "ts-node": "*",
     "typescript-cp": "*"
   },
-  "gitHead": "b67422ff8d7ca8c9a35bacbf9469b449c1e57818"
+  "gitHead": "91062081c3e6e2879b1905b2fd4b247f3787e9e5"
 }
