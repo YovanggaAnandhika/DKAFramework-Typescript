@@ -1,6 +1,6 @@
 {
   "name": "@dkaframework/cli",
-  "version": "1.0.5",
+  "version": "1.0.145",
   "main": "dist/dka.js",
   "types": "dist/dka.d.ts",
   "author": "Yovangga Anandhika",
