@@ -4,6 +4,6 @@
   ],
   "boostrap": true,
   "npmClient": "yarn",
-  "version": "1.0.145",
+  "version": "independent",
   "useWorkspaces": true
 }
