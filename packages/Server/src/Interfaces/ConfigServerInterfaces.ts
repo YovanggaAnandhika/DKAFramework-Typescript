@@ -13,7 +13,7 @@ export interface GlobalServerConfigInterfacesSettings {
     logger ?: GlobalServerConfigInterfacesSettingsLogger
 }
 
-export interface GlobalServerConfigInterfaces extends Object {
+export interface GlobalServerConfigInterfaces {
     state ?: DEVELOPMENT | PRODUCTION
     host ?: string | undefined,
     port ?: number | undefined,

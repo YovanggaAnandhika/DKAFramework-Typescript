@@ -14,9 +14,3 @@ export type PRODUCTION = "PRODUCTION";
 export const DEVELOPMENT : DEVELOPMENT = "DEVELOPMENT";
 export const PRODUCTION : PRODUCTION = "PRODUCTION";
 //#################################
-
-export type SocketIOError = (error ?: ExtendedError) => void;
-export type SocketIOSocketServer = Server<DefaultEventsMap, DefaultEventsMap, DefaultEventsMap, any>;
-export type SocketIOSocketMiddlewareSocket = Socket<DefaultEventsMap, DefaultEventsMap, DefaultEventsMap, any>;
-export type SocketIOMiddlewareUse = (socket : SocketIOSocketMiddlewareSocket, next : SocketIOError) => Promise<void> | void | undefined;
-export type SocketIOSocketIO = (io : SocketIOSocketServer) => Promise<void> | void

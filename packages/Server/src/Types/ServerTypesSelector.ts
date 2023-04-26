@@ -6,7 +6,6 @@ import {UDP_ENGINE} from "../Component/UDP/Types/TypesUDPServer";
 import {CallbackUDPServer} from "../Component/UDP/Interfaces/CallbackUDPServer";
 
 
-export type ServerSelectorObject<Config> = Config extends { engine : SOCKET_ENGINE } ? CallbackSocketIOServer<Config> :
+export type ServerSelector<Config> = Config extends { engine : SOCKET_ENGINE } ? CallbackSocketIOServer<Config> :
     Config extends { engine : FASTIFY_ENGINE } ? CallbackFastifyServer :
         Config extends { engine : UDP_ENGINE } ? CallbackUDPServer : never;
-export type ServerSelector<Config> = Config extends Object ?  ServerSelectorObject<Config> : never ;

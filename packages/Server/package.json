@@ -1,6 +1,6 @@
 {
   "name": "@dkaframework/server",
-  "version": "1.0.138",
+  "version": "1.0.145",
   "homepage": "https://github.com/YovanggaAnandhika/DKAFramework-Typescript-Server.git",
   "description": "The Multi Framework Server Function. Part Module Of DKAFramework",
   "keywords": [
@@ -19,8 +19,8 @@
     "url": "https://github.com/YovanggaAnandhika/DKAFramework-Typescript-Server/issues",
     "email": "dhikaprivate@gmail.com"
   },
-  "main": "./dist/index.js",
-  "types": "./dist/index.d.ts",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
   "author": {
     "name": "Yovangga Anandhika",
     "email": "dhikaprivate@gmail.com"

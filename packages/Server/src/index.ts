@@ -6,9 +6,11 @@ import {SOCKET_ENGINE} from "./Component/SocketIO/Server/Types/TypesSocketIOServ
 import {UDP_ENGINE} from "./Component/UDP/Types/TypesUDPServer";
 import {isArray, isObject, merge} from "lodash";
 import path from "path";
+import {ServerConfigSelector} from "./Types/ServerTypesConfigSelector";
+import {ConfigFastifyServer} from "./Component/Fastify/Interfaces/ConfigFastifyServer";
 //import {DefaultServerConfiguration} from "./Config/DefaultServerConfiguration";
 
-export async function Server<Config extends ConfigServerInterfaces> (serverConfig ?: Config) : Promise<ServerSelector<Config>> {
+export async function Server<Config extends ConfigServerInterfaces = ConfigServerInterfaces> (serverConfig ?: ServerConfigSelector<Config>) : Promise<ServerSelector<Config>> {
     //serverConfig = merge(DefaultServerConfiguration, serverConfig)
     return new Promise(async (resolve, rejected) => {
         switch (serverConfig?.engine) {

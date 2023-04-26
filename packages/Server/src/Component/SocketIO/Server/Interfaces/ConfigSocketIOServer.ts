@@ -4,7 +4,7 @@ import {
     SOCKET_TYPE_FASTIFY,
     SOCKET_TYPE_HTTP,
     SOCKET_TYPE_HTTP2,
-    SOCKET_TYPE_HTTPS
+    SOCKET_TYPE_HTTPS, SocketIOMiddlewareUse, SocketIOSocketIO
 } from "../Types/TypesSocketIOServer";
 import {ServerOptions as SocketServerOptions, Socket} from "socket.io";
 import {RequestListener, ServerOptions as HTTPServerOptions} from "http";
@@ -12,7 +12,6 @@ import {Http2SecureServer, SecureServerOptions as HTTP2SecureServerOptions} from
 import {ServerOptions as HTTPSServerOptions} from "https"
 import {DefaultEventsMap} from "socket.io/dist/typed-events";
 import {FastifyHttp2SecureOptions} from "fastify";
-import {SocketIOMiddlewareUse, SocketIOSocketIO} from "../../../../Types/ConfigServerTypes";
 
 export interface ConfigSocketIOServerSettingsHTTP extends HTTPServerOptions {
     protocol ?: SOCKET_TYPE_HTTP,
@@ -51,7 +50,7 @@ export interface ConfigSocketIOServerSettings {
 }
 
 export interface ConfigSocketIOServerEventsSocket {
-    onConnection ?: (io : Socket<DefaultEventsMap, DefaultEventsMap, DefaultEventsMap, any>) => Promise<void> | void,
+    onConnection ?: (io : Socket<DefaultEventsMap, DefaultEventsMap, any>) => Promise<void>,
     onDisconnection ?: (reason : any) => Promise<void> | void,
 }
 
@@ -63,12 +62,11 @@ export interface ConfigSocketIOServerEvents {
     server ?: ConfigSocketIOServerEventsServer
 }
 
-
 export interface ConfigSocketIOServerInstances {
     engine ?: SOCKET_ENGINE | undefined,
-    events ?: ConfigSocketIOServerEvents,
-    io ?: SocketIOSocketIO,
-    use ?: SocketIOMiddlewareUse,
+    io ?: SocketIOSocketIO | undefined,
+    events ?: ConfigSocketIOServerEvents | undefined,
+    use ?: SocketIOMiddlewareUse | undefined,
     settings ?: ConfigSocketIOServerSettings
 }
 
