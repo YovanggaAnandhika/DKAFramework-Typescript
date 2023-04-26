@@ -13,9 +13,6 @@
   },
   "devDependencies": {
     "@nrwl/nx-cloud": "^15.2.1",
-    "lerna": "^6.5.1",
-    "ts-node" : "latest",
-    "typescript": "latest",
-    "@types/node": "latest"
+    "lerna": "^6.5.1"
   }
 }
