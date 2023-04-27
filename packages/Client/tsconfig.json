@@ -3,18 +3,13 @@
   "include": [ "src/**/*" ],
   "compilerOptions": {
     "target": "ES2015",
-    "module": "CommonJS",
+    "module": "UMD",
     "lib": [
-      "es2017",
-      "es7",
-      "es5",
-      "es6",
       "dom"
     ],
     // Tells TypeScript to read JS files, as
     // Generate d.ts files
     "declaration": true,
-    "jsx": "react",
     "rootDir": "src",
     // Types should go into this directory.
     // Removing this would place the .d.ts files
@@ -26,7 +21,8 @@
     "declarationMap": true,
     "strict": true,
     "esModuleInterop": true,
-    "resolveJsonModule": true
+    "moduleResolution": "Node"
+    //"resolveJsonModule": true
   },
   "exclude": [
     "node_modules",

@@ -9,7 +9,8 @@
     "packages/*"
   ],
   "scripts": {
-    "test": "nodemon --watch test --exec ts-node test/index.ts"
+    "test": "nodemon --watch test --exec ts-node test/index.ts",
+    "workspace:client" : "yarn workspace @dkaframework/client run test"
   },
   "devDependencies": {
     "@nrwl/nx-cloud": "^15.2.1",
