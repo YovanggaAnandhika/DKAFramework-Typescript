@@ -29,12 +29,12 @@ good one.
 
 ## Available Module DKA FRAMEWORK
 
-| Module Name                                                                              | Description                                                                                                    |
-|------------------------------------------------------------------------------------------|----------------------------------------------------------------------------------------------------------------|
-| ![GitHub version](https://img.shields.io/badge/%40dkaframework%2Fserver-v.1.0.145-green)   | The Function Create a server or client program. like reactjs, fastify, socket.io, and another servicing server |
- | ![GitHub version](https://img.shields.io/badge/%40dkaframework%2Fdatabase-v.1.0.145-green) | The Function Create a DBMS Connector. like MARIADB, Sqlite, MongoDB and another DBMS Connector                 |
- | ![GitHub version](https://img.shields.io/badge/%40dkaframework%2Fsecurity-v.1.0.145-green) | The Function Create a security function, like firewall, encryption, decription                                 |
- | ![GitHub version](https://img.shields.io/badge/%40dkaframework%2Futils-v.1.0.145-green)    | The Function is costum. general function for the method practice                                               |
+| Module Name                                                                                                                                                                          | Description                                                                                                    |
+|--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|----------------------------------------------------------------------------------------------------------------|
+| [![GitHub version](https://img.shields.io/badge/%40dkaframework%2Fserver-v.1.0.145-green)](https://github.com/YovanggaAnandhika/DKAFramework-Typescript/tree/v3/packages/Server)     | The Function Create a server or client program. like reactjs, fastify, socket.io, and another servicing server |
+ | [![GitHub version](https://img.shields.io/badge/%40dkaframework%2Fdatabase-v.1.0.145-green)](https://github.com/YovanggaAnandhika/DKAFramework-Typescript/tree/v3/packages/Database) | The Function Create a DBMS Connector. like MARIADB, Sqlite, MongoDB and another DBMS Connector                 |
+ | [![GitHub version](https://img.shields.io/badge/%40dkaframework%2Fsecurity-v.1.0.145-green)](https://github.com/YovanggaAnandhika/DKAFramework-Typescript/tree/v3/packages/Security) | The Function Create a security function, like firewall, encryption, decription                                 |
+ | [![GitHub version](https://img.shields.io/badge/%40dkaframework%2Futils-v.1.0.145-green)](https://github.com/YovanggaAnandhika/DKAFramework-Typescript/tree/v3/packages/Utils)       | The Function is costum. general function for the method practice                                               |
 
 
 <!--
