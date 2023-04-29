@@ -1,5 +1,5 @@
 # DKA FRAMEWORK
-### multifunction framework & easy for coding
+### powerfull framework for integration
 
 ## Status
 
@@ -27,8 +27,7 @@ good one.
 * **Without Installing WebServer.** Using the main JS language that is suitable in terms of data efficiency.
 * **More Other Features.** 🐈
 
-## Available Module
-
+## Available Module DKA FRAMEWORK
 
 | Module Name                                                                              | Description                                                                                                    |
 |------------------------------------------------------------------------------------------|----------------------------------------------------------------------------------------------------------------|
@@ -38,56 +37,21 @@ good one.
  | ![GitHub version](https://img.shields.io/badge/%40dkaframework%2Futils-v.2.0.7-green)    | The Function is costum. general function for the method practice                                               |
 
 
+<!--
 ## Installing DKA DKAFramework-Typescript Module
 
 ### Simple Installation
 
-with npm
+ with npm
 ``` npm install @dkaframework/<packagename>@<version>```<br/>
 with yarn install
-``` yarn add -D @dkaframework/<packagename>@<version> ```
+``` yarn add -D @dkaframework/<packagename>@<version> ``` 
 
 
-Read More About [Installation Guide](https://github.com/YovanggaAnandhika/Server/blob/master/INSTALL.md) On the Website
+Read More About [Installation Guide](https://github.com/YovanggaAnandhika/Server/blob/v3/INSTALL.md) On the Website
 Us For More Information.
 
-
-**I'm a Night 🦉**
-
-```text
-🌞 Morning    147 commits    ██░░░░░░░░░░░░░░░░░░░░░░░   9.16% 
-🌆 Daytime    605 commits    █████████░░░░░░░░░░░░░░░░   37.72% 
-🌃 Evening    533 commits    ████████░░░░░░░░░░░░░░░░░   33.23% 
-🌙 Night      319 commits    █████████████░░░░░░░░░░░░   19.89%
-
-```
-
-📅 **I'm Most Productive on Monday**
-
-```text
-Monday       352 commits    █████░░░░░░░░░░░░░░░░░░░░   21.95% 
-Tuesday      259 commits    ████░░░░░░░░░░░░░░░░░░░░░   16.15% 
-Wednesday    275 commits    ████░░░░░░░░░░░░░░░░░░░░░   17.14% 
-Thursday     167 commits    ██░░░░░░░░░░░░░░░░░░░░░░░   10.41% 
-Friday       207 commits    ███░░░░░░░░░░░░░░░░░░░░░░   12.91% 
-Saturday     193 commits    ███░░░░░░░░░░░░░░░░░░░░░░   12.03% 
-Sunday       151 commits    ██░░░░░░░░░░░░░░░░░░░░░░░   9.41%
-
-```
-
-📊 **This Week I Spent My Time On**
-
-```text
-⌚︎ Time Zone: Asia/Makassar
-
-💬 Programming Languages: 
-YAML                     1 hr 54 mins        ████████████░░░░░░░░░░░░░   47.6% 
-Python                   1 hr 23 mins        ████████░░░░░░░░░░░░░░░░░   34.73% 
-C++                      24 mins             ██████████████░░░░░░░░░░░   50.29% 
-CMake                    10 mins             █░░░░░░░░░░░░░░░░░░░░░░░░   4.27% 
-XML                      4 mins              ░░░░░░░░░░░░░░░░░░░░░░░░░   1.72%
-
-```
+-->
 
 <p style="text-align:center">
 <a href="https://www.buymeacoffee.com/celiduba" target="_blank"><img src="https://cdn.buymeacoffee.com/buttons/default-red.png" alt="Buy Me A Coffee" height="40" width="170" ></a>
@@ -96,7 +60,7 @@ XML                      4 mins              ░░░░░░░░░░░�
 ---
 
 
-Read About : </b>[LICENCE](https://github.com/YovanggaAnandhika/Server/blob/master/LICENSE.md)
+Read About : </b>[LICENCE](https://github.com/YovanggaAnandhika/DKAFramework-Typescript/blob/v3/LICENCE.md)
 
 ## Team
 
