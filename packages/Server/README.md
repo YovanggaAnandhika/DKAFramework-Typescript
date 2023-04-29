@@ -1,123 +1,37 @@
-<h1 style="text-align:center">DKA SERVER MODULE</h1>
-<p style="text-align:center">this is a part module component from or to DKAFramework</p>
-<br>
+# @dkaframework/server
 
-## Status
+[![GitHub last commit](https://img.shields.io/github/last-commit/YovanggaAnandhika/DKAFramework-Typescript)]()
+[![GitHub contributors](https://img.shields.io/github/contributors/YovanggaAnandhika/DKAFramework-Typescript)]()
+[![GitHub pull requests](https://img.shields.io/github/issues-pr/YovanggaAnandhika/DKAFramework-Typescript)]()
+[![GitHub issues](https://img.shields.io/github/issues/YovanggaAnandhika/DKAFramework-Typescript)]()
+[![GitHub repo size](https://img.shields.io/github/repo-size/YovanggaAnandhika/DKAFramework-Typescript)]()
+[![GitHub version](https://img.shields.io/badge/version-v.1.0.145-green)]()
 
+## Features
 
+**[@dkaframework/server](https://github.com/fastify/fastify)** combines other frameworks into a framework and can be used practically to create your project. It consists of:
 
-![GitHub last commit](https://img.shields.io/github/last-commit/YovanggaAnandhika/DKAFramework-Typescript-Server)
-![GitHub contributors](https://img.shields.io/github/contributors/YovanggaAnandhika/DKAFramework-Typescript-Server)
-![GitHub pull requests](https://img.shields.io/github/issues-pr/YovanggaAnandhika/DKAFramework-Typescript-Server)
-![GitHub issues](https://img.shields.io/github/issues/YovanggaAnandhika/DKAFramework-Typescript-Server)
-![GitHub repo size](https://img.shields.io/github/repo-size/YovanggaAnandhika/DKAFramework-Typescript-Server)
+- a **[Fastify](https://github.com/fastify/fastify)** - Fast and low overhead web framework, for Node.js
+- a **[Socket.io](https://github.com/socketio/socket.io-client)** - real-time bidirectional event-based communication
+- a **[Node:dgram - UDP Server](https://nodejs.org/api/dgram.html)** - an udp core udp protocol send files
 
+#### Simple and convenient API
 
-## Benefit
+Sample code:
 
-**Flexible:** System opens and closes the function of loading the required modules because the framework module is
-unloading Install it.
-
-**Fast:** Optimizes Servers with Low RAM, and the Fastest Combination of Frameworks, and Compression Technologies The
-good one.
-
-## Feature
-
-* **Structured.** Easily Comprehensible and Neat Code and Callable Like a Modulation Pack.
-* **No Interface Blocking.** Can Run Without Interfering With Other Functions.
-* **Complete Documentation.** Complete and Included Documentation and Sample Code.
-* **Free from Error.** There is an Error Detection so that Finding Errors Can be Easily Done.
-* **Without Installing WebServer.** Using the main JS language that is suitable in terms of data efficiency.
-* **More Other Features.** 🐈
-
-**I'm a Night 🦉**
-
-```text
-🌞 Morning    147 commits    ██░░░░░░░░░░░░░░░░░░░░░░░   9.16% 
-🌆 Daytime    605 commits    █████████░░░░░░░░░░░░░░░░   37.72% 
-🌃 Evening    533 commits    ████████░░░░░░░░░░░░░░░░░   33.23% 
-🌙 Night      319 commits    █████████████░░░░░░░░░░░░   19.89%
-
-```
-
-📅 **I'm Most Productive on Monday**
-
-```text
-Monday       352 commits    █████░░░░░░░░░░░░░░░░░░░░   21.95% 
-Tuesday      259 commits    ████░░░░░░░░░░░░░░░░░░░░░   16.15% 
-Wednesday    275 commits    ████░░░░░░░░░░░░░░░░░░░░░   17.14% 
-Thursday     167 commits    ██░░░░░░░░░░░░░░░░░░░░░░░   10.41% 
-Friday       207 commits    ███░░░░░░░░░░░░░░░░░░░░░░   12.91% 
-Saturday     193 commits    ███░░░░░░░░░░░░░░░░░░░░░░   12.03% 
-Sunday       151 commits    ██░░░░░░░░░░░░░░░░░░░░░░░   9.41%
-
-```
-
-📊 **This Week I Spent My Time On**
-
-```text
-⌚︎ Time Zone: Asia/Makassar
-
-💬 Programming Languages: 
-YAML                     1 hr 54 mins        ████████████░░░░░░░░░░░░░   47.6% 
-Python                   1 hr 23 mins        ████████░░░░░░░░░░░░░░░░░   34.73% 
-C++                      24 mins             ██████████████░░░░░░░░░░░   50.29% 
-CMake                    10 mins             █░░░░░░░░░░░░░░░░░░░░░░░░   4.27% 
-XML                      4 mins              ░░░░░░░░░░░░░░░░░░░░░░░░░   1.72%
-
-```
-
-<p style="text-align:center">
-<a href="https://www.buymeacoffee.com/celiduba" target="_blank"><img src="https://cdn.buymeacoffee.com/buttons/default-red.png" alt="Buy Me A Coffee" height="40" width="170" ></a>
-</p>
-
----
-
-## Installing DKA DKAFramework-Typescript-Server Module
-
-Simple Installation
-
-with npm
-``` npm install @dkaframework/server@<version>```<br/>
-with yarn install
-``` yarn add -D @dkaframework/server@<version> ```
-
-
-Read More About [Installation Guide](https://github.com/YovanggaAnandhika/Server/blob/master/INSTALL.md) On the Website
-Us For More Information.
-
-## Use DKA Framework
-
-Simple Used Module
-
-with ESCMA SCRIPT
 ```typescript
-   import Server, { Server, Options, Types } from "@dkaframework/server";
+import {Server, Options} from "@dkaframework/server";
 
-   (async () => {
-        await Server(DKAConfig)
-            .then(async (result) => {
-                console.log(result);
-            })
-            .catch(async (error) => {
-                console.log(error);
-            });
-   })();
+(async() => {
+    await Server({
+        engine: Options.ENGINE.FASTIFY, // Options.ENGINE.SOCKETIO || Options.ENGINE.UDP,
+        host: Options.HOST.LOCALHOST, // Options.HOST.WILDCARD
+        port: Options.PORT.DEFAULT,
+        ... // Optional Config if you change engine type
+    }).then(async (serverCallback) => {
+        console.log(serverCallback)
+    }).catch(async (error) => {
+        console.error(error)
+    });
+})()
 ```
-
-Read More About [How To Use](https://github.com/YovanggaAnandhika/Server/blob/master/USAGE.md) For How To Details Use.
-
-## About Copyright
-
-Read About : </b>[LICENCE](https://github.com/YovanggaAnandhika/Server/blob/master/LICENSE.md)
-
-## Team
-
-| [@yovangga](https://github.com/yovanggaanandhika)                                                                       | [@DKAResearchCenter](https://github.com/DKAResearchCenter)                                                    |
-|-------------------------------------------------------------------------------------------------------------------------|---------------------------------------------------------------------------------------------------------------|
-| <img align="center" src="https://avatars.githubusercontent.com/yovanggaanandhika?s=100&v=1" width="100" height="100" /> | <img align="center" src="https://avatars.githubusercontent.com/DKAResearchCenter?s" width="100" height="100"> |
-| Full Stack Development                                                                                                  | DKA Research Center                                                                                           |
-
-## Kredit
-
-Thanks To [DKA Research Center](https://github.com/YovanggaAnandhika) To Donate a Package Name!
