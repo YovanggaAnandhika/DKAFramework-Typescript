@@ -8,7 +8,6 @@ export async function UDPSERVER(config : ConfigUDPServer) : Promise<Socket> {
         mUdp = await udp.createSocket("udp4");
         config.host = (config.state !== Options.STATE.PRODUCTION) ? config.host : "0.0.0.0";
 
-
         (config.on?.Listening !== undefined) ?
             await mUdp.on("listening", config.on.Listening) : null;
 

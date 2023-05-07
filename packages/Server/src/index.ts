@@ -4,13 +4,12 @@ import { default as Options } from "./Config";
 import {FASTIFY_ENGINE} from "./Component/Fastify/Types/TypesFastifyServer";
 import {SOCKET_ENGINE} from "./Component/SocketIO/Server/Types/TypesSocketIOServer";
 import {UDP_ENGINE} from "./Component/UDP/Types/TypesUDPServer";
-import {isArray, isObject, merge} from "lodash";
-import path from "path";
+import {merge} from "lodash";
 import {ServerConfigSelector} from "./Types/ServerTypesConfigSelector";
-import {ConfigFastifyServer} from "./Component/Fastify/Interfaces/ConfigFastifyServer";
-//import {DefaultServerConfiguration} from "./Config/DefaultServerConfiguration";
+import {DefaultServerConfiguration} from "./Config/DefaultServerConfiguration";
+import {WEBPACK_ENGINE} from "./Component/Webpack/Types/WebpackTypesServer";
 
-export async function Server<Config extends ConfigServerInterfaces = ConfigServerInterfaces> (serverConfig ?: ServerConfigSelector<Config>) : Promise<ServerSelector<Config>> {
+export async function Server<Config extends ConfigServerInterfaces> (serverConfig ?: ServerConfigSelector<Config>) : Promise<ServerSelector<Config>> {
     //serverConfig = merge(DefaultServerConfiguration, serverConfig)
     return new Promise(async (resolve, rejected) => {
         switch (serverConfig?.engine) {
@@ -25,7 +24,6 @@ export async function Server<Config extends ConfigServerInterfaces = ConfigServe
                     })
                 break;
             case SOCKET_ENGINE :
-
                 let { SocketIOServerInstances } = await import("./Component/SocketIO/Server");
                 await SocketIOServerInstances(serverConfig)
                     .then(async (mServerCallbackInstance) => {
@@ -50,6 +48,16 @@ export async function Server<Config extends ConfigServerInterfaces = ConfigServe
                 let { UDPSERVER } = await import("./Component/UDP");
                 await UDPSERVER(serverConfig)
                     .then(async (udpSocket) => {
+                        await resolve({ status : true, code : 200, msg : `Server Berhasil Dijalankan` } as ServerSelector<Config>);
+                    })
+                    .catch(async (error) => {
+                        await rejected(error)
+                    });
+                break;
+            case WEBPACK_ENGINE :
+                let { WebpackServerInstances } = await import("./Component/Webpack");
+                await WebpackServerInstances(serverConfig)
+                    .then(async () => {
                         await resolve({ status : true, code : 200, msg : `Server Berhasil Dijalankan` } as ServerSelector<Config>);
                     })
                     .catch(async (error) => {

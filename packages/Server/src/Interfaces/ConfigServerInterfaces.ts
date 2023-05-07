@@ -2,6 +2,7 @@ import {ConfigSocketIOServer} from "../Component/SocketIO/Server/Interfaces/Conf
 import {ConfigFastifyServer} from "../Component/Fastify/Interfaces/ConfigFastifyServer";
 import {DEVELOPMENT, PRODUCTION} from "../Types/ConfigServerTypes";
 import {ConfigUDPServer} from "../Component/UDP/Interfaces/ConfigUDPServer";
+import {ConfigWebpackServer} from "../Component/Webpack/Interfaces/WebpackConfigServer";
 
 
 export interface GlobalServerConfigInterfacesSettingsLogger {
@@ -20,7 +21,7 @@ export interface GlobalServerConfigInterfaces {
     settings ?: GlobalServerConfigInterfacesSettings
 }
 
-export type ConfigServerInterfaces = ConfigSocketIOServer | ConfigFastifyServer | ConfigUDPServer
+export type ConfigServerInterfaces = ConfigSocketIOServer | ConfigFastifyServer | ConfigUDPServer | ConfigWebpackServer
 
 export interface ExtendedError extends Error {
     data?: any;

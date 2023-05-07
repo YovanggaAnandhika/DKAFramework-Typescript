@@ -29,6 +29,32 @@ import SocketIOEngineHeaders from "./Component/SocketIOEngineHeaders";
 import {SocketIOMiddleware} from "./Component/SocketIOMiddleware";
 import tcpPortUsed from "tcp-port-used";
 
+
+export async function SocketIOServerInstances<Config extends ConfigSocketIOServer>(config : Config) : Promise<CallbackServerSocketIOComponent> {
+    return new Promise(async (resolve, rejected) => {
+        config = await merge(DefaultConfigSocketIOHTTPServer, config);
+        //#######################################################
+        await tcpPortUsed.check(config.port as number,config.host)
+            .then(async (inUse) => {
+                if (!inUse){
+                    await ServerSelectedSocketIO<Config>(config)
+                        .then(async (result) => {
+                            await resolve(result)
+                        })
+                        .catch(async (error) => {
+                            await rejected(error)
+                        })
+                }else{
+                    await rejected({ status : false, code : 502, msg : `Port in Used. Try another port. or kill process ${config.port} on this machine`})
+                }
+            })
+            .catch(async (error) => {
+                await rejected({ status : false, code : 500, msg : `error Check TCP Port Used`, error : error})
+            })
+    })
+
+}
+
 async function ServerSelectedSocketIO<Config extends ConfigSocketIOServer>(config : Config) : Promise<CallbackServerSocketIOComponent> {
     //################ Declaration Variable ###########################
     let SocketIO : Server;
@@ -283,28 +309,4 @@ async function ServerSelectedSocketIO<Config extends ConfigSocketIOServer>(confi
                 break;
         }
     })
-}
-export async function SocketIOServerInstances<Config extends ConfigSocketIOServer>(config : Config) : Promise<CallbackServerSocketIOComponent> {
-    return new Promise(async (resolve, rejected) => {
-        config = await merge(DefaultConfigSocketIOHTTPServer, config);
-        //#######################################################
-        await tcpPortUsed.check(config.port as number,config.host)
-            .then(async (inUse) => {
-                if (!inUse){
-                    await ServerSelectedSocketIO<Config>(config)
-                        .then(async (result) => {
-                            await resolve(result)
-                        })
-                        .catch(async (error) => {
-                            await rejected(error)
-                        })
-                }else{
-                    await rejected({ status : false, code : 502, msg : `Port in Used. Try another port. or kill process ${config.port} on this machine`})
-                }
-            })
-            .catch(async (error) => {
-                await rejected({ status : false, code : 500, msg : `error Check TCP Port Used`, error : error})
-            })
-    })
-
 }

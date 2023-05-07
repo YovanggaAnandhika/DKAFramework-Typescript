@@ -7,16 +7,19 @@ import {
 import {DEVELOPMENT, PRODUCTION} from "../Types/ConfigServerTypes";
 import {UDP_ENGINE} from "../Component/UDP/Types/TypesUDPServer";
 import {ConfigSocketIOServerSettings} from "../Component/SocketIO/Server/Interfaces/ConfigSocketIOServer";
+import {WEBPACK_ENGINE} from "../Component/Webpack/Types/WebpackTypesServer";
 
 
 export const ConfigServerEngineFastify : FASTIFY_ENGINE = "FASTIFY"
 export const ConfigServerEngineSocketIO : SOCKET_ENGINE = "SOCKET.IO"
 export const ConfigServerEngineUDP : UDP_ENGINE = "USER_DATA_PROTOCOL"
+export const ConfigServerEngineWebpack : WEBPACK_ENGINE = "WEBPACK";
 
 export const ConfigServerEngine = {
     FASTIFY : ConfigServerEngineFastify,
     SOCKETIO : ConfigServerEngineSocketIO,
-    UDP : ConfigServerEngineUDP
+    UDP : ConfigServerEngineUDP,
+    WEBPACK : ConfigServerEngineWebpack
 }
 
 export const ConfigServerState = {
