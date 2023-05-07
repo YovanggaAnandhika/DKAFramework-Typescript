@@ -13,21 +13,14 @@ export interface MultiCompilerOptions {
 }
 
 export interface WebpackConfigServerInstancesSettings {
-    webpack ?: WebpackSingleConfig | WebpackMultiConfig
+
 }
 
-export type WebpackConfigServerInstancesCallback<Callback extends Stats | MultiStats | any = any> = (err?: Error, stats?: Callback) => void;
-
-
-export type WebpackConfigServerInstancesCheckedCallback<Config> =
-    Config extends { webpack : Array<WebpackSingleConfig> } ? { callback ?: WebpackConfigServerInstancesCallback<MultiStats> } :
-        { callback ?: WebpackConfigServerInstancesCallback<Stats> };
-
-export type WebpackConfigServerInstances = {
+export interface WebpackConfigServerInstances {
     engine ?: WEBPACK_ENGINE | undefined,
-    webpack ?: WebpackSingleConfig,
-    webpackDev ?: WebpackDevSingleConfig,
-    settings ?: WebpackConfigServerInstancesSettings
+    webpack ?: WebpackSingleConfig | undefined,
+    webpackDev ?: WebpackDevSingleConfig | undefined,
+    settings ?: WebpackConfigServerInstancesSettings | undefined
 }
 
 

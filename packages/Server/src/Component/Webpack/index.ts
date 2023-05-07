@@ -1,4 +1,4 @@
-import {ConfigWebpackServer, WebpackConfigServerInstancesCheckedCallback} from "./Interfaces/WebpackConfigServer";
+import {ConfigWebpackServer} from "./Interfaces/WebpackConfigServer";
 import {webpack, Compiler, MultiCompiler} from "webpack";
 import webpackDev, { WebSocketServer } from "webpack-dev-server";
 import {WebpackMultiConfig, WebpackSingleConfig} from "./Types/WebpackTypesServer";
