@@ -4,7 +4,9 @@ import fs from "fs";
 import chalk from "chalk";
 import clear from "clear";
 import figlet from "figlet";
-const { program } = require("@caporal/core");
+import { Command } from "commander";
+import * as process from "process";
+const inquirer = require('inquirer');
 
 function checkModuleExist(name : string){
     try {
@@ -17,6 +19,7 @@ function checkModuleExist(name : string){
 
 (async () => {
     await clear();
+    const program = new Command();
     await console.log(chalk.whiteBright(
             figlet.textSync('DKA-CLI', { horizontalLayout: 'default' })
         )
@@ -24,54 +27,29 @@ function checkModuleExist(name : string){
 
     const Packages = fs.existsSync(path.join(__dirname, "./../package.json")) ? require("./../package.json") : undefined;
 
+    // @ts-ignore
+
     program
         .version(`${Packages.version}`)
-        .command("server", "running a apps dka framework")
-        .argument("<mainFiles>","The Services File Main Point")
-        .option("-n, --nodemon", `nodemon`)
-        .option("-nw, --watch <dir>","watch folder nodemon",{
-            default : []
-        })
-        .option("-t, --typescript [config]", `use typescript engine`)
-        // @ts-ignore
-        .action(async ({args, options, logger}) => {
-            console.log(options.typescript)
-            if (options.nodemon){
-                if (checkModuleExist("nodemon")){
-                    let nodemon = await require("nodemon");
-                    if (options.typescript){
-                        if (checkModuleExist("ts-node")){
-                            await nodemon({
-                                script : args.mainFiles,
-                                watch : options.watch,
-                                exec : `ts-node ${(options.typescript === true) ? `` : `--project ${options.typescript}`}`,
-
-                            })
-                        }else{
-                            logger.error("ts-node module is used. but modules not found");
-                        }
-                    }else{
-                        await nodemon({
-                            script : args.mainFiles,
-                            watch : options.watch,
-                            exec : "node"
-                        })
-                    }
-
-                }else{
-                    logger.error("nodemon module is used. but modules not found");
+        .description(`${Packages.description}`)
+        .command("create-server-app", "create a project with DKA Framework")
+        .action(async (action) => {
+            //let mCurrentDir = (action.args.name !== undefined) ? path.join(process.cwd(), `${action.args.name}`) : path.join(process.cwd());
+            // @ts-ignore
+            inquirer.prompt([
+                {
+                    name : "lang",
+                    type : "list",
+                    message : "select your language ?",
+                    choices: ['Indonesia', 'English'],
+                    filter(val : string) {
+                        return val.toLowerCase();
+                    },
                 }
-            }
+            ])
         })
 
-        .command("login", "function for authentification")
-        .option(`-u,--username <username>`, `login function`)
-        .option(`-p,--password <password>`, `login function`)
-        // @ts-ignore
-        .action(async ({args, options, logger}) => {
-            logger.info("Order canceled: %s", options)
-        });
-
-   await program.run(process.argv.slice(2));
+    await program.parse(process.argv.slice(1))
+    //program.parse(process.argv)
 
 })();

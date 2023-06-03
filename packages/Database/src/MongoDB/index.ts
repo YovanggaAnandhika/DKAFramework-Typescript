@@ -2,11 +2,8 @@ import {Db, MongoClient} from "mongodb";
 import {
     MongoDBConfigConstructor,
 } from "./Interfaces/Config";
-import {MongoDBDefaultConfig} from "./Const/Config";
 import {
-    MongoDBCallback,
     MongoDBCallbackDb,
-    MongoDBCallbackError,
     MongoDBCallbackMongoClient
 } from "./Interfaces/Callback";
 

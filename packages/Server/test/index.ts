@@ -1,4 +1,4 @@
-import { Server, Options } from "../dist";
+import { Server, Options } from "../src";
 import {Configuration} from "webpack";
 import {WebpackMultiConfig, WebpackSingleConfig} from "../src/Component/Webpack/Types/WebpackTypesServer";
 import { join } from "path";
@@ -6,15 +6,13 @@ import { join } from "path";
 (async () => {
 
     await Server({
-        engine : Options.ENGINE.WEBPACK,
+        engine : Options.ENGINE.FASTIFY,
         host : Options.HOST.LOCALHOST,
         port : 2888,
-        webpack : {
-            output : {
-                path : join(__dirname,"./dist/"),
-                filename: 'dkaframework.js'
-            }
-        }
+        app : async (app, opts, next) => {
+
+            next();
+        },
 
     }).then(async (result) => {
 

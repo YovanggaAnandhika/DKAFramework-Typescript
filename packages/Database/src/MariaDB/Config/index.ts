@@ -9,7 +9,8 @@ export const DatabaseMariaDB : mConfigDatabase = {
     password : "",
     port : 3306,
     database : "test",
-    connectionLimit : 100,
+    connectionLimit : 3,
+    connectTimeout : 3,
     autoBackup : {
         enabled : false,
         backupPriodic : "DAILY",

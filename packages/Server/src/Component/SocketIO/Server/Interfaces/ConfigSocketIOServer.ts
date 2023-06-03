@@ -4,14 +4,25 @@ import {
     SOCKET_TYPE_FASTIFY,
     SOCKET_TYPE_HTTP,
     SOCKET_TYPE_HTTP2,
-    SOCKET_TYPE_HTTPS, SocketIOMiddlewareUse, SocketIOSocketIO
+    SOCKET_TYPE_HTTPS, SocketIOEngineCore, SocketIOEngineTypes, SocketIOMiddlewareUse, SocketIOSocketIO
 } from "../Types/TypesSocketIOServer";
 import {ServerOptions as SocketServerOptions, Socket} from "socket.io";
-import {RequestListener, ServerOptions as HTTPServerOptions} from "http";
-import {Http2SecureServer, SecureServerOptions as HTTP2SecureServerOptions} from "http2"
+import {RequestListener, ServerOptions as HTTPServerOptions, Server as HTTPServer} from "http";
+import { Server as HTTPSServer } from "https"
+import {
+    Http2SecureServer as HTTP2SecureServer,
+    Http2SecureServer,
+    SecureServerOptions as HTTP2SecureServerOptions
+} from "http2"
 import {ServerOptions as HTTPSServerOptions} from "https"
 import {DefaultEventsMap} from "socket.io/dist/typed-events";
-import {FastifyHttp2SecureOptions} from "fastify";
+import {
+    FastifyHttp2SecureOptions,
+    FastifyHttpOptions,
+    FastifyHttpsOptions,
+    FastifyInstance,
+    FastifyServerOptions
+} from "fastify";
 
 export interface ConfigSocketIOServerSettingsHTTP extends HTTPServerOptions {
     protocol ?: SOCKET_TYPE_HTTP,
@@ -24,8 +35,9 @@ export interface ConfigSocketIOServerSettingsHTTPS extends HTTPSServerOptions {
     autoListen ?: boolean | undefined
 }
 
-export interface ConfigSocketIOServerSettingsFastify extends FastifyHttp2SecureOptions<Http2SecureServer> {
+export interface ConfigSocketIOServerSettingsFastify {
     protocol ?: SOCKET_TYPE_FASTIFY,
+    type ?: HTTPServer | HTTP2SecureServer | HTTPSServer,
     autoListen ?: boolean | undefined
 }
 
@@ -61,7 +73,7 @@ export interface ConfigSocketIOServerEvents {
     socket ?: ConfigSocketIOServerEventsSocket,
     server ?: ConfigSocketIOServerEventsServer
 }
-
+//HTTPServer | HTTP2SecureServer | HTTPSServer
 export interface ConfigSocketIOServerInstances {
     engine ?: SOCKET_ENGINE | undefined,
     io ?: SocketIOSocketIO | undefined,

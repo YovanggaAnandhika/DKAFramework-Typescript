@@ -1,3 +1,33 @@
 {
-  "private": true
+  "name": "@dkaframework/iot",
+  "version": "1.0.9",
+  "private": false,
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "clean": "rimraf dist",
+    "start": "ts-node test/index.ts",
+    "compile": "tsc --build",
+    "building": "yarn run clean && yarn run compile",
+    "prepublish": "yarn run clean && yarn run compile"
+  },
+  "dependencies": {
+    "@node-escpos/core": "^0.4.0",
+    "@node-escpos/serialport-adapter": "^1.0.0",
+    "@node-escpos/usb-adapter": "^0.3.1",
+    "@serialport/bindings-cpp": "^11.0.1",
+    "@types/johnny-five": "^2.1.2",
+    "etherport-client": "^0.1.4",
+    "firmata": "^2.3.0",
+    "johnny-five": "^2.1.0",
+    "lodash": "^4.17.21",
+    "serialport": "^11.0.0",
+    "usb": "^2.9.0"
+  },
+  "devDependencies": {
+    "@types/firmata": "^0.19.4",
+    "@types/node": "^20.2.4",
+    "ts-node": "^10.9.1",
+    "typescript": "^5.0.4"
+  }
 }

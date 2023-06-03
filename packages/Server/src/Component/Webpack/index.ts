@@ -5,16 +5,7 @@ import {WebpackMultiConfig, WebpackSingleConfig} from "./Types/WebpackTypesServe
 import {merge} from "lodash";
 import {DefaultConfigWebpack, DefaultConfigWebpackServer} from "./Config/DefaultConfigurationWebpackServer";
 
-
-interface A {
-    member: string;
-}
-
-function checkType<T>(object : any): object is T {
-    return true;
-}
-
-export async function WebpackServerInstances<Config extends ConfigWebpackServer>(config : Config) : Promise<void> {
+export async function WebpackServerInstances<Config extends ConfigWebpackServer = ConfigWebpackServer>(config : Config) : Promise<void> {
     let mWebpack : Compiler;
     let mWebpackDev;
     config = await merge(DefaultConfigWebpackServer, config);

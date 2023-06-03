@@ -19,7 +19,8 @@ export interface ConfigFastifyServerInstances {
     app ?: ConfigFastifyServerRegister,
     hooks ?: ConfigFastifyServerHooks
     getConfig ?: (config : ConfigFastifyServer) => Promise<void> | void
-    settings ?: ConfigFastifyServerSettings | undefined
+
+    settings ?: ConfigFastifyServerSettings | undefined,
 }
 
 export type ConfigFastifyServer = ConfigFastifyServerInstances & GlobalServerConfigInterfaces

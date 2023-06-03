@@ -1,4 +1,5 @@
 import { Configuration, MultiStats, Stats } from "webpack";
+import { Configuration as WebpackConfiguration } from "webpack-dev-server";
 
 import { GlobalServerConfigInterfaces } from "../../../Interfaces/ConfigServerInterfaces";
 import {
@@ -7,6 +8,7 @@ import {
     WebpackMultiConfig,
     WebpackSingleConfig
 } from "../Types/WebpackTypesServer";
+import {createBrowserRouter} from "react-router-dom";
 
 export interface MultiCompilerOptions {
     parallelism?: number;
@@ -16,10 +18,15 @@ export interface WebpackConfigServerInstancesSettings {
 
 }
 
+export interface WebpackConfigServerInstancesWebpackDev extends WebpackConfiguration {
+
+}
+
 export interface WebpackConfigServerInstances {
     engine ?: WEBPACK_ENGINE | undefined,
     webpack ?: WebpackSingleConfig | undefined,
-    webpackDev ?: WebpackDevSingleConfig | undefined,
+    webpackDev ?: WebpackConfigServerInstancesWebpackDev | undefined,
+    route ?: ReturnType<typeof createBrowserRouter>
     settings ?: WebpackConfigServerInstancesSettings | undefined
 }
 
