@@ -1,16 +1,15 @@
-import {ConfigServerInterfaces} from "./Interfaces/ConfigServerInterfaces";
+import {ConfigServerInterfaces, GlobalServerConfigInterfaces} from "./Interfaces/ConfigServerInterfaces";
 import {ServerSelector} from "./Types/ServerTypesSelector";
 import { default as Options } from "./Config";
 import {FASTIFY_ENGINE} from "./Component/Fastify/Types/TypesFastifyServer";
 import {SOCKET_ENGINE} from "./Component/SocketIO/Server/Types/TypesSocketIOServer";
 import {UDP_ENGINE} from "./Component/UDP/Types/TypesUDPServer";
-import {merge} from "lodash";
 import {ServerConfigSelector} from "./Types/ServerTypesConfigSelector";
-import {DefaultServerConfiguration} from "./Config/DefaultServerConfiguration";
 import {WEBPACK_ENGINE} from "./Component/Webpack/Types/WebpackTypesServer";
-
+import {DefaultServerConfiguration} from "./Config/DefaultServerConfiguration";
+import {merge} from "lodash";
 export async function Server<Config extends ConfigServerInterfaces> (serverConfig ?: ServerConfigSelector<Config>) : Promise<ServerSelector<Config>> {
-    //serverConfig = merge(DefaultServerConfiguration, serverConfig)
+    serverConfig = merge(DefaultServerConfiguration, serverConfig)
     return new Promise(async (resolve, rejected) => {
         switch (serverConfig?.engine) {
             case FASTIFY_ENGINE :
@@ -69,5 +68,4 @@ export async function Server<Config extends ConfigServerInterfaces> (serverConfi
         }
     });
 }
-
 export { Options };

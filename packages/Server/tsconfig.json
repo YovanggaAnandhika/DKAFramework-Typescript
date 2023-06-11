@@ -25,6 +25,7 @@
     // "Go to Definition" in VSCode
     "declarationMap": true,
     "esModuleInterop": true,
+    "experimentalDecorators": true,
     "resolveJsonModule": true
   },
   "exclude": [

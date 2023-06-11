@@ -3,9 +3,9 @@ import "../Assets/css/style.css"
 import "../Assets/main.sass"
 
 
-class Hello extends React.Component {
+class Hello extends React.Component<any, any> {
 
-    constructor(props) {
+    constructor(props: any) {
         super(props);
 
     }

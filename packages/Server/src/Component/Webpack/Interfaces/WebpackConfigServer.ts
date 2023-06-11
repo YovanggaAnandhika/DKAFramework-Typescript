@@ -9,6 +9,7 @@ import {
     WebpackSingleConfig
 } from "../Types/WebpackTypesServer";
 import {createBrowserRouter} from "react-router-dom";
+import {ConfigFastifyServerRegister} from "../../Fastify/Types/TypesFastifyServer";
 
 export interface MultiCompilerOptions {
     parallelism?: number;

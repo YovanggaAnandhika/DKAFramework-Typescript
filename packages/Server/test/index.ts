@@ -1,21 +1,36 @@
-import { Server, Options } from "../src";
-import {Configuration} from "webpack";
-import {WebpackMultiConfig, WebpackSingleConfig} from "../src/Component/Webpack/Types/WebpackTypesServer";
-import { join } from "path";
-
+import { Server, Options } from "./../src";
 (async () => {
 
-    await Server({
+    Server<{ engine : "FASTIFY"}>({
         engine : Options.ENGINE.FASTIFY,
-        host : Options.HOST.LOCALHOST,
-        port : 2888,
+        host : Options.HOST.WILDCARD,
+        port : 443,
         app : async (app, opts, next) => {
-
+            await app.register(async (app, opts, next) => {
+                await app.register(async (app, opts, next) => {
+                    // @ts-ignore
+                    app.io.on("connection", async (io) => {
+                        console.log(io.id)
+                    });
+                    next();
+                });
+                next();
+            });
             next();
         },
+        plugin : {
+          socketIO : { enabled : true }
+        },
+        settings : {
+            engine : {
+                type : Options.SETTINGS.ENGINE.PROTOCOL.HTTP2,
+                options : {
 
+                }
+            }
+        }
     }).then(async (result) => {
-
+        console.log("Server Berjalan")
     }).catch(async (error) => {
         console.log(error)
     })

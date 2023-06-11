@@ -23,6 +23,7 @@ import {
     FastifyInstance,
     FastifyServerOptions
 } from "fastify";
+import {ConfigFastifyServerRegister} from "../../../Fastify/Types/TypesFastifyServer";
 
 export interface ConfigSocketIOServerSettingsHTTP extends HTTPServerOptions {
     protocol ?: SOCKET_TYPE_HTTP,

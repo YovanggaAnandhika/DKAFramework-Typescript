@@ -38,24 +38,25 @@ export class BCA {
         })
     }
 
-    /*private async RawRequestOpenApi(configRequest : RawRequestOpenApiConfig) : Promise<object> {
+    private async RawRequestOpenApi(configRequest : RawRequestOpenApiConfig) : Promise<object> {
         return new Promise(async (resolve, rejected) => {
             const JSONParse = JSON.stringify(configRequest.data);
             const bodyHash = crypto.createHash('sha256').update(JSONParse.replace(/\s/g, '')).digest('hex')
             const stringToSign: string = `${configRequest.method}:${configRequest.path}:${configRequest.token.accessToken}:${bodyHash}:${configRequest.timestamp}`;
-            const generateSignature = await crypto.createHmac('sha256', configRequest?.credential?.apiKey).update(stringToSign).digest('hex')
-
+            const generateSignature = crypto.createHmac('sha256', `${configRequest?.credential?.apiKey}`).update(stringToSign).digest('hex')
+            const headersData = {
+                Authorization : `${configRequest.token?.tokenType} ${configRequest.token.accessToken}`,
+                "Content-Type" : configRequest.contentType,
+                "Origin" : configRequest.origin,
+                "X-BCA-Key" : configRequest.credential.apiKey,
+                "X-BCA-Timestamp" : configRequest.timestamp,
+                "X-BCA-Signature" : generateSignature,
+            };
+            console.log(headersData)
             await axios({
                 url : `https://${this.config.state}${configRequest.path}`,
                 method : configRequest.method,
-                headers : {
-                    Authorization : `${configRequest.token?.tokenType} ${configRequest.token.accessToken}`,
-                    "Content-Type" : configRequest.contentType,
-                    "Origin" : configRequest.origin,
-                    "X-BCA-Key" : configRequest.credential.apiKey,
-                    "X-BCA-Timestamp" : configRequest.timestamp,
-                    "X-BCA-Signature" : generateSignature,
-                },
+                headers : headersData,
                 data : configRequest.data
             }).then(async (result) => {
                 resolve(result.data)
@@ -63,7 +64,7 @@ export class BCA {
                 rejected(error)
             })
         })
-    }*/
+    }
 
     private static encodingAuthorization(credential ?: BCAApisConfigCredential){
         return `Basic ${Buffer.from(`${credential?.clientId}:${credential?.clientSecret}`).toString('base64')}`

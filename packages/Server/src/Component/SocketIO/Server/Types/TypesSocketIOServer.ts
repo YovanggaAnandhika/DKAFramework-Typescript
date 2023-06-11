@@ -23,7 +23,7 @@ export type SocketIOError = (error ?: ExtendedError) => void | undefined;
 export type SocketIOSocketServer = Server<DefaultEventsMap, DefaultEventsMap, DefaultEventsMap, any>;
 export type SocketIOSocketNamespace = Namespace<DefaultEventsMap, DefaultEventsMap, DefaultEventsMap, any>;
 export type SocketIOSocketMiddlewareSocket = Socket<DefaultEventsMap, DefaultEventsMap, DefaultEventsMap, any>;
-export type SocketIOMiddlewareUse = (socket : SocketIOSocketMiddlewareSocket, next : SocketIOError) => void | undefined;
+export type SocketIOMiddlewareUse = (socket : SocketIOSocketMiddlewareSocket, next : SocketIOError) => void | undefined | Promise<void>;
 export type SocketIOEngineTypes = HTTPServer | HTTP2SecureServer | HTTPSServer;
 export type SocketIOEngineCore<Engine extends SocketIOEngineTypes = HTTPServer> = (engineInstance : Engine) => Promise<void> | void | undefined;
 export type SocketIOSocketIO = (io : SocketIOSocketServer) => Promise<void> | void

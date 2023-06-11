@@ -60,7 +60,7 @@ export class QRIS {
                 let dataResult = result.data as QrisCheckStatusCallback;
                 switch (dataResult.status){
                     case "success" :
-                        switch (dataResult.data.qris_status) {
+                        switch (dataResult.data?.qris_status) {
                             case "paid" :
                                 await resolve(dataResult);
                                 break;

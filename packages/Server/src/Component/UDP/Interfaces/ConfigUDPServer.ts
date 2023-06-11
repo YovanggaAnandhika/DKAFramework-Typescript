@@ -1,6 +1,7 @@
 import {GlobalServerConfigInterfaces} from "../../../Interfaces/ConfigServerInterfaces";
 import {ConfigUDPServerOnMessage, UDP_ENGINE} from "../Types/TypesUDPServer";
 import { Socket, RemoteInfo } from "dgram";
+import {ConfigFastifyServerRegister} from "../../Fastify/Types/TypesFastifyServer";
 
 
 export interface ConfigUDPServerOn {
@@ -9,7 +10,7 @@ export interface ConfigUDPServerOn {
 }
 export interface ConfigUDPServerInstance {
     engine ?: UDP_ENGINE | undefined,
-    on ?: ConfigUDPServerOn | undefined
+    on ?: ConfigUDPServerOn | undefined,
 }
 
 export type ConfigUDPServer = ConfigUDPServerInstance & GlobalServerConfigInterfaces

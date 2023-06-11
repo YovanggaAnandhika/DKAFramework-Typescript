@@ -2,7 +2,7 @@ import Apis from "../src";
 
 
 (async () => {
-    let mQris = new Apis.Payment.QRIS({
+    /*let mQris = new Apis.Payment.QRIS({
         mID : "ID1023262011142",
         apikey : "a838831"
     });
@@ -14,8 +14,8 @@ import Apis from "../src";
         console.log(result)
     }).catch(async (error) => {
         console.error(error)
-    })
-    /*let mBCA = new Apis.Payment.BCA({
+    })*/
+    let mBCA = new Apis.Payment.BCA({
         state : "sandbox.bca.co.id",
         credential : {
             clientId : `3db9c038-f385-42ea-8c4d-39bd46e218e2`,
@@ -29,6 +29,6 @@ import Apis from "../src";
         })
         .catch(async (error) => {
             console.error(error)
-        });*/
+        });
 
 })();
