@@ -8,7 +8,7 @@ import { Server, Options } from "./../src";
         app : async (app, opts, next) => {
             await app.register(async (app, opts, next) => {
                 await app.register(async (app, opts, next) => {
-                    // @ts-ignore
+
                     app.io.on("connection", async (io) => {
                         console.log(io.id)
                     });
