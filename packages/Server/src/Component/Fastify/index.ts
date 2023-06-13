@@ -17,7 +17,7 @@ import {Options} from "../../index";
 import * as http from "http";
 import {Server} from "socket.io";
 
-export let mFastify : FastifyInstance;
+export let mFastify : FastifyInstance
 
 export async function FASTIFY<Config extends ConfigFastifyServer>(configServer : Config) : Promise<CallbackFastifyServer> {
     return new Promise(async (resolve, rejected) => {
@@ -41,7 +41,8 @@ export async function FASTIFY<Config extends ConfigFastifyServer>(configServer :
         await FastifyHooks(mFastify, configServer);
         //###################################################
         //(configServer.app !== undefined) ? await configServer.app(mFastify) : null;
-        mFastify = (configServer.app !== undefined) ? await mFastify.register(configServer.app as typeof mFastify.register.arguments) : mFastify;
+        mFastify = (configServer.app !== undefined) ?
+            await mFastify.register(configServer.app as typeof mFastify.register.arguments) : mFastify;
         mFastify.listen({ port : configServer.port, host : configServer.host }, async (error) => {
             if (!error){
                 (configServer.getConfig !== undefined) ? configServer.getConfig(configServer) : null;

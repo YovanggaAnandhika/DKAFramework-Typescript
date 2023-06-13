@@ -1,20 +1,13 @@
 import { Server, Options } from "./../src";
 (async () => {
 
-    Server<{ engine : "FASTIFY"}>({
+    Server({
         engine : Options.ENGINE.FASTIFY,
         host : Options.HOST.WILDCARD,
         port : 443,
         app : async (app, opts, next) => {
-            await app.register(async (app, opts, next) => {
-                await app.register(async (app, opts, next) => {
-
-                    app.io.on("connection", async (io) => {
-                        console.log(io.id)
-                    });
-                    next();
-                });
-                next();
+            app.io.on("connection", async (io) => {
+                console.log(io.id)
             });
             next();
         },

@@ -1,7 +1,10 @@
 import { Configuration, MultiStats, Stats } from "webpack";
 import { Configuration as WebpackConfiguration } from "webpack-dev-server";
 
-import { GlobalServerConfigInterfaces } from "../../../Interfaces/ConfigServerInterfaces";
+import {
+    GlobalServerConfigInterfaces,
+    GlobalServerConfigInterfacesSettingsLogger
+} from "../../../Interfaces/ConfigServerInterfaces";
 import {
     WEBPACK_ENGINE,
     WebpackDevSingleConfig,
@@ -10,13 +13,14 @@ import {
 } from "../Types/WebpackTypesServer";
 import {createBrowserRouter} from "react-router-dom";
 import {ConfigFastifyServerRegister} from "../../Fastify/Types/TypesFastifyServer";
+import {DEVELOPMENT, PRODUCTION} from "../../../Types/ConfigServerTypes";
 
 export interface MultiCompilerOptions {
     parallelism?: number;
 }
 
 export interface WebpackConfigServerInstancesSettings {
-
+    logger ?: GlobalServerConfigInterfacesSettingsLogger
 }
 
 export interface WebpackConfigServerInstancesWebpackDev extends WebpackConfiguration {
@@ -24,7 +28,10 @@ export interface WebpackConfigServerInstancesWebpackDev extends WebpackConfigura
 }
 
 export interface WebpackConfigServerInstances {
-    engine ?: WEBPACK_ENGINE | undefined,
+    engine : WEBPACK_ENGINE,
+    state ?: DEVELOPMENT | PRODUCTION
+    host ?: string | undefined,
+    port ?: number | undefined,
     webpack ?: WebpackSingleConfig | undefined,
     webpackDev ?: WebpackConfigServerInstancesWebpackDev | undefined,
     route ?: ReturnType<typeof createBrowserRouter>
@@ -32,4 +39,4 @@ export interface WebpackConfigServerInstances {
 }
 
 
-export type ConfigWebpackServer = WebpackConfigServerInstances & GlobalServerConfigInterfaces
+export type ConfigWebpackServer = WebpackConfigServerInstances

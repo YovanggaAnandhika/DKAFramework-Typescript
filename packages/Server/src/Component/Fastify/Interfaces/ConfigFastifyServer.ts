@@ -1,10 +1,15 @@
 import {ConfigFastifyServerMain, ConfigFastifyServerRegister, FASTIFY_ENGINE} from "../Types/TypesFastifyServer";
-import {ConfigServerInterfaces, GlobalServerConfigInterfaces } from "../../../Interfaces/ConfigServerInterfaces";
+import {
+    ConfigServerInterfaces,
+    GlobalServerConfigInterfaces,
+    GlobalServerConfigInterfacesSettingsLogger
+} from "../../../Interfaces/ConfigServerInterfaces";
 import {
     FastifyHttp2Options, FastifyHttp2SecureOptions,
     FastifyHttpOptions, FastifyHttpsOptions,
     FastifyInstance, FastifyPluginAsync, FastifyPluginCallback, FastifyPluginOptions, onRequestHookHandler,
 } from "fastify";
+import {DEVELOPMENT, PRODUCTION} from "../../../Types/ConfigServerTypes";
 
 
 export interface ConfigFastifyServerSettingsEngineHttp {
@@ -24,6 +29,7 @@ export interface ConfigFastifyServerSettingsEngineHttp2 {
 
 export interface ConfigFastifyServerSettings {
     engine ?: ConfigFastifyServerSettingsEngineHttp | ConfigFastifyServerSettingsEngineHttps | ConfigFastifyServerSettingsEngineHttp2,
+    logger ?: GlobalServerConfigInterfacesSettingsLogger
 }
 
 export interface ConfigFastifyServerHooks {
@@ -44,7 +50,10 @@ export interface ConfigFastifyServerInstancesPlugin {
 
 
 export type ConfigFastifyServerInstances = {
-    engine ?: FASTIFY_ENGINE | undefined,
+    engine : FASTIFY_ENGINE
+    state ?: DEVELOPMENT | PRODUCTION
+    host ?: string | undefined,
+    port ?: number | undefined,
     /**
      * @type ConfigFastifyServerMain
      */
@@ -55,4 +64,4 @@ export type ConfigFastifyServerInstances = {
     settings ?: ConfigFastifyServerSettings | undefined,
 }
 
-export type ConfigFastifyServer =  GlobalServerConfigInterfaces & ConfigFastifyServerInstances
+export type ConfigFastifyServer = ConfigFastifyServerInstances

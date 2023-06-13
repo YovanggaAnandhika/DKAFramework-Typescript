@@ -59,7 +59,6 @@ export const DefaultConfigSocketIOHTTP2Server : ConfigSocketIOServer = {
         engine : {
             protocol : Options.SETTINGS.ENGINE.PROTOCOL.HTTP2,
             allowHTTP1 : true,
-
             cert : readFileSync(path.join(__dirname,"./Cert/Server/localhost.crt")),
             key : readFileSync(path.join(__dirname,"./Cert/Server/localhost.key")),
             ca : [
@@ -73,32 +72,6 @@ export const DefaultConfigSocketIOHTTP2Server : ConfigSocketIOServer = {
             cors : {
                 origin : "*"
             },
-            pingInterval : 1000,
-            pingTimeout : 5000,
-            connectTimeout : 8000
-        }
-    }
-}
-export const DefaultConfigSocketIOFastifyServer : ConfigSocketIOServer = {
-    engine : Options.ENGINE.SOCKETIO,
-    host : Options.HOST.LOCALHOST,
-    port : Options.PORT.DEFAULT,
-    settings : {
-        engine : {
-            protocol : Options.SETTINGS.ENGINE.PROTOCOL.FASTIFY,
-            http2 : true,
-            https : {
-                cert : readFileSync(path.join(__dirname,"./Cert/Server/localhost.crt")),
-                key : readFileSync(path.join(__dirname,"./Cert/Server/localhost.key")),
-                ca : [
-                    readFileSync(path.join(__dirname,"./Cert/CA/localhost.crt"))
-                ]
-            },
-            autoListen : true,
-        },
-        socket : {
-            maxHttpBufferSize : 1e8,
-            transports : ['websocket','polling'],
             pingInterval : 1000,
             pingTimeout : 5000,
             connectTimeout : 8000

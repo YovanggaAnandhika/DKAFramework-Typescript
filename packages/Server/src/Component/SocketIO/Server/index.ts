@@ -1,7 +1,6 @@
 import {
     ConfigSocketIOServer,
-    ConfigSocketIOServerSettingsCluster, ConfigSocketIOServerSettingsFastify,
-    ConfigSocketIOServerSettingsHTTP, ConfigSocketIOServerSettingsHTTPS
+    ConfigSocketIOServerSettingsHTTP
 } from "./Interfaces/ConfigSocketIOServer";
 import {SOCKET_TYPE_FASTIFY, SOCKET_TYPE_HTTP, SOCKET_TYPE_HTTP2, SOCKET_TYPE_HTTPS} from "./Types/TypesSocketIOServer";
 import { Server } from "socket.io";
@@ -9,7 +8,6 @@ import os from "node:os";
 import cluster from "node:cluster";
 import {
     createServer as createServerHTTP,
-    IncomingMessage,
     Server as HTTPServer,
     ServerOptions as HTTPServerOptions, ServerResponse
 } from "http";
@@ -216,49 +214,6 @@ async function ServerSelectedSocketIO<Config extends ConfigSocketIOServer>(confi
                 }else{
                     await resolve({ socket : SocketIO, server : mHTTPS, config : config as ConfigSocketIOServer })
                 }
-                break;
-            case SOCKET_TYPE_FASTIFY :
-                FastifyServer = await Fastify();
-                SocketIO = await new Server(FastifyServer.server)
-                //** Header Set
-                SocketIO = SocketIOEngineHeaders(SocketIO);
-                SocketIO.use(SocketIOMiddleware);
-                if (config.use !== undefined){
-                    await SocketIO.use(config.use)
-                }
-                /** Event on Connection Data **/
-                if (config.events?.socket?.onConnection !== undefined){
-                    await SocketIO.on("connection", async (io) => {
-                        await config.events?.socket?.onConnection?.(io);
-                        //** Event On Disconnection Data **/
-                        if (config.events?.socket?.onDisconnection !== undefined){
-                            await io.on("disconnect", async (reason) => {
-                                await config.events?.socket?.onDisconnection?.(reason);
-                            });
-                        }
-                        //** End Event On Disconnection Data **/
-                    });
-                }
-                /** Event on Connection Data **/
-                if (config.io !== undefined){
-                    await config.io?.(SocketIO)
-                }
-                if (config.settings?.engine?.autoListen){
-                    await FastifyServer.ready(async (error) => {
-                        await config.events?.server?.onListening?.(error);
-                    });
-                    await FastifyServer.listen({ port : config.port, host : config.host }, async (error, address) => {
-                        if (!error){
-                            await resolve({ socket : SocketIO, server : FastifyServer, config : config})
-                        }else{
-                            delete error.stack;
-                            await rejected(require("error-to-json")(error))
-                        }
-                    })
-                }else{
-                    await resolve({ socket : SocketIO, server : FastifyServer as FastifyInstance, config : config })
-                }
-
                 break;
             default :
                 config = await merge(DefaultConfigSocketIOHTTPServer, config);

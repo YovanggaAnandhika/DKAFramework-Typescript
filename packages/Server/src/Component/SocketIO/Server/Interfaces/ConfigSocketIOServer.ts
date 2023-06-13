@@ -1,4 +1,7 @@
-import {GlobalServerConfigInterfaces} from "../../../../Interfaces/ConfigServerInterfaces";
+import {
+    GlobalServerConfigInterfaces,
+    GlobalServerConfigInterfacesSettingsLogger
+} from "../../../../Interfaces/ConfigServerInterfaces";
 import {
     SOCKET_ENGINE,
     SOCKET_TYPE_FASTIFY,
@@ -24,6 +27,7 @@ import {
     FastifyServerOptions
 } from "fastify";
 import {ConfigFastifyServerRegister} from "../../../Fastify/Types/TypesFastifyServer";
+import {DEVELOPMENT, PRODUCTION} from "../../../../Types/ConfigServerTypes";
 
 export interface ConfigSocketIOServerSettingsHTTP extends HTTPServerOptions {
     protocol ?: SOCKET_TYPE_HTTP,
@@ -33,12 +37,6 @@ export interface ConfigSocketIOServerSettingsHTTP extends HTTPServerOptions {
 
 export interface ConfigSocketIOServerSettingsHTTPS extends HTTPSServerOptions {
     protocol ?: SOCKET_TYPE_HTTPS,
-    autoListen ?: boolean | undefined
-}
-
-export interface ConfigSocketIOServerSettingsFastify {
-    protocol ?: SOCKET_TYPE_FASTIFY,
-    type ?: HTTPServer | HTTP2SecureServer | HTTPSServer,
     autoListen ?: boolean | undefined
 }
 
@@ -59,7 +57,8 @@ export interface ConfigSocketIOServerSettingsCluster {
 export interface ConfigSocketIOServerSettings {
     socket ?: ConfigSocketIOServerSettingsSocket,
     cluster ?: ConfigSocketIOServerSettingsCluster,
-    engine ?: ConfigSocketIOServerSettingsFastify | ConfigSocketIOServerSettingsHTTP | ConfigSocketIOServerSettingsHTTP2 | ConfigSocketIOServerSettingsHTTPS
+    engine ?: ConfigSocketIOServerSettingsHTTP | ConfigSocketIOServerSettingsHTTP2 | ConfigSocketIOServerSettingsHTTPS,
+    logger ?: GlobalServerConfigInterfacesSettingsLogger
 }
 
 export interface ConfigSocketIOServerEventsSocket {
@@ -76,11 +75,14 @@ export interface ConfigSocketIOServerEvents {
 }
 //HTTPServer | HTTP2SecureServer | HTTPSServer
 export interface ConfigSocketIOServerInstances {
-    engine ?: SOCKET_ENGINE | undefined,
+    engine : SOCKET_ENGINE,
+    state ?: DEVELOPMENT | PRODUCTION
+    host ?: string | undefined,
+    port ?: number | undefined,
     io ?: SocketIOSocketIO | undefined,
     events ?: ConfigSocketIOServerEvents | undefined,
     use ?: SocketIOMiddlewareUse | undefined,
     settings ?: ConfigSocketIOServerSettings
 }
 
-export type ConfigSocketIOServer = ConfigSocketIOServerInstances & GlobalServerConfigInterfaces
+export type ConfigSocketIOServer = ConfigSocketIOServerInstances

@@ -59,6 +59,7 @@ export const fastifyEngineSettingsDefaultHTTPS : ConfigFastifyServerSettingsEngi
             ca : [
                 readFileSync(path.join(__dirname, "./Cert/CA/localhost.crt"))
             ],
+
             rejectUnauthorized : true,
             requestCert : false
         }

@@ -1,0 +1,8 @@
+export type JWE_ENGINE = "JWE";
+export type CRYPTO_ENGINE = "CRYPTO";
+
+export type ALL_ENCRYPTION_ENGINE = JWE_ENGINE | CRYPTO_ENGINE;
+
+export const JWE_ENGINE : JWE_ENGINE = "JWE";
+export const CRYPTO_ENGINE : CRYPTO_ENGINE = "CRYPTO";
+

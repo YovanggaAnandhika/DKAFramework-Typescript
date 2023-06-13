@@ -12,8 +12,8 @@ import {ConfigServerInterfaces} from "../Interfaces/ConfigServerInterfaces";
 
 
 
-export type ServerConfigSelector<Config> = Config extends { engine ?: SOCKET_ENGINE | undefined } ? ConfigSocketIOServer :
-    Config extends { engine ?: FASTIFY_ENGINE | undefined } ? ConfigFastifyServer :
-        Config extends { engine ?: UDP_ENGINE | undefined } ? ConfigUDPServer :
-            Config extends { engine ?: WEBPACK_ENGINE | undefined } ? ConfigWebpackServer :
+export type ServerConfigSelector<Config> = Config extends { engine : SOCKET_ENGINE } ? ConfigSocketIOServer :
+    Config extends { engine : FASTIFY_ENGINE } ? ConfigFastifyServer :
+        Config extends { engine : UDP_ENGINE } ? ConfigUDPServer :
+            Config extends { engine : WEBPACK_ENGINE } ? ConfigWebpackServer :
                 never;
