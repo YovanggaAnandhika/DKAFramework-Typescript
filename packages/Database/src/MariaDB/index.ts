@@ -359,44 +359,39 @@ export class MariaDB implements MariaDBClassInterfaces {
         let mRules : RulesSelect = Rules;
         this.timeStart = new Date().getTime();
         this.mSearchAdd = ``;
+        let SelectColumn = ``;
         //console.log(this.mSearchAdd)
         let checkJoin : Promise<string> = new Promise(async (resolve, rejected) => {
             let innerType = ``;
             let On = ``;
             if (mRules.join !== undefined){
                 if(mRules.as !== undefined){
-                    if (Array.isArray(mRules.join)){
-                        mRules.join.map(async (SelectJoin) => {
-                            let mSelectJoinMode = (SelectJoin.mode !== undefined) ? `${SelectJoin.mode} ` : ``;
-                            let joinAliasTableName = (SelectJoin.as !== undefined) ? `AS \`${SelectJoin.as}\`` : ``;
-                            if (SelectJoin.on !== undefined){
-                                if (SelectJoin.on.collNameFirst.tableAlias !== undefined){
-                                    On = ` ON \`${SelectJoin.on.collNameFirst.tableAlias}\`.\`${SelectJoin.on.collNameFirst.collName}\` = \`${SelectJoin.on.collNameSecond.tableAlias}\`.\`${SelectJoin.on.collNameSecond.collName}\` `;
-                                }else {
-                                    On = ` ON \`${mRules.as}\`.\`${SelectJoin.on.collNameFirst.collName}\` = \`${SelectJoin.on.collNameSecond.tableAlias}\`.\`${SelectJoin.on.collNameSecond.collName}\` `;
-                                }
-                            }else{
-                                On = ``;
-                            }
-                            innerType += `${mSelectJoinMode}JOIN \`${SelectJoin.TableName}\` ${joinAliasTableName} ${On}`;
-                        })
-                    }else if (typeof mRules.join === "object"){
+                    let mSelectJoinMode = (mRules.join.mode !== undefined) ? `${mRules.join.mode} ` : ``;
+                    let joinAliasTableName = (mRules.join.as !== undefined) ? `AS \`${mRules.join.as}\`` : ``;
 
-                        let mSelectJoinMode = (mRules.join.mode !== undefined) ? `${mRules.join.mode} ` : ``;
-                        let joinAliasTableName = (mRules.join.as !== undefined) ? `AS \`${mRules.join.as}\`` : ``;
-                        if (mRules.join.on !== undefined){
-                            if (mRules.join.on.collNameFirst.tableAlias !== undefined){
-                                On = ` ON \`${mRules.join.on.collNameFirst.tableAlias}\`.\`${mRules.join.on.collNameFirst.collName}\` = \`${mRules.join.on.collNameSecond.tableAlias}\`.\`${mRules.join.on.collNameSecond.collName}\` `;
+                    if (mRules.join.column !== undefined){
+                        let mJoinAs = mRules.join.as;
+                        mRules.join.column.map(async (item) => {
+                            if (typeof item === "object"){
+                                SelectColumn += (mJoinAs !== undefined) ? `\`${mJoinAs}\`.\`${item.name}\` as \`${item.as}\` ,` : `\`${item.name}\` as \`${item.as}\`,`;
                             }else {
-                                On = ` ON \`${mRules.as}\`.\`${mRules.join.on.collNameFirst.collName}\` = \`${mRules.join.on.collNameSecond.tableAlias}\`.\`${mRules.join.on.collNameSecond.collName}\` `;
+                                SelectColumn += (mJoinAs !== undefined) ? `\`${mJoinAs}\`.\`${item}\`,` : `\`${item}\`,`;
                             }
-                        }else{
-                            On = ``;
-                        }
-
-                        innerType += `${mSelectJoinMode}JOIN \`${mRules.join.TableName}\` ${joinAliasTableName} ${On}`;
-                        console.log(innerType)
+                        });
+                    }else{
+                        SelectColumn += (mRules.join.as !== undefined) ? `\`${mRules.join.as}\`.*,` : `*,`;
                     }
+                    if (mRules.join.on !== undefined){
+                        if (mRules.join.on.collNameFirst.tableAlias !== undefined){
+                            On = ` ON \`${mRules.join.on.collNameFirst.tableAlias}\`.\`${mRules.join.on.collNameFirst.collName}\` = \`${mRules.join.on.collNameSecond.tableAlias}\`.\`${mRules.join.on.collNameSecond.collName}\` `;
+                        }else {
+                            On = ` ON \`${mRules.as}\`.\`${mRules.join.on.collNameFirst.collName}\` = \`${mRules.join.on.collNameSecond.tableAlias}\`.\`${mRules.join.on.collNameSecond.collName}\` `;
+                        }
+                    }else{
+                        On = ``;
+                    }
+
+                    innerType += `${mSelectJoinMode}JOIN \`${mRules.join.TableName}\` ${joinAliasTableName} ${On}`;
                     await resolve(innerType)
                 }else{
                     await rejected({ status : false, code : 500, msg : `join mode is exist. but parent as not set. please set first`} as CallbackError)
@@ -406,8 +401,6 @@ export class MariaDB implements MariaDBClassInterfaces {
             }
         })
         return new Promise(async (resolve, rejected) => {
-            let SelectColumn = ``;
-
             if (Array.isArray(mRules.search)){
                 await mRules.search.forEach((item  ) => {
                     if (typeof item === "object"){
@@ -426,15 +419,23 @@ export class MariaDB implements MariaDBClassInterfaces {
             if (mRules.column !== undefined){
                 mRules.column.map(async (item) => {
                     if (isObject(item)){
-                        SelectColumn += `\`${item.alias}\`.\`${item.name}\`,`
+                        if (mRules.as !== undefined){
+                            SelectColumn += `\`${mRules.as}\`.\`${item.name}\` AS \`${item.as}\`,`
+                        }else{
+                            SelectColumn += `\`${item.name}\` AS \`${item.as}\`,`
+                        }
                     }else if(isString(item)){
-                        SelectColumn += `\`${item}\`,`;
+                        if (mRules.as !== undefined){
+                            SelectColumn += `\`${mRules.as}\`.\`${item}\`,`;
+                        }else{
+                            SelectColumn += `\`${item}\`,`;
+                        }
                     }
                 })
-                SelectColumn = SelectColumn.slice(0, -1);
             }else{
-                SelectColumn = `*`;
+                SelectColumn += (mRules.as !== undefined) ? `\`${mRules.as}\`.*,` : `*,`;
             }
+            SelectColumn = SelectColumn.slice(0, -1);
             const SelectLimit = (mRules.limit !== undefined) ? `LIMIT ${mRules.limit}` : ``;
             const SelectOrderBy = (mRules.orderBy !== undefined && mRules.orderBy.column.length > 0) ? `ORDER BY ${mRules.orderBy.column} ${mRules.orderBy.mode} ` : ` `;
             const selectParentAs = (mRules.as !== undefined && mRules.as !== false) ? ` AS \`${mRules.as}\` ` : ` `;

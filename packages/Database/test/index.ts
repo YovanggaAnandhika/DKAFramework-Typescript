@@ -11,28 +11,30 @@ import { v5 as uidv5, v4 as uidv4, v3 as uidv3, v1 as uidv1 } from "uuid"
     });
 
 
-    let uid = uidv5(Date.now().toString(), uidv5.URL);
-    db.Insert(`dka-user_login`, {
-        data : {
-            id_user_login : uid,
-            username : "hendra",
-            password : "agustriawan"
+    db.Select(`dka-developer_apps`, {
+        as : `apps`,
+        column : [
+            { name : `secret_key`, as : `client_secret`}
+        ],
+        join : {
+            mode : "INNER",
+            as : `account`,
+            TableName : `dka-developer_account`,
+            on : {
+                collNameFirst : {
+                    tableAlias : `account`,
+                    collName : `id_developer_account`,
+                },
+                collNameSecond : {
+                    tableAlias : `apps`,
+                    collName : `id_developer_account`
+                }
+            }
         }
     }).then(async (res) => {
-        db.Insert(`dka-user_login_personal_info`, {
-            data : {
-                id_user_login_info : uidv5(Date.now().toString(), uid),
-                id_user_login : uid,
-                first_name : "Yovangga",
-                last_name : "anandhika"
-            }
-        }).then(async (res) => {
-            console.log(res)
-        }).catch(async (error) => {
-            console.error(error)
-        })
+        console.log(res)
     }).catch(async (error) => {
-        console.error(error)
+        console.log(error)
     })
 
 

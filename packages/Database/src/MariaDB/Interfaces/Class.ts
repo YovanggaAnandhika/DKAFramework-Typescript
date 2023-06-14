@@ -40,20 +40,26 @@ export interface RulesSelectJoinOn {
     collNameFirst : RulesSelectJoinOnAlias,
     collNameSecond : RulesSelectJoinOnAlias
 }
+
+export interface RulesSelectJoinColumn {
+    as ?: string,
+    name ?: string
+}
+
 export interface RulesSelectJoin {
     mode ?: | undefined | "INNER" | "ALTER" | "OUTER",
-    column ?: Array<String> | undefined,
+    column ?: Array<RulesSelectJoinColumn> | Array<string> | undefined,
     TableName ?: string | undefined,
     as ?: string | undefined
     on ?: RulesSelectJoinOn | undefined
 }
 
 export interface RulesSelectColumn {
-    alias ?: string,
+    as ?: string,
     name ?: string
 }
 export interface RulesSelect extends Rules {
-    join ?: Array<RulesSelectJoin> | RulesSelectJoin | undefined,
+    join ?: RulesSelectJoin | undefined,
     search? : Array<RulesSelectSearch | string> | RulesSelectSearch | undefined,
     column? : Array<RulesSelectColumn> | Array<string> | undefined,
     limit? : number | undefined,
