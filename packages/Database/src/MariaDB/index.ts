@@ -291,8 +291,10 @@ export class MariaDB implements MariaDBClassInterfaces {
                 this.mVal = [];
                 /** Check Module Encryption Declaration **/
                 Object.keys(Rules?.data).map(async (key) => {
-                    this.mKey.push(` \`${key}\` `);
-                    this.mVal.push(`"${ Rules?.data[key]}"`);
+                    if (Rules?.data[key] !== undefined){
+                        this.mKey.push(` \`${key}\` `);
+                        this.mVal.push(`"${ Rules?.data[key]}"`);
+                    }
                 });
 
                 this.SqlScript = `INSERT INTO \`${TableName}\` (${this.mKey})VALUES (${this.mVal}) `;
@@ -308,8 +310,10 @@ export class MariaDB implements MariaDBClassInterfaces {
                     this.mSetData = [];
                     //######################################################
                     Object.keys(item).map(async (key) => {
-                        this.mKey.push(`${key}`);
-                        this.mSetData.push(`"${Rules?.data[index][key]}"`);
+                        if (Rules?.data[index][key] !== undefined){
+                            this.mKey.push(`${key}`);
+                            this.mSetData.push(`"${Rules?.data[index][key]}"`);
+                        }
                     });
                     //#######################################################
                     this.mVal.push(`(${this.mSetData})`)
