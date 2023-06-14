@@ -249,42 +249,16 @@ export class MariaDB implements MariaDBClassInterfaces {
             let mIfNotExist = (mRules.ifNotExist) ? "IF NOT EXISTS " : "";
             let mEngine = (mRules.engine !== undefined) ? `ENGINE ${mRules.engine}` : ``;
 
-            if (mRules.encryption !== undefined) {
-                if (require.resolve("@dkaframework/security")) {
-                    let mEncryption = require("@dkaframework/security").default;
+            mFinalQuery = `CREATE TABLE ${mIfNotExist}\`${TableName}\`(${mQuery}) ${mEngine};`;
+            this.mMethod = "CREATE_TABLE";
 
-                    let mTableName = new mEncryption(mRules.encryption).encodeIvSync(TableName);
-                    let mTableNameEncrypt = (mRules.settings?.table) ? mTableName : TableName;
-
-                    let mDatabase = new mEncryption(mRules.encryption).encodeIvSync(this.mConfig.database);
-                    let mDatabaseEncrypt = (mRules.settings?.database) ? mDatabase : this.mConfig.database;
-                    let mConvertToScript = `\`${mDatabaseEncrypt}\`.`;
-
-                    mFinalQuery = `CREATE TABLE ${mIfNotExist}${mConvertToScript}\`${mTableNameEncrypt}\`(${mQuery}) ${mEngine};`;
-                    this.mMethod = "CREATE_TABLE";
-                    await this.rawQuerySync<CallbackCreateTable>(mFinalQuery,[], { ifNotExist : mRules.ifNotExist })
-                        .then(async (result) => {
-                            await resolve(result);
-                        }).catch(async (error) => {
-                            await rejected(<CallbackError>error);
-                        });
-
-                }else{
-                    await rejected(<CallbackError>{ status : false, code : 500, msg : `Encryption Module is Declare. but module not installed, please installed first "@dkaframework/security" `});
-                }
-            }else{
-                mFinalQuery = `CREATE TABLE ${mIfNotExist}\`${TableName}\`(${mQuery}) ${mEngine};`;
-                this.mMethod = "CREATE_TABLE";
-
-                await this.rawQuerySync<CallbackCreateTable>(mFinalQuery,[], { ifNotExist : mRules.ifNotExist })
-                    .then(async (result) => {
-                        await resolve(result);
-                    })
-                    .catch(async (error) => {
-                        await rejected(<CallbackError>error);
-                    });
-
-            }
+            await this.rawQuerySync<CallbackCreateTable>(mFinalQuery,[], { ifNotExist : mRules.ifNotExist })
+                .then(async (result) => {
+                    await resolve(result);
+                })
+                .catch(async (error) => {
+                    await rejected(<CallbackError>error);
+                });
         })
 
     }
@@ -302,77 +276,40 @@ export class MariaDB implements MariaDBClassInterfaces {
      * The Table Name Database Selected For Use Action for <b>READ DATA<b/>
      * <br/>
      * ---------
-     * @param {RulesInsert} Rule - <b>Rules</b><br/>
+     * @param Rules
      * The Rules is Parameter Options For Insert <b>Database Function</b><br/>
      * ---------
      * @return Promise<CallbackCreate | CallbackError> - <b>Promise<CallbackCreate | CallbackError></b><br/>
      * The Return Variable Format
      */
-    async Insert(TableName : string, Rule : RulesInsert = InsertDataConfig) : Promise<CallbackInsert> {
+    async Insert(TableName : string, Rules : RulesInsert = InsertDataConfig) : Promise<CallbackInsert> {
         this.timeStart = new Date().getTime();
-        let Rules : RulesInsert = merge(InsertDataConfig, {
-            encryption : this.mConfig.encryption
-        }, Rule);
-
+        await merge(Rules,InsertDataConfig);
         return new Promise(async (resolve, rejected) => {
-            if (isObject(Rules.data)){
+            if (Rules?.data !== undefined && isObject(Rules?.data)){
                 this.mKey = [];
                 this.mVal = [];
                 /** Check Module Encryption Declaration **/
-                if (Rules.encryption !== undefined) {
-                    if (require.resolve("@dkaframework/security")) {
-                        let mEncryption = require("@dkaframework/security").default;
+                Object.keys(Rules?.data).map(async (key) => {
+                    this.mKey.push(` \`${key}\` `);
+                    this.mVal.push(`"${ Rules?.data[key]}"`);
+                });
 
-                        /** Refactor Table Name to Encryption **/
-                        let mTableName = new mEncryption(Rules.encryption).encodeIvSync(TableName);
-                        let mTableNameEncrypt = (Rules.settings?.table) ? mTableName : TableName;
-                        /** Refactor Database Name **/
-                        let mDatabase = new mEncryption(Rules.encryption).encodeIvSync(this.mConfig.database);
-                        let mDatabaseEncrypt = (Rules.settings?.database) ? mDatabase : this.mConfig.database;
-                        let mConvertToScript = `\`${mDatabaseEncrypt}\`.`;
-
-                        /** **
-                         * Looping Key And Val For Raw Script
-                         */
-                        await Object.keys(Rules.data).forEach((key) => {
-                            /** Refactor Key If Or Not Encryption **/
-                            let mKey = new mEncryption(Rules.encryption).encodeIvSync(key);
-                            let mKeyEncrypt = (Rules.settings?.coloumn) ? mKey : key;
-                            this.mKey.push(` \`${mKeyEncrypt}\` `);
-                            /** Refactor Val If Or Not Encryption **/
-                            let mVal = new mEncryption(Rules.encryption).encodeIvSync(Rules.data[key]);
-                            let mValEncrypt = (Rules.settings?.coloumn) ? mVal : Rules.data[key];
-                            this.mVal.push(`"${ mValEncrypt}"`);
-                        });
-                        /** Generate SQL Script Raw **/
-                        this.SqlScript = `INSERT INTO ${mConvertToScript}\`${mTableNameEncrypt}\` (${this.mKey})VALUES (${this.mVal}) `;
-
-                    }else{
-                        return { status : false, code : 500, msg : `Encryption Module is Declare. but module not installed, please installed first "@dkaframework/security" `};
-                    }
-                }else{
-                    await Object.keys(Rules.data).forEach((key) => {
-                        this.mKey.push(` \`${key}\` `);
-                        this.mVal.push(`"${ Rules.data[key]}"`);
-                    });
-
-                    this.SqlScript = `INSERT INTO \`${TableName}\` (${this.mKey})VALUES (${this.mVal}) `;
-                }
-            }else if (isArray(Rules.data)){
+                this.SqlScript = `INSERT INTO \`${TableName}\` (${this.mKey})VALUES (${this.mVal}) `;
+            }else if (isArray(Rules?.data)){
                 //@@@@@@@@@@@@@@@@@@@
                 this.mVal = [];
                 this.mKey = [];
                 this.mSetData = [];
                 //@@@@@@@@@@@@@@@@@@@
-
                 //**********************************************************
-                Rules.data.map(async (item : object, index : number) => {
+                Rules?.data.map(async (item : object, index : number) => {
                     this.mKey = [];
                     this.mSetData = [];
                     //######################################################
                     Object.keys(item).map(async (key) => {
                         this.mKey.push(`${key}`);
-                        this.mSetData.push(`"${Rules.data[index][key]}"`);
+                        this.mSetData.push(`"${Rules?.data[index][key]}"`);
                     });
                     //#######################################################
                     this.mVal.push(`(${this.mSetData})`)
@@ -797,41 +734,13 @@ export class MariaDB implements MariaDBClassInterfaces {
                                             await PoolConnection.release()
                                                 .then(async () => {
                                                     if (rows.length > 0) {
-                                                        if (ExtendsOptions?.encryption !== undefined){
-                                                            if (require.resolve("@dkaframework/security")) {
-                                                                let mEncryption = require("@dkaframework/security").default;
-                                                                let mEncryptInst = await new mEncryption(ExtendsOptions.encryption);
-                                                                let mFinalRows : any[] = [];
-                                                                await rows.map(async (data : any) =>{
-                                                                    let mJSONData : any = {};
-                                                                    await Object.keys(data).forEach( function (key) {
-                                                                        let mKey = (ExtendsOptions.settings?.coloumn) ?
-                                                                            mEncryptInst.decodeIvSync(key) : key;
-                                                                        let mVal = (ExtendsOptions.settings?.rows && typeof data[key] !== "number") ?
-                                                                            mEncryptInst.decodeIvSync(data[key]) : data[key];
-                                                                        mJSONData[mKey] = mVal;
-                                                                    });
-                                                                    mFinalRows.push(mJSONData);
-                                                                });
-                                                                await resolve(<T>{
-                                                                    status: true,
-                                                                    code: 200,
-                                                                    msg: `successful, your data has been read`,
-                                                                    data: mFinalRows,
-                                                                    metadata: metadata
-                                                                });
-                                                            }else{
-                                                                await rejected({ status : false, code : 500, msg : `Encryption Module is Declare. but module not installed, please installed first "@dkaframework/security" `});
-                                                            }
-                                                        }else{
-                                                            await resolve(<T>{
-                                                                status: true,
-                                                                code: 200,
-                                                                msg: `successful, your data has been read`,
-                                                                data: rows,
-                                                                metadata: metadata
-                                                            });
-                                                        }
+                                                        await resolve(<T>{
+                                                            status: true,
+                                                            code: 200,
+                                                            msg: `successful, your data has been read`,
+                                                            data: rows,
+                                                            metadata: metadata
+                                                        });
                                                     } else {
                                                         await rejected({
                                                             status: false,
@@ -1013,31 +922,25 @@ export class MariaDB implements MariaDBClassInterfaces {
                                                     });
                                                     break;
                                                 case "ER_NO_SUCH_TABLE" :
-                                                    if (ExtendsOptions?.encryption !== undefined){
-                                                        await rejected({
-                                                            status: false,
-                                                            code: 500,
-                                                            msg: "Error Detected, cannot find encryption variable table name",
-                                                            metadata : metadata,
-                                                            error: {
-                                                                errorMsg: error.text,
-                                                                errorCode: error.code,
-                                                                errNo: error.errno
-                                                            }
-                                                        });
-                                                    }else{
-                                                        await rejected({
-                                                            status: false,
-                                                            code: 500,
-                                                            msg: "Error Detected",
-                                                            metadata : metadata,
-                                                            error: {
-                                                                errorMsg: error.text,
-                                                                errorCode: error.code,
-                                                                errNo: error.errno
-                                                            }
-                                                        });
-                                                    }
+                                                    await rejected({
+                                                        status: false,
+                                                        code: 500,
+                                                        msg: "Error Detected",
+                                                        metadata : metadata,
+                                                        error: {
+                                                            errorMsg: error.text,
+                                                            errorCode: error.code,
+                                                            errNo: error.errno
+                                                        }
+                                                    });
+                                                    break;
+                                                case "ER_DUP_ENTRY" :
+                                                    await rejected({
+                                                        status: false,
+                                                        code: error.errno,
+                                                        msg: error.text,
+                                                        metadata : metadata
+                                                    });
                                                     break;
                                                 default :
                                                     await rejected({

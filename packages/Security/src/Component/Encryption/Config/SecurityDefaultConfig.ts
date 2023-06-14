@@ -24,7 +24,7 @@ export const SecurityDefaultConfigJWEEncryptOptions : SecurityConfigJWTEngineOpt
 
 
 export const SecurityDefaultConfigJWEDecryptOptionsJWK : JWKOptions = {
-    key : path.join(__dirname, "./../Cert/Server/localhost.key"),
+    key : path.join(__dirname, "./../Cert/Server/public.key"),
     form : "pem"
 }
 

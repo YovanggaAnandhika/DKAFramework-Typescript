@@ -1,6 +1,6 @@
 {
   "name": "@dkaframework/database",
-  "version": "1.0.147",
+  "version": "1.0.149",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "author": {
@@ -11,7 +11,7 @@
   "license": "MIT",
   "private": false,
   "scripts": {
-    "dev-test": "nodemon --watch src --watch test --exec ts-node test/index.ts",
+    "dev": "nodemon --watch src --watch test --exec ts-node test/index.ts",
     "clean": "rimraf dist",
     "compile": "tsc --build",
     "build": "yarn run clean && yarn run compile",
@@ -41,12 +41,14 @@
     "@types/escpos": "^2.5.2",
     "@types/express": "^4.17.13",
     "@types/node": "^20.2.4",
+    "@types/uuid": "^9.0.2",
     "escpos": "^3.0.0-alpha.6",
     "escpos-adapter": "^3.0.0-alpha.4",
     "nodemon": "^2.0.19",
     "rm": "^0.1.8",
     "ts-node": "*",
-    "typescript-cp": "*"
+    "typescript-cp": "*",
+    "uuid": "^9.0.0"
   },
   "gitHead": "56b58b2fb5d929308fdb58761ca4c5b78568a9d1"
 }
