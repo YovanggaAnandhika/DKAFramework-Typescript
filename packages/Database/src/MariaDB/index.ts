@@ -381,6 +381,16 @@ export class MariaDB implements MariaDBClassInterfaces {
                     }else{
                         SelectColumn += (mRules.join.as !== undefined) ? `\`${mRules.join.as}\`.*,` : `*,`;
                     }
+
+                    if (mRules.join.search !== undefined) {
+                        let mCondition = (mRules.join.search.condition !== undefined) ? mRules.join.search?.condition : `=`;
+                        let checkIfAsExist = (mRules.join.as !== undefined) ? `\`${mRules.join.as}\`.\`${mRules.join.search.coloumName}\`` : `\`${mRules.join.search.coloumName}\``;
+                        this.mSearchAdd += `${checkIfAsExist} ${mCondition} '${mRules.join.search.data}' `;
+                        if (mRules.search !== undefined){
+                            this.mSearchAdd += `${mRules.join.search.conditionFromParents} `;
+                        }
+                    }
+
                     if (mRules.join.on !== undefined){
                         if (mRules.join.on.collNameFirst.tableAlias !== undefined){
                             On = ` ON \`${mRules.join.on.collNameFirst.tableAlias}\`.\`${mRules.join.on.collNameFirst.collName}\` = \`${mRules.join.on.collNameSecond.tableAlias}\`.\`${mRules.join.on.collNameSecond.collName}\` `;
@@ -406,14 +416,16 @@ export class MariaDB implements MariaDBClassInterfaces {
                     if (typeof item === "object"){
                         let mCondition = (item.condition !== undefined) ? item.condition : `=`;
                         let mCheckIfNull = (item.data !== null) ? `${mCondition} \'${item.data}\'` : `IS NULL`;
-                        this.mSearchAdd += `\`${item.coloumName}\` ${mCheckIfNull}`;
+                        let checkIfAsExist = (mRules.as !== undefined) ? `\`${mRules.as}\`.\`${item.coloumName}\`` : `\`${item.coloumName}\``;
+                        this.mSearchAdd += `${checkIfAsExist} ${mCheckIfNull}`;
                     }else if(isString(item)){
                         this.mSearchAdd += ` ${item} `;
                     }
                 });
             }else if (typeof mRules.search === "object"){
-                let mCondition = (mRules.search.condition !== undefined) ? mRules.search.condition : `=`
-                this.mSearchAdd += `\`${mRules.search.coloumName}\` ${mCondition} '${mRules.search.data}' `;
+                let mCondition = (mRules.search.condition !== undefined) ? mRules.search.condition : `=`;
+                let checkIfAsExist = (mRules.as !== undefined) ? `\`${mRules.as}\`.\`${mRules.search.coloumName}\`` : `\`${mRules.search.coloumName}\``;
+                this.mSearchAdd += `${checkIfAsExist} ${mCondition} '${mRules.search.data}' `;
             }
             const UpdateWhere = (mRules.search !== undefined) ? `WHERE ${this.mSearchAdd}` : ``;
             if (mRules.column !== undefined){

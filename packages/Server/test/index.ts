@@ -4,11 +4,12 @@ import { Server, Options } from "./../src";
     Server({
         engine : Options.ENGINE.FASTIFY,
         host : Options.HOST.WILDCARD,
-        port : 443,
+        port : 8233,
         app : async (app, opts, next) => {
-            app.io.on("connection", async (io) => {
-                console.log(io.id)
-            });
+            app.get("/",async (request, response) => {
+                request.headers["Bypass-Tunnel-Reminder"] = "";
+                response.send("halo")
+            })
             next();
         },
         plugin : {
@@ -20,6 +21,10 @@ import { Server, Options } from "./../src";
                 options : {
 
                 }
+            },
+            ngrok : {
+                enabled : true,
+                authToken : "g3UD9sgpzrW41i6YGVWH_3w7oA58kHxKDgSNpmncba"
             }
         }
     }).then(async (result) => {

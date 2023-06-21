@@ -46,11 +46,19 @@ export interface RulesSelectJoinColumn {
     name ?: string
 }
 
+export interface RulesSelectJoinSearch {
+    coloumName ?: string
+    condition ?: "LIKE" | "=" | "!=" | undefined
+    data ?: string | bigint | number | null,
+    conditionFromParents : "AND" | "OR" | undefined
+}
+
 export interface RulesSelectJoin {
     mode ?: | undefined | "INNER" | "ALTER" | "OUTER",
     column ?: Array<RulesSelectJoinColumn> | Array<string> | undefined,
     TableName ?: string | undefined,
-    as ?: string | undefined
+    search ?: RulesSelectJoinSearch | undefined,
+    as ?: string | undefined,
     on ?: RulesSelectJoinOn | undefined
 }
 

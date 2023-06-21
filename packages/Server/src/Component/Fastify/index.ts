@@ -16,6 +16,7 @@ import {FastifyPlugins} from "./Component/FastifyPlugins";
 import {Options} from "../../index";
 import * as http from "http";
 import {Server} from "socket.io";
+import {FastifySettings} from "./Component/FastifySettings";
 
 export let mFastify : FastifyInstance
 
@@ -46,7 +47,17 @@ export async function FASTIFY<Config extends ConfigFastifyServer>(configServer :
         mFastify.listen({ port : configServer.port, host : configServer.host }, async (error) => {
             if (!error){
                 (configServer.getConfig !== undefined) ? configServer.getConfig(configServer) : null;
-                await resolve({ status : true, code : 200, msg : `Server is Successfully Running`, config : configServer })
+
+                await FastifySettings(mFastify, configServer)
+                    .then(async (result) => {
+                        console.log(result)
+                        await resolve({ status : true, code : 200, msg : `Server is Successfully Running`, config : configServer });
+                    })
+                    .catch(async (error) => {
+                        await rejected({ status : false, code : 500, msg : `Server Error For Running`, error : error})
+                    })
+                //await resolve({ status : true, code : 200, msg : `Server is Successfully Running`, config : configServer });
+
             }else{
                 (configServer.getConfig !== undefined) ? configServer.getConfig(configServer) : null;
                 await rejected({ status : true, code : 200, msg : `Server is Successfully Running`, error : error})

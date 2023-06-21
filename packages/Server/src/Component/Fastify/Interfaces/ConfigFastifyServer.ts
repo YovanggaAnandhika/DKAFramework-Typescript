@@ -27,9 +27,16 @@ export interface ConfigFastifyServerSettingsEngineHttp2 {
     options ?: FastifyHttp2SecureOptions<any> | FastifyHttp2Options<any> | FastifyHttpOptions<any>
 }
 
+export interface ConfigFastifyServerInstancesPluginNgrok {
+    enabled ?: boolean | undefined,
+    authToken ?: string | undefined,
+    onStatusChange ?: (status: "connected" | "closed") => any;
+}
+
 export interface ConfigFastifyServerSettings {
     engine ?: ConfigFastifyServerSettingsEngineHttp | ConfigFastifyServerSettingsEngineHttps | ConfigFastifyServerSettingsEngineHttp2,
-    logger ?: GlobalServerConfigInterfacesSettingsLogger
+    logger ?: GlobalServerConfigInterfacesSettingsLogger,
+    ngrok ?: ConfigFastifyServerInstancesPluginNgrok | undefined
 }
 
 export interface ConfigFastifyServerHooks {
@@ -45,7 +52,7 @@ export interface ConfigFastifyServerInstancesPluginOptions {
 export interface ConfigFastifyServerInstancesPlugin {
     formBody ?: ConfigFastifyServerInstancesPluginOptions | undefined,
     cors ?: ConfigFastifyServerInstancesPluginOptions | undefined,
-    socketIO ?: ConfigFastifyServerInstancesPluginOptions | undefined
+    socketIO ?: ConfigFastifyServerInstancesPluginOptions | undefined,
 }
 
 
