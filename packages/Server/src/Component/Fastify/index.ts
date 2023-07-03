@@ -1,12 +1,8 @@
-import fastify, {
-    FastifyBaseLogger,
-    FastifyInstance, FastifyTypeProviderDefault,
-    RawReplyDefaultExpression,
-    RawRequestDefaultExpression
-} from "fastify";
+import fastify, { FastifyInstance } from "fastify";
 import {ConfigFastifyServer} from "./Interfaces/ConfigFastifyServer";
 import {CallbackFastifyServer} from "./Interfaces/CallbackFastifyServer";
 import {extend, merge} from "lodash";
+
 import DefaultConfigFastifyServer, {
     fastifyEngineSettingsDefaultHTTP, fastifyEngineSettingsDefaultHTTP2,
     fastifyEngineSettingsDefaultHTTPS
@@ -14,9 +10,8 @@ import DefaultConfigFastifyServer, {
 import {FastifyHooks} from "./Component/FastifyHooks";
 import {FastifyPlugins} from "./Component/FastifyPlugins";
 import {Options} from "../../index";
-import * as http from "http";
-import {Server} from "socket.io";
-import {FastifySettings} from "./Component/FastifySettings";
+import {DEVELOPMENT, PRODUCTION} from "../../Types/ConfigServerTypes";
+import isElectron from "is-electron";
 
 export let mFastify : FastifyInstance
 
@@ -42,28 +37,44 @@ export async function FASTIFY<Config extends ConfigFastifyServer>(configServer :
         await FastifyHooks(mFastify, configServer);
         //###################################################
         //(configServer.app !== undefined) ? await configServer.app(mFastify) : null;
-        mFastify = (configServer.app !== undefined) ?
-            await mFastify.register(configServer.app as typeof mFastify.register.arguments) : mFastify;
+        mFastify = (configServer.app !== undefined) ? await mFastify.register(configServer.app as typeof mFastify.register.arguments) : mFastify;
+        configServer.host = (configServer.state === DEVELOPMENT || configServer.state === undefined) ? configServer.host : Options.HOST.WILDCARD;
+
+        //#######################################################################################################################################
+        if (isElectron()){
+            if (require.resolve("electron")){
+                let { app } = require("electron");
+                await app.on("before-quit", async () => {
+                    await mFastify.close();
+                });
+
+                process.on("SIGINT", async () => {
+                    await mFastify.close();
+                })
+            }
+        }else{
+            process.on("SIGINT", async () => {
+                await mFastify.close();
+            })
+        }
+
+
+
+        //#######################################################################################################################################
+
         mFastify.listen({ port : configServer.port, host : configServer.host }, async (error) => {
             if (!error){
                 (configServer.getConfig !== undefined) ? configServer.getConfig(configServer) : null;
-
-                await FastifySettings(mFastify, configServer)
-                    .then(async (result) => {
-                        console.log(result)
-                        await resolve({ status : true, code : 200, msg : `Server is Successfully Running`, config : configServer });
-                    })
-                    .catch(async (error) => {
-                        await rejected({ status : false, code : 500, msg : `Server Error For Running`, error : error})
-                    })
-                //await resolve({ status : true, code : 200, msg : `Server is Successfully Running`, config : configServer });
-
+                await resolve({ status : true, code : 200, msg : `Server is Successfully Running`, config : configServer });
             }else{
                 (configServer.getConfig !== undefined) ? configServer.getConfig(configServer) : null;
-                await rejected({ status : true, code : 200, msg : `Server is Successfully Running`, error : error})
+                await rejected({ status : true, code : 500, msg : `Server is Not Successfully Running`, error : error});
+                await process.exit();
             }
         })
+
     })
 }
+
 
 export default FASTIFY;

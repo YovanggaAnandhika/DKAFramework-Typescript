@@ -20,9 +20,9 @@ import {
 } from "./Config/DefaultConfigSocketIOServer";
 import {merge} from "lodash";
 import Fastify, { FastifyInstance } from "fastify";
-import {PRODUCTION} from "../../../Types/ConfigServerTypes";
-import {Options} from "../../../index";
-import {CallbackServerSocketIOComponent} from "../../../Interfaces/CallbackServerInterfaces";
+import {PRODUCTION} from "../../Types/ConfigServerTypes";
+import {Options} from "../../index";
+import {CallbackServerSocketIOComponent} from "../../Interfaces/CallbackServerInterfaces";
 import SocketIOEngineHeaders from "./Component/SocketIOEngineHeaders";
 import {SocketIOMiddleware} from "./Component/SocketIOMiddleware";
 import tcpPortUsed from "tcp-port-used";
@@ -265,3 +265,5 @@ async function ServerSelectedSocketIO<Config extends ConfigSocketIOServer>(confi
         }
     })
 }
+
+export default SocketIOServerInstances;

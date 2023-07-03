@@ -28,7 +28,7 @@ export interface WebpackConfigServerInstancesWebpackDev extends WebpackConfigura
 }
 
 export interface WebpackConfigServerInstances {
-    engine : WEBPACK_ENGINE,
+    engine ?: WEBPACK_ENGINE | undefined,
     state ?: DEVELOPMENT | PRODUCTION
     host ?: string | undefined,
     port ?: number | undefined,

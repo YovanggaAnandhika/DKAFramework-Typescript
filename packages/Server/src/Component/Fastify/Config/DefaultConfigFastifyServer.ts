@@ -37,6 +37,9 @@ export const DefaultConfigFastifyServer : ConfigFastifyServer = {
     settings : {
         engine : {
             type : "HTTP"
+        },
+        ngrok : {
+            enabled : false
         }
     }
 }

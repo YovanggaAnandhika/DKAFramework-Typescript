@@ -40,7 +40,7 @@ export interface ConfigFastifyServerSettings {
 }
 
 export interface ConfigFastifyServerHooks {
-    onRequest : (req : onRequestHookHandler) => Promise<void>
+    onRequest ?: (req : onRequestHookHandler) => Promise<void>
 }
 
 
@@ -57,7 +57,7 @@ export interface ConfigFastifyServerInstancesPlugin {
 
 
 export type ConfigFastifyServerInstances = {
-    engine : FASTIFY_ENGINE
+    engine ?: FASTIFY_ENGINE | undefined
     state ?: DEVELOPMENT | PRODUCTION
     host ?: string | undefined,
     port ?: number | undefined,

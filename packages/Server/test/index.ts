@@ -1,39 +1,25 @@
-import { Server, Options } from "./../src";
+//import { Server, Options } from "./../src";
+
+import * as process from "process";
+
+console.log("data");
+/*
 (async () => {
 
-    Server({
+    await Server({
         engine : Options.ENGINE.FASTIFY,
-        host : Options.HOST.WILDCARD,
-        port : 8233,
         app : async (app, opts, next) => {
-            app.get("/",async (request, response) => {
-                request.headers["Bypass-Tunnel-Reminder"] = "";
-                response.send("halo")
-            })
-            next();
-        },
-        plugin : {
-          socketIO : { enabled : true }
-        },
-        settings : {
-            engine : {
-                type : Options.SETTINGS.ENGINE.PROTOCOL.HTTP2,
-                options : {
 
-                }
-            },
-            ngrok : {
-                enabled : true,
-                authToken : "g3UD9sgpzrW41i6YGVWH_3w7oA58kHxKDgSNpmncba"
-            }
+            next()
         }
-    }).then(async (result) => {
-        console.log("Server Berjalan")
+    }).then(async (resultServ) => {
+        console.log(resultServ)
     }).catch(async (error) => {
-        console.log(error)
+        console.error(error)
     })
 
-    /*Server({
+
+    /!*Server({
         engine : Options.ENGINE.FASTIFY,
         port : 2811
     }).then(async (server) => {
@@ -41,9 +27,9 @@ import { Server, Options } from "./../src";
         //await server.engine.server.listen({ port : server.getConfig.port, host : server.getConfig.host})
     }).catch(async (error) => {
         console.error(error)
-    });*/
+    });*!/
 
 
 
     //mServer.engine.server.listen
-})();
+})();*/

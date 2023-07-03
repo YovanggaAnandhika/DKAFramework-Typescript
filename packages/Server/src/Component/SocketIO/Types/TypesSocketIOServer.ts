@@ -1,4 +1,4 @@
-import {ExtendedError} from "../../../../Interfaces/ConfigServerInterfaces";
+import {ExtendedError} from "../../../Interfaces/ConfigServerInterfaces";
 import {Namespace, Server, Socket} from "socket.io";
 import {DefaultEventsMap} from "socket.io/dist/typed-events";
 import {FastifyInstance} from "fastify";

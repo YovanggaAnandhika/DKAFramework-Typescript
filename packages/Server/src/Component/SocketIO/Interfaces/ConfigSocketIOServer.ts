@@ -1,7 +1,6 @@
 import {
-    GlobalServerConfigInterfaces,
     GlobalServerConfigInterfacesSettingsLogger
-} from "../../../../Interfaces/ConfigServerInterfaces";
+} from "../../../Interfaces/ConfigServerInterfaces";
 import {
     SOCKET_ENGINE,
     SOCKET_TYPE_FASTIFY,
@@ -13,21 +12,11 @@ import {ServerOptions as SocketServerOptions, Socket} from "socket.io";
 import {RequestListener, ServerOptions as HTTPServerOptions, Server as HTTPServer} from "http";
 import { Server as HTTPSServer } from "https"
 import {
-    Http2SecureServer as HTTP2SecureServer,
-    Http2SecureServer,
     SecureServerOptions as HTTP2SecureServerOptions
 } from "http2"
 import {ServerOptions as HTTPSServerOptions} from "https"
 import {DefaultEventsMap} from "socket.io/dist/typed-events";
-import {
-    FastifyHttp2SecureOptions,
-    FastifyHttpOptions,
-    FastifyHttpsOptions,
-    FastifyInstance,
-    FastifyServerOptions
-} from "fastify";
-import {ConfigFastifyServerRegister} from "../../../Fastify/Types/TypesFastifyServer";
-import {DEVELOPMENT, PRODUCTION} from "../../../../Types/ConfigServerTypes";
+import {DEVELOPMENT, PRODUCTION} from "../../../Types/ConfigServerTypes";
 
 export interface ConfigSocketIOServerSettingsHTTP extends HTTPServerOptions {
     protocol ?: SOCKET_TYPE_HTTP,
@@ -75,7 +64,7 @@ export interface ConfigSocketIOServerEvents {
 }
 //HTTPServer | HTTP2SecureServer | HTTPSServer
 export interface ConfigSocketIOServerInstances {
-    engine : SOCKET_ENGINE,
+    engine ?: SOCKET_ENGINE | undefined,
     state ?: DEVELOPMENT | PRODUCTION
     host ?: string | undefined,
     port ?: number | undefined,

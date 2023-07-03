@@ -1,6 +1,6 @@
 {
   "name": "@dkaframework/database",
-  "version": "1.0.152",
+  "version": "1.0.164",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "author": {
@@ -19,16 +19,19 @@
   },
   "dependencies": {
     "@dkaframework/security": "latest",
+    "@journeyapps/sqlcipher": "^5.3.1",
     "@types/jsbn": "^1.2.30",
     "@types/lodash": "^4.0.0",
     "firebase": "^9.13.0",
     "firebase-admin": "^11.2.0",
+    "is-admin": "^4.0.0",
     "lodash": "^4.0.0",
     "mariadb": "^2.5.6",
     "moment": "^2.29.4",
     "moment-timezone": "^0.5.37",
     "mongodb": "^4.11.0",
     "mysqldump": "^3.2.0",
+    "node-windows": "^1.0.0-beta.8",
     "rimraf": "^4.4.0",
     "tcp-port-used": "^1.0.2",
     "telnet": "^0.0.1",

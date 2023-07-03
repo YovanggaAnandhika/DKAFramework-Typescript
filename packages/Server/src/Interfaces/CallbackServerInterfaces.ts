@@ -1,5 +1,5 @@
 import {Server} from "socket.io";
-import {ConfigSocketIOServer} from "../Component/SocketIO/Server/Interfaces/ConfigSocketIOServer";
+import {ConfigSocketIOServer} from "../Component/SocketIO/Interfaces/ConfigSocketIOServer";
 import {Http2Server as HTTP2Server} from "http2";
 import {Server as HTTPServer} from "http";
 import {Server as HTTPSServer} from "https";

@@ -1,7 +1,7 @@
 import { readFileSync } from "fs";
 import path from "path"
 import {ConfigSocketIOServer} from "../Interfaces/ConfigSocketIOServer";
-import {Options} from "../../../../index";
+import {Options} from "../../../index";
 
 export const DefaultConfigSocketIOHTTPServer : ConfigSocketIOServer = {
     engine : Options.ENGINE.SOCKETIO,
