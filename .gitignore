@@ -7,3 +7,6 @@ lerna-debug.log
 /**/*/yarn.lock
 /**/*/yarn-error.log
 /**/*/dka.env
+/**/*/session-Default/*
+/**/*/session/*
+/**/*/.wwebjs_cache/*

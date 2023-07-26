@@ -7,13 +7,19 @@ export interface QrisApiConfig {
 
 export interface QrisConfigCreateInvoice {
     cliTrxNumber ?: string,
-    cliTrxAmount ?: number
+    cliTrxAmount ?: number,
+    checkingIntervalMs ?: number
 }
 
-export interface QrisCOnfigCheckStatus {
+export interface QrisConfigCheckStatusOptions {
+    checkingIntervalMs ?: number
+}
+export interface QrisConfigCheckStatus {
     qris_invoiceid ?: number,
     trxvalue ?: number,
-    trxdate ?: Date
+    trxdate ?: Date,
+    options ?: QrisConfigCheckStatusOptions,
+    onResponse : (result : QrisCheckStatusCallback) => void
 }
 
 export interface QrisCreateInvoiceCallbackData {

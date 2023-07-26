@@ -17,18 +17,19 @@ export let mFastify : FastifyInstance
 
 export async function FASTIFY<Config extends ConfigFastifyServer>(configServer : Config) : Promise<CallbackFastifyServer> {
     return new Promise(async (resolve, rejected) => {
-        configServer = await extend(DefaultConfigFastifyServer, configServer)
+        await merge(configServer, DefaultConfigFastifyServer)
         switch (configServer.settings.engine.type) {
             case Options.SETTINGS.ENGINE.PROTOCOL.HTTP :
-                configServer.settings.engine = await merge(fastifyEngineSettingsDefaultHTTP, configServer.settings.engine);
+                await merge(configServer.settings.engine, fastifyEngineSettingsDefaultHTTP);
                 mFastify = fastify(configServer.settings?.engine.options);
                 break;
             case Options.SETTINGS.ENGINE.PROTOCOL.HTTPS :
-                configServer.settings.engine = await merge(fastifyEngineSettingsDefaultHTTPS, configServer.settings.engine);
+                await merge(configServer.settings.engine, fastifyEngineSettingsDefaultHTTPS);
                 mFastify = fastify(configServer.settings?.engine.options);
                 break;
             case Options.SETTINGS.ENGINE.PROTOCOL.HTTP2 :
-                configServer.settings.engine = await merge(fastifyEngineSettingsDefaultHTTP2, configServer.settings.engine);
+                await merge(configServer.settings.engine, fastifyEngineSettingsDefaultHTTP2);
+                console.log(configServer.settings.engine.options)
                 mFastify = fastify(configServer.settings?.engine.options);
                 break;
         }

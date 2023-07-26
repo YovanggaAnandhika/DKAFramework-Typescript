@@ -1,16 +1,10 @@
-import {Arduino} from "./Component/Arduino";
-import {ArduinoTypes} from "./Component/Arduino/Types/ArduinoTypes";
-import IOTConfigGlobal from "./Options/IOTConfigGlobal";
-import {Escpos} from "./Component/Escpos";
-
+import { Printer } from "./Component/Printer";
+import { Arduino } from "./Component/Arduino"
 
 export const IoT = {
-    Arduino : Arduino,
-    Escpos : Escpos,
-    Options : IOTConfigGlobal
+    Printer : Printer,
+    Arduino : Arduino
 }
 
-
-export { Arduino, Escpos, IOTConfigGlobal as Options };
-
+export { Printer, Arduino };
 export default IoT;

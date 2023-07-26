@@ -1,34 +1,32 @@
 import Apis from "../src";
-
+import * as qrcode from "qrcode-terminal";
+import * as moment from "moment-timezone";
 
 (async () => {
-    /*let mQris = new Apis.Payment.QRIS({
-        mID : "ID1023262011142",
-        apikey : "a838831"
+    let wa = Apis.Chat.WhatsApps();
+    moment.locale("id")
+    wa.on("qr", async (qr) => {
+        qrcode.generate(qr, {small: true});
     });
 
-    mQris.createInvoice({
-        cliTrxAmount : 100000,
-        cliTrxNumber : "#392992"
-    }).then(async (result) => {
-        console.log(result)
-    }).catch(async (error) => {
-        console.error(error)
-    })*/
-    let mBCA = new Apis.Payment.BCA({
-        state : "sandbox.bca.co.id",
-        credential : {
-            clientId : `3db9c038-f385-42ea-8c4d-39bd46e218e2`,
-            clientSecret : `db3d0b37-47d9-4100-9e35-cd154b6b7866`
+    wa.on("ready", async () => {
+        console.log("ready terhubung")
+    });
+
+    wa.on("message", async (message) => {
+        let chat = await wa.getChats();
+        let senderChatContainer = chat.find((chat) => chat.id._serialized === message.from);
+
+        if (senderChatContainer !== undefined){
+            let allMsg = await senderChatContainer.fetchMessages({ limit : 2 });
+            let timeNow = moment(moment.now());
+            console.log(allMsg[0].body);
+            let previousMsgTime = moment.unix(allMsg[0].timestamp);
+            let comparisonTimeFromNow = moment.duration(timeNow.diff(previousMsgTime));
+            console.log(comparisonTimeFromNow.asHours());
         }
-    });
 
-    mBCA.getToken()
-        .then(async (resolve) => {
-            console.log(resolve)
-        })
-        .catch(async (error) => {
-            console.error(error)
-        });
+    })
 
+    await wa.initialize();
 })();

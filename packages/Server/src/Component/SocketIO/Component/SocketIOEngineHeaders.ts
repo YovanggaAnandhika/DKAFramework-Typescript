@@ -5,7 +5,7 @@ import {merge} from "lodash";
 export function SocketIOEngineHeaders(Socket : Server) : Server {
     let mHeader : any = {};
     Socket.engine.on("headers", async (header : any, req : any) => {
-        let mPackageJson = require("./../../../../../package.json");
+        let mPackageJson = require("./../../../../package.json");
         mHeader = {
             "framework-version" : mPackageJson.version,
             "framework-name" : mPackageJson.name,
