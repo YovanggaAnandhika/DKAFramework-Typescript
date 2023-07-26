@@ -49,7 +49,7 @@ export class QRIS {
 
         return new Promise(async (resolve, rejected) => {
 
-        })
+        });
 
     }
 }
