@@ -7,7 +7,7 @@ import SerialPort from "serialport";
 class NodeMCU {
 
     private board : Firmata | undefined = undefined;
-    private sp : SerialPort | undefined = undefined;
+    private sp : typeof SerialPort | undefined = undefined;
     private led : { [pin : string] : Led } = {};
     private config : NodeMCUConfig | undefined = undefined;
 
