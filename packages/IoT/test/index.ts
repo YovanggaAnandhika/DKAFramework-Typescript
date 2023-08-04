@@ -1,13 +1,34 @@
-import { Board, Led } from "johnny-five";
+import IoT from "../src";
+import nodeMCU from "../src/Component/Arduino/NodeMCU";
+import {result} from "lodash";
 
 
 (async () => {
 
-    let board = new Board();
+    let Node = await IoT.Arduino.NodeMCU({
+        mode : "WIFI_MODE",
+        host : "192.168.137.101",
+        port : 58888,
+        debug : false,
+        repl : false,
+        onReady : async () => {
 
-    board.on("ready", () => {
-        let LED = new Led(4);
-        LED.blink(800);
-    })
+        }
+    });
+
+    await Node.Relay({ state : true })
+        .then(async (res) => {
+            console.log(res)
+        })
+        .catch(async (error) => {
+            console.error(error)
+        });
+
+
+
+
+
+
+
 
 })();
