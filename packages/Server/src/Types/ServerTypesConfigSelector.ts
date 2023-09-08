@@ -1,6 +1,4 @@
-import {
-    SOCKET_ENGINE
-} from "../Component/SocketIO/Types/TypesSocketIOServer";
+import {SOCKET_ENGINE} from "../Component/SocketIO/Types/TypesSocketIOServer";
 import {FASTIFY_ENGINE} from "../Component/Fastify/Types/TypesFastifyServer";
 import {UDP_ENGINE} from "../Component/UDP/Types/TypesUDPServer";
 import {ConfigSocketIOServer} from "../Component/SocketIO/Interfaces/ConfigSocketIOServer";
@@ -8,7 +6,6 @@ import {ConfigFastifyServer} from "../Component/Fastify/Interfaces/ConfigFastify
 import {ConfigUDPServer} from "../Component/UDP/Interfaces/ConfigUDPServer";
 import {ConfigWebpackServer} from "../Component/Webpack/Interfaces/WebpackConfigServer";
 import {WEBPACK_ENGINE} from "../Component/Webpack/Types/WebpackTypesServer";
-
 
 
 export type ServerConfigSelector<Config> = Config extends { engine ?: SOCKET_ENGINE | undefined } ? ConfigSocketIOServer :

@@ -2,12 +2,12 @@ import path from "path";
 import * as fs from "fs";
 import {merge} from "lodash";
 // install escpos-usb adapter module manually
-import { Printer, Image } from "@node-escpos/core";
+import {Image, Printer} from "@node-escpos/core";
 import USB, {TDevice} from "@node-escpos/usb-adapter";
 import NETWORK from "@node-escpos/serialport-adapter";
 
 // Select the adapter based on your printer type
-import {EscposConfig, EscposNetwork, EscposUSB, EscposUSBIdentifyVendorProduct} from "./Interfaces/EscposConfig";
+import {EscposConfig, EscposNetwork, EscposUSB} from "./Interfaces/EscposConfig";
 import {DEVELOPMENT, ESCPOS_NETWORK, ESCPOS_USB} from "./Types/EscposTypes";
 import {DefaultConfigNetwork, DefaultConfigUSB} from "./Config/DefaultConfigEscpos";
 import {EscposCheckerConfig} from "./Types/EscposCheckerConfig";
@@ -15,8 +15,9 @@ import {EscposCheckerConfig} from "./Types/EscposCheckerConfig";
 import EscposOptions from "./Const";
 import * as os from "os";
 import * as macaddress from "macaddress";
-const CPUUsage = require("cpu-percentage");
 import * as ip from "ip";
+
+const CPUUsage = require("cpu-percentage");
 
 export class Escpos<Config extends EscposConfig> {
     //######################################################

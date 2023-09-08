@@ -1,10 +1,10 @@
-import {ConfigUDPServer, UDPList} from "./Interfaces/ConfigUDPServer";
-import udp, { Socket } from "dgram";
+import {ConfigUDPServer} from "./Interfaces/ConfigUDPServer";
+import udp, {Socket} from "dgram";
 import {Options} from "../../index";
 
 export async function UDPSERVER(config : ConfigUDPServer) : Promise<Socket> {
     let mUdp : Socket;
-    return new Promise(async (resolve, rejected) => {
+    return new Promise(async (resolve) => {
         mUdp = await udp.createSocket("udp4");
         config.host = (config.state !== Options.STATE.PRODUCTION) ? config.host : "0.0.0.0";
 

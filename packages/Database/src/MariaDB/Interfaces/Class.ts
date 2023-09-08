@@ -1,9 +1,9 @@
-import {MariaDBConstructorConfig} from "./Config";
 import {
-    Callback,
-    CallbackBackup, CallbackCreateDatabase, CallbackCreateTable,
+    CallbackBackup,
+    CallbackCreateDatabase,
+    CallbackCreateTable,
     CallbackDelete,
-    CallbackError, CallbackInsert,
+    CallbackInsert,
     CallbackSelect,
     CallbackUpdate
 } from "./Callback";

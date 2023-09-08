@@ -1,30 +1,13 @@
-import { Server, Options } from "./../src";
-
-import * as process from "process";
-import {readFileSync} from "fs";
-import * as path from "path";
+import {Options, Server} from "./../src";
 import * as fs from "fs";
-import {ConfigSocketIOServerInstancesNamespaces} from "../src/Component/SocketIO/Interfaces/ConfigSocketIOServer";
+import * as path from "path";
 
 (async () => {
-
-    let mNamespace : ConfigSocketIOServerInstancesNamespaces = {
-        dev : {
-            onConnection : async (io, namespace) => {
-                //console.log(`connect namespace ${namespace.name}`);
-                io.on("hello", async (data) => {
-                    console.log(data);
-                });
-                io.emit('hello',{ halo : "hello from server"});
-            }
-        }
-    }
 
     await Server({
         engine : Options.ENGINE.SOCKETIO,
         host : "0.0.0.0",
         port : 3821,
-        namespaces : mNamespace,
         settings : {
             socket : {
                 pingInterval : 1000

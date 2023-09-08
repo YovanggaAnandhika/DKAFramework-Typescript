@@ -1,6 +1,6 @@
-import axios, { Axios } from "axios";
+import axios, {Axios} from "axios";
 import {
-    QrisApiConfig, QrisCheckStatusCallback,
+    QrisApiConfig,
     QrisConfigCheckStatus,
     QrisConfigCreateInvoice,
     QrisCreateInvoiceCallback

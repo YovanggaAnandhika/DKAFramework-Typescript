@@ -1,4 +1,4 @@
-import {ConfigServerInterfaces, GlobalServerConfigInterfaces} from "./Interfaces/ConfigServerInterfaces";
+import {ConfigServerInterfaces} from "./Interfaces/ConfigServerInterfaces";
 import {ServerSelector} from "./Types/ServerTypesSelector";
 import {default as Options} from "./Config";
 import {FASTIFY_ENGINE} from "./Component/Fastify/Types/TypesFastifyServer";

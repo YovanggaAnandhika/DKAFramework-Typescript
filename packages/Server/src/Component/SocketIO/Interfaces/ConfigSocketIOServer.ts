@@ -1,17 +1,16 @@
+import {GlobalServerConfigInterfacesSettingsLogger} from "../../../Interfaces/ConfigServerInterfaces";
 import {
-    GlobalServerConfigInterfacesSettingsLogger
-} from "../../../Interfaces/ConfigServerInterfaces";
-import {
+    ConfigSocketIOInstanceEventsLatency,
     SOCKET_ENGINE,
     SOCKET_TYPE_HTTP,
     SOCKET_TYPE_HTTP2,
-    SOCKET_TYPE_HTTPS, SocketIOMiddlewareUse, SocketIOSocketIO
+    SOCKET_TYPE_HTTPS,
+    SocketIOMiddlewareUse,
+    SocketIOSocketIO
 } from "../Types/TypesSocketIOServer";
 import {Namespace, Server, ServerOptions as SocketServerOptions, Socket} from "socket.io";
-import {RequestListener, ServerOptions as HTTPServerOptions, Server as HTTPServer} from "http";
-import {
-    SecureServerOptions as HTTP2SecureServerOptions
-} from "http2"
+import {RequestListener, ServerOptions as HTTPServerOptions} from "http";
+import {SecureServerOptions as HTTP2SecureServerOptions} from "http2"
 import {ServerOptions as HTTPSServerOptions} from "https"
 import {DefaultEventsMap} from "socket.io/dist/typed-events";
 import {DEVELOPMENT, PRODUCTION} from "../../../Types/ConfigServerTypes";
@@ -42,6 +41,7 @@ export interface ConfigSocketIOServerSettingsSocketKey {
 
 export interface ConfigSocketIOServerSettingsSocket extends Partial<SocketServerOptions> {
     jwt ?: ConfigSocketIOServerSettingsSocketJWT;
+    pingProtocol ?: "UDP" | "TCP"
 }
 
 export interface ConfigSocketIOServerSettingsCluster {
@@ -58,6 +58,7 @@ export interface ConfigSocketIOServerSettings {
 
 export interface ConfigSocketIOServerEventsSocket {
     onConnection ?: (io : Socket<DefaultEventsMap, DefaultEventsMap, any>, server : Server<DefaultEventsMap, DefaultEventsMap, any>) => Promise<void>,
+    onLatency ?: (delay : number, type : ConfigSocketIOInstanceEventsLatency) => Promise<void> | void | undefined;
     onDisconnection ?: (reason : any) => Promise<void> | void,
 }
 
@@ -73,6 +74,7 @@ export interface ConfigSocketIOServerEvents {
 export interface ConfigSocketIOServerEventsNamespace {
     use ?: SocketIOMiddlewareUse | undefined;
     onConnection ?: (io : Socket<DefaultEventsMap, DefaultEventsMap, any>, namespace : Namespace<DefaultEventsMap, DefaultEventsMap, any>) => Promise<void> | void | undefined,
+    onLatency ?: (delay : number, type : ConfigSocketIOInstanceEventsLatency) => Promise<void> | void | undefined;
     onDisconnection ?: (reason : any) => Promise<void> | void,
 }
 export interface ConfigSocketIOServerInstancesNamespaces {

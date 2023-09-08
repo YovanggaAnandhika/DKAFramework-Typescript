@@ -1,9 +1,6 @@
-import {
-    GlobalServerConfigInterfaces,
-    GlobalServerConfigInterfacesSettingsLogger
-} from "../../../Interfaces/ConfigServerInterfaces";
+import {GlobalServerConfigInterfacesSettingsLogger} from "../../../Interfaces/ConfigServerInterfaces";
 import {ConfigUDPServerOnMessage, UDP_ENGINE} from "../Types/TypesUDPServer";
-import { Socket, RemoteInfo } from "dgram";
+import {Socket} from "dgram";
 import {DEVELOPMENT, PRODUCTION} from "../../../Types/ConfigServerTypes";
 
 

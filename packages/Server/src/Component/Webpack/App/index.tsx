@@ -1,5 +1,5 @@
-import React, { StrictMode } from "react";
-import ReactDOM, { createRoot } from "react-dom/client";
+import React, {StrictMode} from "react";
+import {createRoot} from "react-dom/client";
 
 const rootElement = document.getElementById("dka");
 // @ts-ignore

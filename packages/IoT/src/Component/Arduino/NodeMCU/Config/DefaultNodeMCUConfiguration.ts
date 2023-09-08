@@ -3,9 +3,9 @@ import {
     NodeMCUConfigUSB,
     NodeMCUConfigWifi,
     NodeMCULedMethod,
-    NodeMCURelayMethod, RELAY_MODE_ONCE, RELAY_MODE_TOGGLE
+    NodeMCURelayMethod,
+    RELAY_MODE_ONCE
 } from "../Interfaces/NodeMCUConfig";
-import NodeMCU from "../index";
 
 
 export const DefaultConfigConstructorNodeMCUWifi : NodeMCUConfigWifi = {

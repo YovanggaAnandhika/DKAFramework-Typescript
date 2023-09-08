@@ -1,10 +1,12 @@
-import exp from "constants";
 import {RSAKeyPairOptions} from "crypto";
 import {
     CertExtensionsAuthorityKeyIdentifier,
-    CertExtensionsBasicConstraints, CertExtensionsExtKeyUsage,
-    CertExtensionsKeyUsageCA, CertExtensionsKeyUsageCert,
-    CertExtensionsNSCertType, CertExtensionsSubjectAltName,
+    CertExtensionsBasicConstraints,
+    CertExtensionsExtKeyUsage,
+    CertExtensionsKeyUsageCA,
+    CertExtensionsKeyUsageCert,
+    CertExtensionsNSCertType,
+    CertExtensionsSubjectAltName,
     CertExtensionsSubjectKeyIdentifier
 } from "./CertExtensions";
 import {pki} from "node-forge";

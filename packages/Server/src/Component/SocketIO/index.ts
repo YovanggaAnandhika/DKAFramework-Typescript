@@ -1,32 +1,32 @@
+import {ConfigSocketIOServer, ConfigSocketIOServerSettingsHTTP} from "./Interfaces/ConfigSocketIOServer";
 import {
-    ConfigSocketIOServer,
-    ConfigSocketIOServerSettingsHTTP
-} from "./Interfaces/ConfigSocketIOServer";
-import {SOCKET_TYPE_FASTIFY, SOCKET_TYPE_HTTP, SOCKET_TYPE_HTTP2, SOCKET_TYPE_HTTPS} from "./Types/TypesSocketIOServer";
-import { Server } from "socket.io";
-import os from "node:os";
-import cluster from "node:cluster";
-import { pki } from "node-forge";
+    ConfigSocketIOInstanceEventsLatency,
+    SOCKET_TYPE_HTTP,
+    SOCKET_TYPE_HTTP2,
+    SOCKET_TYPE_HTTPS
+} from "./Types/TypesSocketIOServer";
+import {Server} from "socket.io";
+import {createServer as createServerHTTP, Server as HTTPServer, ServerOptions as HTTPServerOptions} from "http";
+import {createServer as createServerHTTPS, Server as HTTPSServer, ServerOptions as HTTPSServerOptions} from "https";
 import {
-    createServer as createServerHTTP,
-    Server as HTTPServer,
-    ServerOptions as HTTPServerOptions, ServerResponse
-} from "http";
-import { createServer as createServerHTTPS, Server as HTTPSServer, ServerOptions as HTTPSServerOptions } from "https";
-import { createServer as createServerHTTP2, createSecureServer as createSecureServerHTTP2, Http2Server as HTTP2Server, Http2SecureServer as HTTP2SecureServer, SecureServerOptions as HTTP2SecureServerOptions, ServerOptions as HTTP2ServerOptions } from "http2";
+    createSecureServer as createSecureServerHTTP2,
+    Http2SecureServer as HTTP2SecureServer,
+    ServerOptions as HTTP2ServerOptions
+} from "http2";
 import {
     DefaultConfigSocketIOHTTP2Server,
     DefaultConfigSocketIOHTTPServer,
     DefaultConfigSocketIOHTTPSServer
 } from "./Config/DefaultConfigSocketIOServer";
 import {merge} from "lodash";
-import Fastify, { FastifyInstance } from "fastify";
+import {FastifyInstance} from "fastify";
 import {PRODUCTION} from "../../Types/ConfigServerTypes";
 import {Options} from "../../index";
 import {CallbackServerSocketIOComponent} from "../../Interfaces/CallbackServerInterfaces";
 import SocketIOEngineHeaders from "./Component/SocketIOEngineHeaders";
 import {SocketIOMiddleware} from "./Component/SocketIOMiddleware";
 import tcpPortUsed from "tcp-port-used";
+import moment from "moment-timezone";
 
 
 export async function SocketIOServerInstances<Config extends ConfigSocketIOServer>(config : Config) : Promise<CallbackServerSocketIOComponent> {
@@ -40,14 +40,14 @@ export async function SocketIOServerInstances<Config extends ConfigSocketIOServe
     return new Promise(async (resolve, rejected) => {
         config = await merge(DefaultConfigSocketIOHTTPServer, config);
         //#######################################################
-        await tcpPortUsed.check(config.port as number,config.host)
+        tcpPortUsed.check(config.port as number,config.host)
             .then(async (inUse) => {
                 if (!inUse){
                     switch (config.settings?.engine?.protocol) {
                         case SOCKET_TYPE_HTTP :
                             config = await merge(DefaultConfigSocketIOHTTPServer, config);
                             mHTTP = createServerHTTP(config.settings?.engine as HTTPServerOptions, (config.settings?.engine as ConfigSocketIOServerSettingsHTTP)?.requestListeners);
-                            SocketIO = await new Server(mHTTP, config.settings?.socket);
+                            SocketIO = new Server(mHTTP, config.settings?.socket);
                             //** Header Set
                             SocketIO = SocketIOEngineHeaders(SocketIO);
 
@@ -57,8 +57,6 @@ export async function SocketIOServerInstances<Config extends ConfigSocketIOServe
                             }
 
                             process.on("SIGINT", async () => {
-                                console.log("signInt");
-
                                 mHTTP.close(async (err) => {
                                     if (!err)
                                         SocketIO.close();
@@ -73,50 +71,75 @@ export async function SocketIOServerInstances<Config extends ConfigSocketIOServe
                                     if (config.namespaces[namespace].use !== undefined){
                                         mNamespace.use(config.namespaces[namespace].use);
                                     }
-                                    if (config.namespaces[namespace].onConnection !== undefined){
-                                        await mNamespace.on("connection",async (io) => {
-                                            await io.on("ping", (startTime, cb) => {
-                                                if (typeof cb === "function")
-                                                    cb(startTime);
-                                            });
-                                            await config.namespaces[namespace].onConnection(io, mNamespace);
-
-                                            if (config.namespaces[namespace].onDisconnection !== undefined){
-                                                await mNamespace.on("disconnect",(reason) => {
-                                                    config.namespaces[namespace].onDisconnection(reason);
-                                                });
+                                    mNamespace.on("connection",async (io) => {
+                                        io.on("ping", (startTime, cb) => {
+                                            if (typeof cb === "function") {
+                                                cb(startTime);
+                                                if (config.namespaces[namespace].onLatency !== undefined){
+                                                    let timeNowDiff = moment(moment.now());
+                                                    let latency = timeNowDiff.diff(startTime, 'millisecond');
+                                                    let typeLatency: ConfigSocketIOInstanceEventsLatency =
+                                                        (latency < 20) ? "GREAT" :
+                                                            (latency >= 20 && latency <= 40) ? "GOOD" :
+                                                                (latency > 40 && latency <= 100) ? "ACCEPTABLE" :
+                                                                    "BAD";
+                                                    config.namespaces[namespace].onLatency?.(latency, typeLatency);
+                                                }
                                             }
                                         });
-                                    }
+                                        if (config.namespaces[namespace].onConnection !== undefined){
+                                            await config.namespaces[namespace].onConnection(io, mNamespace);
+                                        }
+                                        if (config.namespaces[namespace].onDisconnection !== undefined){
+                                            mNamespace.on("disconnect",(reason) => {
+                                                config.namespaces[namespace].onDisconnection(reason);
+                                            });
+                                        }
+                                    });
+
                                 })
                             }
                             /** Event on Connection Data **/
-                            if (config.events?.socket?.onConnection !== undefined){
-                                await SocketIO.on("connection", async (io) => {
-                                    await io.on("ping", (startTime,cb) => {
-                                        if (typeof cb === "function")
-                                            cb(startTime);
-                                    });
-                                    await config.events?.socket?.onConnection?.(io, SocketIO);
-                                    //** Event On Disconnection Data **/
-                                    if (config.events?.socket?.onDisconnection !== undefined){
-                                        await io.on("disconnect", async (reason) => {
-                                            await config.events?.socket?.onDisconnection?.(reason);
-                                        });
+                            SocketIO.on("connection", async (io) => {
+                                io.on("ping", (startTime,cb) => {
+                                    if (typeof cb === "function"){
+                                        cb(startTime);
+                                        if (config.events?.socket?.onLatency !== undefined){
+                                            let timeNowDiff = moment(moment.now());
+                                            let latency = timeNowDiff.diff(startTime, 'millisecond');
+                                            let typeLatency: ConfigSocketIOInstanceEventsLatency =
+                                                (latency < 20) ? "GREAT" :
+                                                    (latency >= 20 && latency <= 40) ? "GOOD" :
+                                                        (latency > 40 && latency <= 100) ? "ACCEPTABLE" :
+                                                            "BAD";
+                                            config.events?.socket?.onLatency?.(latency, typeLatency);
+                                        }
                                     }
-                                    //** End Event On Disconnection Data **/
+
                                 });
-                            }
+                                if (config.events?.socket?.onConnection !== undefined){
+                                    await config.events?.socket?.onConnection?.(io, SocketIO);
+                                }
+
+                                //** Event On Disconnection Data **/
+                                if (config.events?.socket?.onDisconnection !== undefined){
+                                    io.on("disconnect", async (reason) => {
+                                        await config.events?.socket?.onDisconnection?.(reason);
+                                    });
+                                }
+                                //** End Event On Disconnection Data **/
+                            });
+
                             /** Event on Connection Data **/
                             if (config.io !== undefined){
                                 await config.io?.(SocketIO)
                             }
 
-                            await mHTTP.on("listening", async () => {
+                            mHTTP.on("listening", async () => {
                                 await config.events?.server?.onListening?.();
                             })
 
-                            await mHTTP.on("error", async (err : Error) => {
+                            mHTTP.on("error", async (err : Error) => {
                                 delete err.stack;
                                 await rejected(require("error-to-json")(err))
                             });
@@ -125,8 +148,7 @@ export async function SocketIOServerInstances<Config extends ConfigSocketIOServe
                             config.host = (config.state == PRODUCTION) ? Options.HOST.WILDCARD : config.host;
 
                             if (config.settings?.engine?.autoListen){
-                                console.log(config)
-                                await mHTTP.listen(config.port, config.host, async () => {
+                                mHTTP.listen(config.port, config.host, async () => {
                                     await resolve({ socket : SocketIO, server : mHTTP, config : config });
                                 });
                             }else{
@@ -136,7 +158,7 @@ export async function SocketIOServerInstances<Config extends ConfigSocketIOServe
                         case SOCKET_TYPE_HTTP2 :
                             config = await merge(DefaultConfigSocketIOHTTP2Server, config);
                             mHTTP2 = createSecureServerHTTP2(config.settings?.engine  as HTTP2ServerOptions)
-                            SocketIO = await new Server(mHTTP2, config.settings?.socket);
+                            SocketIO = new Server(mHTTP2, config.settings?.socket);
                             //** Header Set
                             SocketIO = SocketIOEngineHeaders(SocketIO);
 
@@ -151,7 +173,6 @@ export async function SocketIOServerInstances<Config extends ConfigSocketIOServe
                             }
 
                             process.on("SIGINT", async () => {
-                                console.log("signInt");
 
                                 mHTTP2.close(async (err) => {
                                     if (!err)
@@ -167,51 +188,77 @@ export async function SocketIOServerInstances<Config extends ConfigSocketIOServe
                                     if (config.namespaces[namespace].use !== undefined){
                                         mNamespace.use(config.namespaces[namespace].use);
                                     }
-                                    if (config.namespaces[namespace].onConnection !== undefined){
-                                        await mNamespace.on("connection",async (io) => {
-                                            await io.on("ping", (startTime, cb) => {
-                                                if (typeof cb === "function")
-                                                    cb(startTime);
-                                            });
-                                            await config.namespaces[namespace].onConnection(io, mNamespace);
-
-                                            if (config.namespaces[namespace].onDisconnection !== undefined){
-                                                await mNamespace.on("disconnect",(reason) => {
-                                                    config.namespaces[namespace].onDisconnection(reason);
-                                                });
+                                    mNamespace.on("connection",async (io) => {
+                                        io.on("ping", (startTime, cb) => {
+                                            if (typeof cb === "function") {
+                                                cb(startTime);
+                                                if (config.namespaces[namespace].onLatency !== undefined){
+                                                    let timeNowDiff = moment(moment.now());
+                                                    let latency = timeNowDiff.diff(startTime, 'millisecond');
+                                                    let typeLatency: ConfigSocketIOInstanceEventsLatency =
+                                                        (latency < 20) ? "GREAT" :
+                                                            (latency >= 20 && latency <= 40) ? "GOOD" :
+                                                                (latency > 40 && latency <= 100) ? "ACCEPTABLE" :
+                                                                    "BAD";
+                                                    config.namespaces[namespace].onLatency?.(latency, typeLatency);
+                                                }
                                             }
                                         });
-                                    }
+                                        if (config.namespaces[namespace].onConnection !== undefined){
+                                            await config.namespaces[namespace].onConnection(io, mNamespace);
+                                        }
+
+
+                                        if (config.namespaces[namespace].onDisconnection !== undefined){
+                                            mNamespace.on("disconnect",(reason) => {
+                                                config.namespaces[namespace].onDisconnection(reason);
+                                            });
+                                        }
+                                    });
+
                                 })
                             }
+
                             /** Event on Connection Data **/
-                            if (config.events?.socket?.onConnection !== undefined){
-                                await SocketIO.on("connection", async (io) => {
-                                    await io.on("ping", (startTime, cb) => {
-                                        if (typeof cb === "function")
-                                            cb(startTime);
-                                    });
-                                    await config.events?.socket?.onConnection?.(io, SocketIO);
-                                    // @ts-ignore
-                                    //** Event On Disconnection Data **/
-                                    if (config.events?.socket?.onDisconnection !== undefined){
-                                        await io.on("disconnect", async (reason) => {
-                                            await config.events?.socket?.onDisconnection?.(reason);
-                                        });
+                            SocketIO.on("connection", async (io) => {
+                                io.on("ping", (startTime, cb) => {
+                                    if (typeof cb === "function") {
+                                        cb(startTime);
+                                        if (config.events?.socket?.onLatency !== undefined){
+                                            let timeNowDiff = moment(moment.now());
+                                            let latency = timeNowDiff.diff(startTime, 'millisecond');
+                                            let typeLatency : ConfigSocketIOInstanceEventsLatency =
+                                                (latency < 20) ? "GREAT" :
+                                                    (latency >= 20 && latency <= 40) ? "GOOD" :
+                                                        (latency > 40 && latency <= 100) ? "ACCEPTABLE" :
+                                                            "BAD";
+                                            config.events?.socket?.onLatency?.(latency, typeLatency);
+                                        }
+
                                     }
-                                    //** End Event On Disconnection Data **/
                                 });
-                            }
+                                if (config.events?.socket?.onConnection !== undefined){
+                                    await config.events?.socket?.onConnection?.(io, SocketIO);
+                                }
+
+                                //** Event On Disconnection Data **/
+                                if (config.events?.socket?.onDisconnection !== undefined){
+                                    io.on("disconnect", async (reason) => {
+                                        await config.events?.socket?.onDisconnection?.(reason);
+                                    });
+                                }
+                                //** End Event On Disconnection Data **/
+                            });
+
                             /** Event on Connection Data **/
                             if (config.io !== undefined){
                                 await config.io?.(SocketIO)
                             }
-                            await mHTTP2.on("listening", async () => {
+                            mHTTP2.on("listening", async () => {
                                 await config.events?.server?.onListening?.();
-
                             })
 
-                            await mHTTP2.on("error", async (err : Error) => {
+                            mHTTP2.on("error", async (err : Error) => {
                                 delete err.stack;
                                 await rejected(require("error-to-json")(err))
                             });
@@ -220,7 +267,7 @@ export async function SocketIOServerInstances<Config extends ConfigSocketIOServe
                             config.host = (config.state == PRODUCTION) ? Options.HOST.WILDCARD : config.host;
 
                             if (config.settings?.engine?.autoListen){
-                                await mHTTP2.listen(config.port, config.host, async () => {
+                                mHTTP2.listen(config.port, config.host, async () => {
                                     await resolve({ socket : SocketIO, server : mHTTP2, config : config })
                                 });
                             }else{
@@ -230,7 +277,7 @@ export async function SocketIOServerInstances<Config extends ConfigSocketIOServe
                         case SOCKET_TYPE_HTTPS :
                             config = await merge(DefaultConfigSocketIOHTTPSServer, config);
                             mHTTPS = createServerHTTPS(config.settings?.engine  as HTTPSServerOptions);
-                            SocketIO = await new Server(mHTTPS, config.settings?.socket);
+                            SocketIO = new Server(mHTTPS, config.settings?.socket);
                             //** Header Set
                             SocketIO = SocketIOEngineHeaders(SocketIO);
 
@@ -245,8 +292,6 @@ export async function SocketIOServerInstances<Config extends ConfigSocketIOServe
                                 rawSocket.peerCertificate = rawSocket.request.client.getPeerCertificate();
                             });
                             process.on("SIGINT", async () => {
-                                console.log("signInt");
-
                                 mHTTPS.close(async (err) => {
                                     if (!err)
                                         SocketIO.close();
@@ -261,45 +306,71 @@ export async function SocketIOServerInstances<Config extends ConfigSocketIOServe
                                     if (config.namespaces[namespace].use !== undefined){
                                         mNamespace.use(config.namespaces[namespace].use);
                                     }
-                                    if (config.namespaces[namespace].onConnection !== undefined){
-                                        await mNamespace.on("connection",async (io) => {
-                                            await io.on("ping", (startTime, cb) => {
-                                                if (typeof cb === "function")
-                                                    cb(startTime);
-                                            });
-                                            await config.namespaces[namespace].onConnection(io, mNamespace);
 
-                                            if (config.namespaces[namespace].onDisconnection !== undefined){
-                                                await mNamespace.on("disconnect",(reason) => {
-                                                    config.namespaces[namespace].onDisconnection(reason);
-                                                });
+                                    mNamespace.on("connection",async (io) => {
+                                        io.on("ping", (startTime, cb) => {
+                                            if (typeof cb === "function") {
+                                                cb(startTime);
+                                                if (config.namespaces[namespace].onLatency !== undefined){
+                                                    let timeNowDiff = moment(moment.now());
+                                                    let latency = timeNowDiff.diff(startTime, 'millisecond');
+                                                    let typeLatency: ConfigSocketIOInstanceEventsLatency =
+                                                        (latency < 20) ? "GREAT" :
+                                                            (latency >= 20 && latency <= 40) ? "GOOD" :
+                                                                (latency > 40 && latency <= 100) ? "ACCEPTABLE" :
+                                                                    "BAD";
+                                                    config.namespaces[namespace].onLatency?.(latency, typeLatency);
+                                                }
                                             }
                                         });
-                                    }
+                                        if (config.namespaces[namespace].onConnection !== undefined){
+                                            await config.namespaces[namespace].onConnection(io, mNamespace);
+                                        }
+
+                                        if (config.namespaces[namespace].onDisconnection !== undefined){
+                                            mNamespace.on("disconnect",(reason) => {
+                                                config.namespaces[namespace].onDisconnection(reason);
+                                            });
+                                        }
+                                    });
+
                                 })
                             }
                             /** Event on Connection Data **/
-                            if (config.events?.socket?.onConnection !== undefined){
-                                await SocketIO.on("connection", async (io) => {
-                                    await io.on("ping", (startTime, cb) => {
-                                        if (typeof cb === "function")
-                                            cb(startTime);
-                                    });
-                                    await config.events?.socket?.onConnection?.(io, SocketIO);
-                                    //** Event On Disconnection Data **/
-                                    if (config.events?.socket?.onDisconnection !== undefined){
-                                        await io.on("disconnect", async (reason) => {
-                                            await config.events?.socket?.onDisconnection?.(reason);
-                                        });
+                            SocketIO.on("connection", async (io) => {
+                                io.on("ping", (startTime, cb) => {
+                                    if (typeof cb === "function") {
+                                        cb(startTime);
+                                        if (config.events?.socket?.onLatency !== undefined){
+                                            let timeNowDiff = moment(moment.now());
+                                            let latency = timeNowDiff.diff(startTime, 'millisecond');
+                                            let typeLatency: ConfigSocketIOInstanceEventsLatency =
+                                                (latency < 20) ? "GREAT" :
+                                                    (latency >= 20 && latency <= 40) ? "GOOD" :
+                                                        (latency > 40 && latency <= 100) ? "ACCEPTABLE" :
+                                                            "BAD";
+                                            config.events?.socket?.onLatency?.(latency, typeLatency);
+                                        }
+
                                     }
-                                    //** End Event On Disconnection Data **/
                                 });
-                            }
+                                if (config.events?.socket?.onConnection !== undefined){
+                                    await config.events?.socket?.onConnection?.(io, SocketIO);
+                                }
+                                //** Event On Disconnection Data **/
+                                if (config.events?.socket?.onDisconnection !== undefined){
+                                    io.on("disconnect", async (reason) => {
+                                        await config.events?.socket?.onDisconnection?.(reason);
+                                    });
+                                }
+                                //** End Event On Disconnection Data **/
+                            });
+
                             /** Event on Connection Data **/
                             if (config.io !== undefined){
                                 await config.io?.(SocketIO)
                             }
-                            await mHTTPS.on("error", async (err : Error) => {
+                            mHTTPS.on("error", async (err : Error) => {
                                 delete err.stack;
                                 await rejected(require("error-to-json")(err))
                             });
@@ -308,10 +379,10 @@ export async function SocketIOServerInstances<Config extends ConfigSocketIOServe
                             config.host = (config.state == PRODUCTION) ? Options.HOST.WILDCARD : config.host;
 
                             if (config.settings?.engine?.autoListen){
-                                await mHTTPS.on("listening", async () => {
+                                mHTTPS.on("listening", async () => {
                                     await config.events?.server?.onListening?.();
                                 })
-                                await mHTTPS.listen(config.port, config.host, async () => {
+                                mHTTPS.listen(config.port, config.host, async () => {
                                     await resolve({ socket : SocketIO, server : mHTTPS, config : config as ConfigSocketIOServer })
                                 });
                             }else{
@@ -321,7 +392,7 @@ export async function SocketIOServerInstances<Config extends ConfigSocketIOServe
                         default :
                             config = await merge(DefaultConfigSocketIOHTTPServer, config);
                             mHTTP = createServerHTTP(config.settings?.engine as HTTPServerOptions);
-                            SocketIO = await new Server(mHTTP,config.settings?.socket);
+                            SocketIO = new Server(mHTTP,config.settings?.socket);
                             //** Header Set
                             SocketIO = SocketIOEngineHeaders(SocketIO);
 
@@ -332,7 +403,6 @@ export async function SocketIOServerInstances<Config extends ConfigSocketIOServe
                             }
 
                             process.on("SIGINT", async () => {
-                                console.log("signInt");
 
                                 mHTTP.close(async (err) => {
                                     if (!err)
@@ -345,51 +415,75 @@ export async function SocketIOServerInstances<Config extends ConfigSocketIOServe
                             if (config.namespaces !== undefined){
                                 Object.keys(config.namespaces).map( async (namespace) => {
                                     let mNamespace = SocketIO.of(namespace);
-                                    if (config.namespaces[namespace].onConnection !== undefined){
-                                        await mNamespace.on("connection",async (io) => {
-                                            await io.on("ping", (startTime, cb) => {
-                                                if (typeof cb === "function")
-                                                    cb(startTime);
-                                            });
-                                            await config.namespaces[namespace].onConnection(io, mNamespace);
-
-                                            if (config.namespaces[namespace].onDisconnection !== undefined){
-                                                await mNamespace.on("disconnect",(reason) => {
-                                                    config.namespaces[namespace].onDisconnection(reason);
-                                                });
+                                    mNamespace.on("connection",async (io) => {
+                                        io.on("ping", (startTime, cb) => {
+                                            if (typeof cb === "function") {
+                                                cb(startTime);
+                                                if (config.namespaces[namespace].onLatency !== undefined){
+                                                    let timeNowDiff = moment(moment.now());
+                                                    let latency = timeNowDiff.diff(startTime, 'millisecond');
+                                                    let typeLatency: ConfigSocketIOInstanceEventsLatency =
+                                                        (latency < 20) ? "GREAT" :
+                                                            (latency >= 20 && latency <= 40) ? "GOOD" :
+                                                                (latency > 40 && latency <= 100) ? "ACCEPTABLE" :
+                                                                    "BAD";
+                                                    config.namespaces[namespace].onLatency?.(latency, typeLatency);
+                                                }
                                             }
                                         });
-                                    }
+                                        if (config.namespaces[namespace].onConnection !== undefined){
+                                            await config.namespaces[namespace].onConnection(io, mNamespace);
+                                        }
+
+                                        if (config.namespaces[namespace].onDisconnection !== undefined){
+                                            mNamespace.on("disconnect",(reason) => {
+                                                config.namespaces[namespace].onDisconnection(reason);
+                                            });
+                                        }
+                                    });
+
                                 })
                             }
 
                             /** Event on Connection Data **/
-                            if (config.events?.socket?.onConnection !== undefined){
-                                await SocketIO.on("connection", async (io) => {
-                                    await io.on("ping", (startTime, cb) => {
-                                        if (typeof cb === "function")
-                                            cb(startTime);
-                                    });
-                                    await config.events?.socket?.onConnection?.(io, SocketIO);
-                                    //** Event On Disconnection Data **/
-                                    if (config.events?.socket?.onDisconnection !== undefined){
-                                        await io.on("disconnect", async (reason) => {
-                                            await config.events?.socket?.onDisconnection?.(reason);
-                                        });
+                            SocketIO.on("connection", async (io) => {
+                                io.on("ping", (startTime, cb) => {
+                                    if (typeof cb === "function") {
+                                        cb(startTime);
+                                        if (config.events?.socket?.onLatency !== undefined){
+                                            let timeNowDiff = moment(moment.now());
+                                            let latency = timeNowDiff.diff(startTime, 'millisecond');
+                                            let typeLatency: ConfigSocketIOInstanceEventsLatency =
+                                                (latency < 20) ? "GREAT" :
+                                                    (latency >= 20 && latency <= 40) ? "GOOD" :
+                                                        (latency > 40 && latency <= 100) ? "ACCEPTABLE" :
+                                                            "BAD";
+                                            config.events?.socket?.onLatency?.(latency, typeLatency);
+                                        }
                                     }
-                                    //** End Event On Disconnection Data **/
                                 });
-                            }
+                                if (config.events?.socket?.onConnection !== undefined){
+                                    await config.events?.socket?.onConnection?.(io, SocketIO);
+                                }
+                                //** Event On Disconnection Data **/
+                                if (config.events?.socket?.onDisconnection !== undefined){
+                                    io.on("disconnect", async (reason) => {
+                                        await config.events?.socket?.onDisconnection?.(reason);
+                                    });
+                                }
+                                //** End Event On Disconnection Data **/
+                            });
+
 
                             if (config.io !== undefined){
                                 await config.io?.(SocketIO)
                             }
 
-                            await mHTTP.on("listening", async () => {
+                            mHTTP.on("listening", async () => {
                                 await config.events?.server?.onListening?.();
                             })
                             /** Event on Connection Data **/
-                            await mHTTP.on("error", async (err : Error) => {
+                            mHTTP.on("error", async (err : Error) => {
                                 delete err.stack;
                                 await rejected(require("error-to-json")(err))
                             });
@@ -398,7 +492,7 @@ export async function SocketIOServerInstances<Config extends ConfigSocketIOServe
                             config.host = (config.state == PRODUCTION) ? "0.0.0.0" : config.host;
 
                             if (config.settings?.engine?.autoListen){
-                                await mHTTP.listen(config.port, config.host, async () => {
+                                mHTTP.listen(config.port, config.host, async () => {
                                     await resolve({ socket : SocketIO, server : mHTTP, config : config});
                                 })
                             }else{

@@ -1,5 +1,4 @@
 import {SqliteConfiguration} from "../Interfaces/SqliteConfiguration";
-import { merge } from "lodash";
 import {
     DEVELOPMENT,
     SQLITE_EXT_DB,

@@ -1,16 +1,17 @@
-import fastify, { FastifyInstance } from "fastify";
+import fastify, {FastifyInstance} from "fastify";
 import {ConfigFastifyServer} from "./Interfaces/ConfigFastifyServer";
 import {CallbackFastifyServer} from "./Interfaces/CallbackFastifyServer";
-import {extend, merge} from "lodash";
+import {merge} from "lodash";
 
 import DefaultConfigFastifyServer, {
-    fastifyEngineSettingsDefaultHTTP, fastifyEngineSettingsDefaultHTTP2,
+    fastifyEngineSettingsDefaultHTTP,
+    fastifyEngineSettingsDefaultHTTP2,
     fastifyEngineSettingsDefaultHTTPS
 } from "./Config/DefaultConfigFastifyServer";
 import {FastifyHooks} from "./Component/FastifyHooks";
 import {FastifyPlugins} from "./Component/FastifyPlugins";
 import {Options} from "../../index";
-import {DEVELOPMENT, PRODUCTION} from "../../Types/ConfigServerTypes";
+import {DEVELOPMENT} from "../../Types/ConfigServerTypes";
 import isElectron from "is-electron";
 
 export let mFastify : FastifyInstance

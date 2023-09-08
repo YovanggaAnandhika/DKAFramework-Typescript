@@ -1,5 +1,5 @@
-import {ModuleOptions, Configuration} from "webpack";
-import { Configuration as ConfigurationWebpackDev } from "webpack-dev-server"
+import {Configuration, ModuleOptions} from "webpack";
+import {Configuration as ConfigurationWebpackDev} from "webpack-dev-server"
 import {WEBPACK_ENGINE, WebpackRulesTypes} from "../Types/WebpackTypesServer";
 import path, {join} from "path";
 import {ConfigWebpackServer} from "../Interfaces/WebpackConfigServer";

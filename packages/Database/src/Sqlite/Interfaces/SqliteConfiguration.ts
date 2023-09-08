@@ -2,12 +2,9 @@ import {
     DEVELOPMENT,
     PRODUCTION,
     SQLITE_ALL_EXT,
-    SQLITE_JOURNAL_ALL, SQLITE_SYNCHRONOUS_ALL,
-    SQLITE_SYNCHRONOUS_FULL
+    SQLITE_JOURNAL_ALL,
+    SQLITE_SYNCHRONOUS_ALL
 } from "../Types/SqliteConfigurationTypes";
-
-import * as Path from "path";
-
 
 
 export interface SqliteConfigurationSettings {

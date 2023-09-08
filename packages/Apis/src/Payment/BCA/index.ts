@@ -1,7 +1,6 @@
 import {BCAApisConfig, BCAApisConfigCredential, BCATokenAccess, RawRequestOpenApiConfig} from "./Interfaces/BCAConfig";
 import axios from "axios";
 import * as crypto from "crypto";
-import {merge} from "lodash";
 
 
 export class BCA {

@@ -1,5 +1,5 @@
-import five, { Board, Led, Relay, Button, Sensor, Switch } from "johnny-five";
-import { EtherPortClient } from "etherport-client";
+import {Board, Button, Led, Relay} from "johnny-five";
+import {EtherPortClient} from "etherport-client";
 import {
     ALL_STATE,
     BOARD_STATE_CLOSE,
@@ -9,19 +9,22 @@ import {
     BOARD_STATE_IDLE,
     BOARD_STATE_READY,
     MODE_USB,
-    MODE_WIFI, NodeMCUButtonMethod,
+    MODE_WIFI,
+    NodeMCUButtonMethod,
     NodeMCUConfig,
-    NodeMCULedMethod, NodeMCURelayMethod, RELAY_MODE_ONCE, RELAY_MODE_TOGGLE
+    NodeMCULedMethod,
+    NodeMCURelayMethod,
+    RELAY_MODE_ONCE,
+    RELAY_MODE_TOGGLE
 } from "./Interfaces/NodeMCUConfig";
 import {merge} from "lodash";
 import {
     DefaultConfigButtonMethod,
     DefaultConfigConstructorNodeMCUUSB,
     DefaultConfigConstructorNodeMCUWifi,
-    DefaultConfigLedMethod, DefaultConfigRelayMethod
+    DefaultConfigLedMethod,
+    DefaultConfigRelayMethod
 } from "./Config/DefaultNodeMCUConfiguration";
-
-import Firmata from "firmata";
 
 let boardStates : ALL_STATE = BOARD_STATE_IDLE;
 let mBoard : Board | undefined = undefined;

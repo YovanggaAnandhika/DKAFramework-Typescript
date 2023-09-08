@@ -1,7 +1,8 @@
 import {FASTIFY_ENGINE} from "../Component/Fastify/Types/TypesFastifyServer";
 import {
     SOCKET_ENGINE,
-    SOCKET_TYPE_HTTP, SOCKET_TYPE_HTTP2,
+    SOCKET_TYPE_HTTP,
+    SOCKET_TYPE_HTTP2,
     SOCKET_TYPE_HTTPS
 } from "../Component/SocketIO/Types/TypesSocketIOServer";
 import {DEVELOPMENT, PRODUCTION} from "../Types/ConfigServerTypes";

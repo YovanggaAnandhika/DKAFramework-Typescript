@@ -1,9 +1,8 @@
 import {ConfigWebpackServer} from "./Interfaces/WebpackConfigServer";
-import {webpack, Compiler, MultiCompiler} from "webpack";
-import webpackDev, { WebSocketServer } from "webpack-dev-server";
-import {WebpackMultiConfig, WebpackSingleConfig} from "./Types/WebpackTypesServer";
+import {Compiler, webpack} from "webpack";
+import webpackDev from "webpack-dev-server";
 import {merge} from "lodash";
-import {DefaultConfigWebpack, DefaultConfigWebpackServer} from "./Config/DefaultConfigurationWebpackServer";
+import {DefaultConfigWebpackServer} from "./Config/DefaultConfigurationWebpackServer";
 
 export async function WebpackServerInstances<Config extends ConfigWebpackServer = ConfigWebpackServer>(config : Config) : Promise<void> {
     let mWebpack : Compiler;

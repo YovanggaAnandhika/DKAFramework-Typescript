@@ -1,11 +1,6 @@
-import {Db, MongoClient} from "mongodb";
-import {
-    MongoDBConfigConstructor,
-} from "./Interfaces/Config";
-import {
-    MongoDBCallbackDb,
-    MongoDBCallbackMongoClient
-} from "./Interfaces/Callback";
+import {MongoClient} from "mongodb";
+import {MongoDBConfigConstructor,} from "./Interfaces/Config";
+import {MongoDBCallbackDb, MongoDBCallbackMongoClient} from "./Interfaces/Callback";
 
 export type MongoDBCallbackChecker<DB> = DB extends { db : string }
     ? MongoDBCallbackDb : MongoDBCallbackMongoClient;

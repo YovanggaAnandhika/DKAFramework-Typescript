@@ -1,20 +1,22 @@
-import { io, Socket } from "socket.io-client";
+import {io, Socket} from "socket.io-client";
 import {ConfigSocketIOClient, ConfigSocketIOClientInstanceEventsLatency} from "./Interfaces/ConfigSocketIOClient";
-import {merge} from "lodash";
 import {ConfigDefaultSocketIOClient, ConfigDefaultSocketIOClientHTTPS} from "./Config";
-import {SOCKET_TYPE_HTTP, SOCKET_TYPE_HTTPS} from "./Types/TypesSocketIOClient";
-import {on} from "./Interfaces/SocketSymbol";
-import reservedEvents from "./Interfaces/SocketReservedEvents";
 import _ from "lodash";
 import moment, {Moment} from "moment-timezone";
 
 let PingObserver : NodeJS.Timer | undefined = undefined;
-
-export function SocketIOInstance(config : ConfigSocketIOClient) : Socket {
-    //** set Default Config;
+/**
+ *
+ * @param config ConfigSocketIOClient
+ * @constructor
+ */
+export function SocketIO(config : ConfigSocketIOClient) : Socket {
+    //#####################################################################
     config = (config.settings?.socket?.secure) ?
         _.merge(ConfigDefaultSocketIOClientHTTPS,config) :
     _.merge(ConfigDefaultSocketIOClient, config);
+    //#####################################################################
+    config.ns = (config.ns?.charAt(0) !== "/") ? `/${config.ns}` : config.ns;
 
     let protocol = (config.settings?.socket?.secure) ? "https://" : "http://";
     let urlHost = `${protocol}${config.host}:${config.port}${config.ns}`;
@@ -23,11 +25,31 @@ export function SocketIOInstance(config : ConfigSocketIOClient) : Socket {
     if (config.io !== undefined)
         config.io(socket);
 
+
+    if (config.events?.onLatency !== undefined && config.settings?.socket?.pingMode === "ON_EVENT"){
+        socket.onAny(async () => {
+            let timeNow = moment(moment.now());
+            // volatile, so the packet will be discarded if the socket is not connected
+            socket.volatile.emit("ping", timeNow, async (starTime: Moment) => {
+                if (socket.connected){
+                    let timeNowDiff = moment(moment.now());
+                    let latency = timeNowDiff.diff(starTime, 'millisecond');
+                    let typeLatency: ConfigSocketIOClientInstanceEventsLatency = (latency < 20) ? "GREAT" :
+                        (latency >= 20 && latency <= 40) ? "GOOD" :
+                            (latency > 40 && latency <= 100) ? "ACCEPTABLE" :
+                                "BAD";
+                    await config.events?.onLatency?.(latency, typeLatency);
+                }
+            });
+        });
+    }
+
     if (config.events !== undefined) {
         if (config.events.onConnect !== undefined){
             socket.on("connect", async () => {
                 config.events?.onConnect?.();
-                if (config.events?.onLatency !== undefined){
+
+                if (config.events?.onLatency !== undefined && config.settings?.socket?.pingMode === "INTERVAL"){
                     PingObserver = setInterval(() => {
                         let timeNow = moment(moment.now());
                         // volatile, so the packet will be discarded if the socket is not connected
@@ -41,14 +63,15 @@ export function SocketIOInstance(config : ConfigSocketIOClient) : Socket {
                                             "BAD";
                             await config.events?.onLatency?.(latency, typeLatency);
                         });
-                    }, config.settings?.socket?.pingIntervalToServer);
+                    }, config.settings?.socket?.pingDelay);
                 }
             });
         }
 
         if (config.events.onDisconnect !== undefined){
             socket.on("disconnect", config.events.onDisconnect);
-            clearInterval(PingObserver)
+            if (config.events?.onLatency !== undefined && PingObserver !== undefined && config.settings?.socket?.pingMode === "INTERVAL")
+                clearInterval(PingObserver)
         }
 
         if (config.events.onConnectError !== undefined){
@@ -84,5 +107,3 @@ export function SocketIOInstance(config : ConfigSocketIOClient) : Socket {
     return socket;
 
 }
-
-export default SocketIOInstance;

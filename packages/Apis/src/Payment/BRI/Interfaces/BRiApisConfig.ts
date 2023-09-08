@@ -1,7 +1,6 @@
 import {BRI_DEVELOPMENT, BRI_PRODUCTION} from "../Types/TypesBRIApis";
 
 
-
 export interface BRIApisConfigGetToken {
     client_key : string,
     client_secret : string

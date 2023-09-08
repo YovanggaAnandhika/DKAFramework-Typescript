@@ -1,5 +1,4 @@
 import axios from "axios";
-import qs = require("qs");
 import BRiApisConfig, {BRIApisConfigGetToken} from "./Interfaces/BRiApisConfig";
 
 

@@ -1,5 +1,5 @@
-import { Printer } from "./Component/Printer";
-import { Arduino } from "./Component/Arduino"
+import {Printer} from "./Component/Printer";
+import {Arduino} from "./Component/Arduino"
 
 export const IoT = {
     Printer : Printer,

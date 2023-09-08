@@ -1,5 +1,5 @@
 import path from "path";
-import { MariaDBConstructorConfig as mConfigDatabase } from "../Interfaces/Config"
+import {MariaDBConstructorConfig as mConfigDatabase} from "../Interfaces/Config"
 import {RulesCreateDatabase, RulesCreateTable, RulesInsert, RulesSelect} from "../Interfaces/Class";
 
 export const DatabaseMariaDB : mConfigDatabase = {

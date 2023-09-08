@@ -1,13 +1,12 @@
-import {ConfigFastifyServerMain, ConfigFastifyServerRegister, FASTIFY_ENGINE} from "../Types/TypesFastifyServer";
+import {ConfigFastifyServerMain, FASTIFY_ENGINE} from "../Types/TypesFastifyServer";
+import {GlobalServerConfigInterfacesSettingsLogger} from "../../../Interfaces/ConfigServerInterfaces";
 import {
-    ConfigServerInterfaces,
-    GlobalServerConfigInterfaces,
-    GlobalServerConfigInterfacesSettingsLogger
-} from "../../../Interfaces/ConfigServerInterfaces";
-import {
-    FastifyHttp2Options, FastifyHttp2SecureOptions,
-    FastifyHttpOptions, FastifyHttpsOptions,
-    FastifyInstance, FastifyPluginAsync, FastifyPluginCallback, FastifyPluginOptions, onRequestHookHandler,
+    FastifyHttp2Options,
+    FastifyHttp2SecureOptions,
+    FastifyHttpOptions,
+    FastifyHttpsOptions,
+    FastifyPluginOptions,
+    onRequestHookHandler,
 } from "fastify";
 import {DEVELOPMENT, PRODUCTION} from "../../../Types/ConfigServerTypes";
 

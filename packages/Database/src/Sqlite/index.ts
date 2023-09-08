@@ -1,11 +1,9 @@
 import Sqlite3, {Database} from "@journeyapps/sqlcipher";
 import {SqliteConfiguration} from "./Interfaces/SqliteConfiguration";
 import {DEVELOPMENT, STATES} from "./Types/SqliteConfigurationTypes";
-import * as fs from "fs";
 import * as path from "path";
 import {merge} from "lodash";
 import DefaultConfigSqlite from "./Config/DefaultConfigSqlite";
-import {SqliteCallback} from "./Interfaces/SqliteCallback";
 import {SqliteMultipleInstance} from "./Interfaces/SqliteMultipleInstance";
 
 

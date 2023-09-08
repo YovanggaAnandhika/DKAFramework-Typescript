@@ -1,4 +1,4 @@
-import { Packet } from "socket.io-parser";
+import {Packet} from "socket.io-parser";
 import {SOCKET_ENGINE, SOCKET_TYPE_HTTP, SOCKET_TYPE_HTTPS} from "../Types/TypesSocketIOClient";
 import {GlobalClientConfigInterfaces} from "../../../Interfaces/ConfigClientInterfaces";
 import {ManagerOptions, Socket, SocketOptions} from "socket.io-client";
@@ -12,9 +12,13 @@ export interface ConfigSocketIOClientInstanceSettingsEngineHTTPS {
     protocol : SOCKET_TYPE_HTTPS
 }
 
+export type ConfigSocketIOClientInstanceSettingsPingMode = "ON_EVENT" | "INTERVAL";
+export type ConfigSocketIOClientInstanceSettingsPingProtocol = "UDP" | "TCP";
 export interface ConfigSocketIOClientInstanceSettingsSocket extends Partial<ManagerOptions & SocketOptions>{
-    pingIntervalToServer ?: number | undefined;
+    pingMode ?: ConfigSocketIOClientInstanceSettingsPingMode;
+    pingDelay ?: number | undefined;
 }
+
 export interface ConfigSocketIOClientInstanceSettings {
     socket ?: ConfigSocketIOClientInstanceSettingsSocket
 }

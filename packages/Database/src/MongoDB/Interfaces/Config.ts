@@ -1,5 +1,4 @@
 import {MongoClientOptions} from "mongodb";
-import {MongoDBCallback, MongoDBCallbackDb, MongoDBCallbackMongoClient} from "./Callback";
 
 
 export interface MongoDBConfigConstructor {

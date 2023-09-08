@@ -1,6 +1,5 @@
-import { ExtendedError } from "socket.io/dist/namespace";
+import {ExtendedError} from "socket.io/dist/namespace";
 import {SocketIOInstanceSocket} from "../../Types/SocketSecure";
-
 
 
 export const SocketSecure = async (socket : SocketIOInstanceSocket, next: (err?: ExtendedError) => void) => {

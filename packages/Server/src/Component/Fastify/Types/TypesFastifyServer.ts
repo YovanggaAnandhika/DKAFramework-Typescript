@@ -1,4 +1,4 @@
-import {FastifyInstance, FastifyPluginOptions} from "fastify";
+import {FastifyPluginOptions} from "fastify";
 import {mFastify} from "../index";
 
 

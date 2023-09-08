@@ -1,15 +1,13 @@
-import SocketIOInstance from "../src/Component/SocketIO";
+import {Options, SocketIO} from "../src";
 
 (async () => {
 
-    SocketIOInstance({
-        host : "localhost",
+    SocketIO({
+        host : Options.HOST.LOCALHOST,
         port : 3821,
-        ns : "/dev",
         io : async (io) => {
             io.on("hello", async (data) => {
-                console.log(data);
-                io.emit('hello',{ halo : "hello from client"})
+                io.emit('hello',{ halo : "hello from client"});
             });
         },
         events : {
@@ -19,12 +17,8 @@ import SocketIOInstance from "../src/Component/SocketIO";
             onDisconnect : async (reason,desc ) => {
                 console.log(reason)
             },
-            /*onConnectError : async (error) => {
-              console.error(error)
-            },*/
             onLatency : async (delay, type) => {
               console.log(`delay ${delay} ms, ${type}`);
-
             },
             Manager : {
                 onReconnectAttempt : async (attempt) => {
@@ -35,10 +29,6 @@ import SocketIOInstance from "../src/Component/SocketIO";
         settings : {
             socket : {
                 secure: true,
-                reconnectionAttempts : 10000,
-                reconnection : true,
-                reconnectionDelay : 1000,
-                reconnectionDelayMax : 5000
             }
         }
     }).connect();

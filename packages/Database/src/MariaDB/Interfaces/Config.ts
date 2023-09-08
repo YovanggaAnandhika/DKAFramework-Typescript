@@ -1,4 +1,4 @@
-import { ConnectionConfig, PoolConfig, PoolClusterConfig} from "mariadb"
+import {ConnectionConfig, PoolClusterConfig, PoolConfig} from "mariadb"
 import {db_createConnection, db_createPoolClusterConnection, db_createPoolConnection, Priodic} from "../Type/types";
 import {ConfigConstructor} from "@dkaframework/security/dist/Interfaces/Config";
 

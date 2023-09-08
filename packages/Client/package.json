@@ -1,10 +1,10 @@
 {
   "name": "@dkaframework/client",
-  "version": "1.0.146",
+  "version": "1.0.191",
   "main": "index.js",
   "author": "Yovangga Anandhika",
   "license": "MIT",
-  "private": true,
+  "private": false,
   "scripts": {
     "action:clean": "tsc --build --clean",
     "action:compile": "tsc --build",

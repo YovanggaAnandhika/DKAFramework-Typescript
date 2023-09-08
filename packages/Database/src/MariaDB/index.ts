@@ -1,11 +1,11 @@
-import GlobalConfig, {CreateDatabaseConfig, CreateTableConfig, InsertDataConfig, SelectConfigDefault} from "./Config";
+import GlobalConfig, {CreateDatabaseConfig, CreateTableConfig, InsertDataConfig} from "./Config";
 import crypto from "crypto";
-import {Pool, Connection, createConnection, createPool, createPoolCluster, SqlError} from "mariadb";
+import {Connection, createConnection, createPool, createPoolCluster, Pool} from "mariadb";
 import {MariaDBConstructorConfig} from "./Interfaces/Config";
-import {isArray, isObject, merge, extend, isString} from "lodash";
+import {extend, isArray, isObject, isString, merge} from "lodash";
 import {
-    Callback,
-    CallbackBackup, CallbackCreateDatabase,
+    CallbackBackup,
+    CallbackCreateDatabase,
     CallbackCreateTable,
     CallbackDelete,
     CallbackError,
@@ -14,20 +14,20 @@ import {
     CallbackUpdate,
     metadata
 } from "./Interfaces/Callback";
-import moment, {now} from "moment-timezone";
+import moment from "moment-timezone";
 import {
-    RulesInsert,
-    RulesDelete,
-    RulesSelect,
-    RulesUpdate,
     ExtendsOptions,
-    RulesCreateTable, RulesCreateDatabase, MariaDBClassInterfaces, RulesSelectSearch, RulesSelectColumn
+    MariaDBClassInterfaces,
+    RulesCreateDatabase,
+    RulesCreateTable,
+    RulesDelete,
+    RulesInsert,
+    RulesSelect,
+    RulesUpdate
 } from "./Interfaces/Class";
 import {Instance, Method} from "./Type/types";
 
-import { DumpReturn } from "mysqldump/dist/mysqldump";
-import * as fs from "fs";
-import {default as mEncryption} from "@dkaframework/security";
+import {DumpReturn} from "mysqldump/dist/mysqldump";
 
 
 /**

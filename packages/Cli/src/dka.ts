@@ -4,8 +4,9 @@ import fs from "fs";
 import chalk from "chalk";
 import clear from "clear";
 import figlet from "figlet";
-import { Command } from "commander";
+import {Command} from "commander";
 import * as process from "process";
+
 const inquirer = require('inquirer');
 
 function checkModuleExist(name : string){

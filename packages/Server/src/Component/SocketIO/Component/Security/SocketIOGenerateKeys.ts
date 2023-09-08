@@ -1,5 +1,4 @@
-import {generateKeyPair, createSign, RSAKeyPairOptions} from "crypto";
-import {open} from "fs";
+import {createSign, generateKeyPair, RSAKeyPairOptions} from "crypto";
 
 class SocketIOGenerateKeys {
 

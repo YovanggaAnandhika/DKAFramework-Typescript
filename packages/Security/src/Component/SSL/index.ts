@@ -1,16 +1,13 @@
 import * as Crypto from "crypto";
-import {pki, md, pem, util, random} from "node-forge";
+import {md, pki, random, util} from "node-forge";
 import {
-    CertificateAuthorityData, CertificateData,
+    CertificateAuthorityData,
+    CertificateData,
     generateCASettings,
     generateCertSettings,
     GenerateKeys,
     KeyPairsData
 } from "./Types/GeneralCertOptionsMethod";
-import {merge} from "lodash";
-import {generateCertPairsDefaultConfig} from "./Config/generateCertPairsDefaultConfig";
-import {CertExtensionsSubjectAltName} from "./Types/CertExtensions";
-
 
 
 export class SSL {

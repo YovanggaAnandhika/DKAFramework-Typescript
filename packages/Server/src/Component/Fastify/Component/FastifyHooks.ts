@@ -1,7 +1,4 @@
-import {FastifyInstance} from "fastify";
 import {ConfigFastifyServer} from "../Interfaces/ConfigFastifyServer";
-import {merge} from "lodash";
-import {readFileSync} from "fs";
 import {mFastify} from "../index";
 
 

@@ -1,4 +1,4 @@
-import WA, {ClientOptions, Chat} from "whatsapp-web.js";
+import WA, {ClientOptions} from "whatsapp-web.js";
 import _ from "lodash";
 import {DefaultConfigWhatapps} from "./Config/DefaultConfigWhatapps";
 

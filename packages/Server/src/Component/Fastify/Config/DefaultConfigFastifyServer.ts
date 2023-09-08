@@ -1,7 +1,9 @@
 import {Options} from "../../../index";
 import {
     ConfigFastifyServer,
-    ConfigFastifyServerSettingsEngineHttp, ConfigFastifyServerSettingsEngineHttp2, ConfigFastifyServerSettingsEngineHttps
+    ConfigFastifyServerSettingsEngineHttp,
+    ConfigFastifyServerSettingsEngineHttp2,
+    ConfigFastifyServerSettingsEngineHttps
 } from "../Interfaces/ConfigFastifyServer";
 import {readFileSync} from "fs";
 import path from "path";

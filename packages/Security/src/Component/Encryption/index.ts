@@ -1,5 +1,4 @@
-import {JWE, JWK, JWS, parse, JWA} from "node-jose"
-import * as Jose from "jose"
+import {JWE, JWK, parse} from "node-jose"
 
 import {merge} from "lodash";
 import {
@@ -8,7 +7,6 @@ import {
 } from "./Config/SecurityDefaultConfig";
 import fs from "fs";
 import {SecurityConfigJWTEngineOptions} from "./Interfaces/SecurityConfig";
-import path from "path";
 
 export class Encryption {
 

@@ -1,7 +1,4 @@
-import {
-    JWEOptions,
-    JWKOptions, SecurityConfigJWTEngineOptions
-} from "../Interfaces/SecurityConfig";
+import {JWEOptions, JWKOptions, SecurityConfigJWTEngineOptions} from "../Interfaces/SecurityConfig";
 import path from "path";
 
 export const SecurityDefaultConfigJWEEncryptOptionsJWK : JWKOptions = {

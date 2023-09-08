@@ -1,5 +1,5 @@
 import {Configuration, RuleSetRule} from "webpack";
-import { Configuration as WebpackConfiguration } from "webpack-dev-server";
+import {Configuration as WebpackConfiguration} from "webpack-dev-server";
 import {MultiCompilerOptions} from "../Interfaces/WebpackConfigServer";
 
 

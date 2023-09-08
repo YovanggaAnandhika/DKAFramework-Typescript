@@ -1,4 +1,4 @@
-import { readFileSync } from "fs";
+import {readFileSync} from "fs";
 import path from "path"
 import {ConfigSocketIOServer} from "../Interfaces/ConfigSocketIOServer";
 import {Options} from "../../../index";
@@ -19,6 +19,7 @@ export const DefaultConfigSocketIOHTTPServer : ConfigSocketIOServer = {
             cors : {
                 origin : "*",
             },
+            pingProtocol : "UDP",
             pingInterval : 1000,
             pingTimeout : 5000,
             connectTimeout : 8000
@@ -48,6 +49,7 @@ export const DefaultConfigSocketIOHTTPSServer : ConfigSocketIOServer = {
             cors : {
                 origin : "*"
             },
+            pingProtocol : "UDP",
             maxHttpBufferSize : 1e8,
             pingInterval : 1000,
             pingTimeout : 5000,
@@ -79,6 +81,7 @@ export const DefaultConfigSocketIOHTTP2Server : ConfigSocketIOServer = {
             cors : {
                 origin : "*"
             },
+            pingProtocol : "UDP",
             pingInterval : 1000,
             pingTimeout : 5000,
             connectTimeout : 8000

@@ -1,5 +1,4 @@
 import {ConfigSocketIOClient} from "../Interfaces/ConfigSocketIOClient";
-import {SOCKET_TYPE_HTTP, SOCKET_TYPE_HTTPS} from "../Types/TypesSocketIOClient";
 
 
 export const ConfigDefaultSocketIOClient : ConfigSocketIOClient = {
@@ -10,7 +9,8 @@ export const ConfigDefaultSocketIOClient : ConfigSocketIOClient = {
         socket : {
             secure : false,
             timeout : 8000,
-            pingIntervalToServer : 4000,
+            pingMode : "INTERVAL",
+            pingDelay : 8000,
             transports : ["websocket", "polling"]
         }
     }
@@ -24,7 +24,8 @@ export const ConfigDefaultSocketIOClientHTTPS : ConfigSocketIOClient = {
         socket : {
             secure : true,
             timeout : 8000,
-            pingIntervalToServer : 4000,
+            pingMode : "INTERVAL",
+            pingDelay : 8000,
             transports : ["websocket", "polling"],
             rejectUnauthorized : false
         }

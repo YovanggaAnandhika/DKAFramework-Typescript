@@ -1,5 +1,3 @@
-import {ConfigUDPClient} from "../Component/UDP/Interfaces/ConfigUDPClient";
-import {ConfigSocketIOClient} from "../Component/SocketIO/Interfaces/ConfigSocketIOClient";
 import {DEVELOPMENT, PRODUCTION} from "../Types/ConfigClientTypes";
 
 
@@ -8,5 +6,3 @@ export interface GlobalClientConfigInterfaces {
     host ?: string,
     port ?: number
 }
-
-export type ConfigClientInterfaces = ConfigUDPClient | ConfigSocketIOClient;

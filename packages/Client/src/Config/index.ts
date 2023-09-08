@@ -1,20 +1,31 @@
-import {SOCKET_ENGINE} from "../Component/SocketIO/Types/TypesSocketIOClient";
-import {UDP_ENGINE} from "../Component/UDP/Types/TypesUDPClient";
 import {DEVELOPMENT, PRODUCTION} from "../Types/ConfigClientTypes";
+import {ConfigSocketIOClientInstanceSettingsPingMode} from "../Component/SocketIO/Interfaces/ConfigSocketIOClient";
 
 
-export const ConfigClientOptionsEngine = {
-    SOCKETIO : SOCKET_ENGINE,
-    UDP : UDP_ENGINE
+const ConfigClientOptionsHost = {
+    LOCALHOST : "localhost",
+    WILDCARD : "0.0.0.0"
 }
 
-export const ConfigClientOptionsState = {
+const ConfigClientOptionsState = {
     DEVELOPMENT : DEVELOPMENT,
     PRODUCTION : PRODUCTION
 }
-export const ConfigClientOptions = {
+
+const ConfigClientOptionsSettingsSocketPingMode = {
+    INTERVAL : "INTERVAL" as ConfigSocketIOClientInstanceSettingsPingMode,
+    ON_EVENT : "ON_EVENT" as ConfigSocketIOClientInstanceSettingsPingMode
+}
+const ConfigClientOptionsSettingsSocket = {
+    PING_MODE : ConfigClientOptionsSettingsSocketPingMode
+}
+const ConfigClientOptionsSettings = {
+    SOCKET : ConfigClientOptionsSettingsSocket
+}
+const ConfigClientOptions = {
     STATE : ConfigClientOptionsState,
-    ENGINE : ConfigClientOptionsEngine
+    HOST : ConfigClientOptionsHost,
+    SETTINGS : ConfigClientOptionsSettings
 }
 
-export default ConfigClientOptions;
+export const Options = ConfigClientOptions;
