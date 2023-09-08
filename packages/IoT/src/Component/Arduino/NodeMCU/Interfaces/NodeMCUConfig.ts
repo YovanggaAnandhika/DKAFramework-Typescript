@@ -14,8 +14,10 @@ export interface NodeMCUConfigWifi extends BoardOption {
     host ?: string | undefined,
     port ?: number,
     repl ?: boolean,
+    reconnect ?: boolean,
     onConnect ?: () => void | Promise<void>,
     onReady ?: (MethodNodeMCU) => void | Promise<void>,
+    onDisconnect ?: () => void | Promise<void>,
     onError ?: () => void | Promise<void>,
     onFail ?: () => void | Promise<void>,
     onClose ?: () => void | Promise<void>
@@ -25,6 +27,7 @@ export interface NodeMCUConfigUSB extends BoardOption {
     port ?: string,
     repl ?: boolean,
     onConnect ?: () => void | Promise<void>,
+    onDisconnect ?: () => void | Promise<void>,
     onReady ?: (method ?: typeof MethodNodeMCU | undefined) => void | Promise<void>,
     onError ?: (error ?: Error | undefined) => void | Promise<void>,
     onFail ?: () => void | Promise<void>,
@@ -50,13 +53,43 @@ export const BOARD_STATE_FAIL : BOARD_STATE_FAIL = "BOARD_STATE_FAIL";
 export const BOARD_STATE_ERROR : BOARD_STATE_ERROR = "BOARD_STATE_ERROR";
 
 export interface NodeMCULedMethod {
-    pin ?: number,
+    pin ?: number | string,
     reverse ?: boolean,
     state ?: boolean
 }
 
-export interface NodeMCURelayMethod {
-    pin ?: number,
+
+export type RELAY_MODE_ONCE = "RELAY_MODE_ONCE";
+export type RELAY_MODE_TOGGLE = "RELAY_MODE_TOGGLE";
+export type ALL_RELAY_MODE = RELAY_MODE_ONCE | RELAY_MODE_TOGGLE;
+
+export const RELAY_MODE_ONCE : RELAY_MODE_ONCE = "RELAY_MODE_ONCE";
+export const RELAY_MODE_TOGGLE : RELAY_MODE_TOGGLE = "RELAY_MODE_TOGGLE";
+export interface NodeMCURelayMethodOnce {
+    pin ?: number | string,
+    mode ?: RELAY_MODE_ONCE,
     reverse ?: boolean,
     state ?: boolean
+}
+export interface NodeMCURelayMethodOnce {
+    pin ?: number | string,
+    mode ?: RELAY_MODE_ONCE,
+    reverse ?: boolean,
+    state ?: boolean
+}
+export interface NodeMCURelayMethodToggle {
+    pin ?: number | string,
+    mode ?: RELAY_MODE_TOGGLE,
+    intervalDelay ?: number,
+    reverse ?: boolean
+}
+
+export type NodeMCURelayMethod = NodeMCURelayMethodOnce | NodeMCURelayMethodToggle;
+
+export interface NodeMCUButtonMethod {
+    pin ?: number,
+    holdtime ?: number,
+    onPress ?: () => void,
+    onDown ?: () => void,
+    onUp ?: () => void,
 }

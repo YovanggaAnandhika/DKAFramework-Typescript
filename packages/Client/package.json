@@ -9,18 +9,21 @@
     "action:clean": "tsc --build --clean",
     "action:compile": "tsc --build",
     "action:copy": "tscp",
-    "test": "",
+    "test": "nodemon --watch src --watch test --exec ts-node test/index.ts",
     "build": "yarn run action:clean && yarn run action:compile && yarn run action:copy",
     "prepublish": "yarn run action:clean && yarn run action:compile && yarn run action:copy",
     "login": "npm login"
   },
   "dependencies": {
-    "socket.io-client": "^4.6.1",
+    "lodash": "^4.17.21",
+    "moment-timezone": "^0.5.43",
+    "socket.io-client": "^4.7.2",
     "ts-node": "^10.9.1",
     "web-pingjs": "^1.0.1"
   },
   "gitHead": "56b58b2fb5d929308fdb58761ca4c5b78568a9d1",
   "devDependencies": {
+    "nodemon": "^3.0.1",
     "ts-node": "^10.9.1"
   }
 }

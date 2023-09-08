@@ -1,4 +1,10 @@
-import {NodeMCUConfigUSB, NodeMCUConfigWifi, NodeMCULedMethod, NodeMCURelayMethod} from "../Interfaces/NodeMCUConfig";
+import {
+    NodeMCUButtonMethod,
+    NodeMCUConfigUSB,
+    NodeMCUConfigWifi,
+    NodeMCULedMethod,
+    NodeMCURelayMethod, RELAY_MODE_ONCE, RELAY_MODE_TOGGLE
+} from "../Interfaces/NodeMCUConfig";
 import NodeMCU from "../index";
 
 
@@ -6,7 +12,9 @@ export const DefaultConfigConstructorNodeMCUWifi : NodeMCUConfigWifi = {
     mode : "WIFI_MODE",
     host : "192.168.137.101",
     port : 58888,
-    repl : false
+    reconnect : true,
+    repl : false,
+    timeout : 10000
 };
 
 export const DefaultConfigConstructorNodeMCUUSB : NodeMCUConfigUSB = {
@@ -23,6 +31,12 @@ export const DefaultConfigLedMethod : NodeMCULedMethod = {
 
 export const DefaultConfigRelayMethod : NodeMCURelayMethod = {
     pin : 2,
+    mode : RELAY_MODE_ONCE,
     reverse : false,
     state : false
+}
+
+export const DefaultConfigButtonMethod : NodeMCUButtonMethod = {
+    pin : 2,
+    holdtime : 1200
 }

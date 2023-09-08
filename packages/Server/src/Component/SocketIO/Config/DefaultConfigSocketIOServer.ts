@@ -13,6 +13,7 @@ export const DefaultConfigSocketIOHTTPServer : ConfigSocketIOServer = {
             autoListen : true,
         },
         socket : {
+            allowEIO3 : true,
             transports : ['websocket','polling'],
             maxHttpBufferSize : 1e8,
             cors : {
@@ -42,7 +43,11 @@ export const DefaultConfigSocketIOHTTPSServer : ConfigSocketIOServer = {
             autoListen : true,
         },
         socket : {
+            allowEIO3 : true,
             transports : ['websocket','polling'],
+            cors : {
+                origin : "*"
+            },
             maxHttpBufferSize : 1e8,
             pingInterval : 1000,
             pingTimeout : 5000,
@@ -64,9 +69,11 @@ export const DefaultConfigSocketIOHTTP2Server : ConfigSocketIOServer = {
             ca : [
                 readFileSync(path.join(__dirname,"./Cert/CA/localhost.crt"))
             ],
+            rejectUnauthorized : false,
             autoListen : true,
         },
         socket : {
+            allowEIO3 : true,
             transports : ['websocket','polling'],
             maxHttpBufferSize : 1e8,
             cors : {

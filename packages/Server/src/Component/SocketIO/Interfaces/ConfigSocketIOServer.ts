@@ -3,14 +3,12 @@ import {
 } from "../../../Interfaces/ConfigServerInterfaces";
 import {
     SOCKET_ENGINE,
-    SOCKET_TYPE_FASTIFY,
     SOCKET_TYPE_HTTP,
     SOCKET_TYPE_HTTP2,
-    SOCKET_TYPE_HTTPS, SocketIOEngineCore, SocketIOEngineTypes, SocketIOMiddlewareUse, SocketIOSocketIO
+    SOCKET_TYPE_HTTPS, SocketIOMiddlewareUse, SocketIOSocketIO
 } from "../Types/TypesSocketIOServer";
-import {ServerOptions as SocketServerOptions, Socket} from "socket.io";
+import {Namespace, Server, ServerOptions as SocketServerOptions, Socket} from "socket.io";
 import {RequestListener, ServerOptions as HTTPServerOptions, Server as HTTPServer} from "http";
-import { Server as HTTPSServer } from "https"
 import {
     SecureServerOptions as HTTP2SecureServerOptions
 } from "http2"
@@ -34,8 +32,16 @@ export interface ConfigSocketIOServerSettingsHTTP2 extends HTTP2SecureServerOpti
     autoListen ?: boolean | undefined
 }
 
-export interface ConfigSocketIOServerSettingsSocket extends Partial<SocketServerOptions> {
+export interface ConfigSocketIOServerSettingsSocketJWT {
 
+}
+
+export interface ConfigSocketIOServerSettingsSocketKey {
+
+}
+
+export interface ConfigSocketIOServerSettingsSocket extends Partial<SocketServerOptions> {
+    jwt ?: ConfigSocketIOServerSettingsSocketJWT;
 }
 
 export interface ConfigSocketIOServerSettingsCluster {
@@ -51,7 +57,7 @@ export interface ConfigSocketIOServerSettings {
 }
 
 export interface ConfigSocketIOServerEventsSocket {
-    onConnection ?: (io : Socket<DefaultEventsMap, DefaultEventsMap, any>) => Promise<void>,
+    onConnection ?: (io : Socket<DefaultEventsMap, DefaultEventsMap, any>, server : Server<DefaultEventsMap, DefaultEventsMap, any>) => Promise<void>,
     onDisconnection ?: (reason : any) => Promise<void> | void,
 }
 
@@ -59,8 +65,18 @@ export interface ConfigSocketIOServerEventsServer {
     onListening ?: (error ?: Error) => Promise<void> | void
 }
 export interface ConfigSocketIOServerEvents {
-    socket ?: ConfigSocketIOServerEventsSocket,
-    server ?: ConfigSocketIOServerEventsServer
+    socket ?: ConfigSocketIOServerEventsSocket;
+    server ?: ConfigSocketIOServerEventsServer;
+}
+
+
+export interface ConfigSocketIOServerEventsNamespace {
+    use ?: SocketIOMiddlewareUse | undefined;
+    onConnection ?: (io : Socket<DefaultEventsMap, DefaultEventsMap, any>, namespace : Namespace<DefaultEventsMap, DefaultEventsMap, any>) => Promise<void> | void | undefined,
+    onDisconnection ?: (reason : any) => Promise<void> | void,
+}
+export interface ConfigSocketIOServerInstancesNamespaces {
+    [ name : string ] : ConfigSocketIOServerEventsNamespace,
 }
 //HTTPServer | HTTP2SecureServer | HTTPSServer
 export interface ConfigSocketIOServerInstances {
@@ -69,6 +85,7 @@ export interface ConfigSocketIOServerInstances {
     host ?: string | undefined,
     port ?: number | undefined,
     io ?: SocketIOSocketIO | undefined,
+    namespaces ?: ConfigSocketIOServerInstancesNamespaces;
     events ?: ConfigSocketIOServerEvents | undefined,
     use ?: SocketIOMiddlewareUse | undefined,
     settings ?: ConfigSocketIOServerSettings

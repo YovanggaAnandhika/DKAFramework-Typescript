@@ -7,4 +7,4 @@ import {UDP_ENGINE} from "../Component/UDP/Types/TypesUDPClient";
 
 
 export type ClientSelectorCallback<Config> = Config extends { engine : SOCKET_ENGINE } ? CallbackSocketIOClient :
-    Config extends { engine : UDP_ENGINE } ? CallbackUDPClient : never;
+    Config extends { engine : UDP_ENGINE} ? CallbackUDPClient : never;

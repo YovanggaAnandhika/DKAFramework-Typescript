@@ -9,20 +9,24 @@ import {
     BOARD_STATE_IDLE,
     BOARD_STATE_READY,
     MODE_USB,
-    MODE_WIFI,
+    MODE_WIFI, NodeMCUButtonMethod,
     NodeMCUConfig,
-    NodeMCULedMethod, NodeMCURelayMethod
+    NodeMCULedMethod, NodeMCURelayMethod, RELAY_MODE_ONCE, RELAY_MODE_TOGGLE
 } from "./Interfaces/NodeMCUConfig";
 import {merge} from "lodash";
 import {
+    DefaultConfigButtonMethod,
     DefaultConfigConstructorNodeMCUUSB,
     DefaultConfigConstructorNodeMCUWifi,
     DefaultConfigLedMethod, DefaultConfigRelayMethod
 } from "./Config/DefaultNodeMCUConfiguration";
 
+import Firmata from "firmata";
+
 let boardStates : ALL_STATE = BOARD_STATE_IDLE;
 let mBoard : Board | undefined = undefined;
 let LedList : {[pin : string] : Led } = {};
+let ButtonList : {[pin : string] : Button } = {};
 let RelayList : {[pin : string] : Relay } = {};
 
 export const MethodNodeMCU = {
@@ -53,32 +57,91 @@ export const MethodNodeMCU = {
                 RelayList[options.pin] = (RelayList[options.pin] === undefined) ? new Relay({ board : mBoard, pin : options.pin}) : RelayList[options.pin];
 
                 if (!options.reverse){
-                    (options.state) ? RelayList[options.pin].open() : RelayList[options.pin].close();
-                    resolve({ status : true, code : 200, msg : `successfully set relay ${options.pin}`});
+                    switch(options.mode){
+                        case RELAY_MODE_ONCE :
+                            (options.state) ? RelayList[options.pin].open() : RelayList[options.pin].close();
+                            await resolve({ status : true, code : 200, msg : `successfully set relay ${options.pin}`});
+                            break;
+                        case RELAY_MODE_TOGGLE :
+                            await RelayList[options.pin].open();
+                            await setTimeout(async () => {
+                                await RelayList[options.pin].close();
+                                await resolve({ status : true, code : 200, msg : `successfully set relay ${options.pin}`});
+                            }, (options.intervalDelay !== undefined) ? options.intervalDelay : 800);
+                            break;
+                    }
+
                 }else{
-                    (options.state) ? RelayList[options.pin].close() : RelayList[options.pin].open();
-                    resolve({ status : true, code : 200, msg : `successfully set relay ${options.pin}`});
+                    switch(options.mode){
+                        case RELAY_MODE_ONCE :
+                            (options.state) ? RelayList[options.pin].close() : RelayList[options.pin].open();
+                            resolve({ status : true, code : 200, msg : `successfully set relay ${options.pin}`});
+                            break;
+                        case RELAY_MODE_TOGGLE :
+                            await RelayList[options.pin].close();
+                            await setTimeout(async () => {
+                                await RelayList[options.pin].open();
+                                await resolve({ status : true, code : 200, msg : `successfully set relay ${options.pin}`});
+                            },(options.intervalDelay !== undefined) ? options.intervalDelay : 800);
+                            break;
+                    }
                 }
             }else{
                 await rejected({ status : false, code : 500, msg : `board undefined` });
             }
         })
     },
+    Button : (options : NodeMCUButtonMethod)  => {
+        if (mBoard !== undefined){
+            options = merge(DefaultConfigButtonMethod, options)
+            ButtonList[options.pin] = (ButtonList[options.pin] === undefined) ? new Button({ board : mBoard, pin : options.pin, holdtime : options.holdtime }) : ButtonList[options.pin];
+            //add Event If Require
+            (options.onPress !== undefined) ? ButtonList[options.pin].on("press", options.onPress) : null;
+            (options.onDown !== undefined) ? ButtonList[options.pin].on("down", options.onDown) : null;
+            (options.onUp !== undefined) ? ButtonList[options.pin].on("up", options.onUp) : null;
+        }else{
+
+        }
+    }
 }
 
 async function NodeMCU(config ?: NodeMCUConfig) : Promise<typeof MethodNodeMCU> {
     let board : Board | undefined = undefined;
+    let Ether : EtherPortClient | undefined;
     return new Promise(async (resolve, rejected) => {
         switch (config.mode) {
             case MODE_WIFI :
                 config = merge(DefaultConfigConstructorNodeMCUWifi, config);
-                board = new Board({
-                    port : new EtherPortClient({
-                        host: config.host,
-                        port: config.port,
-                    }),
-                    repl : config.repl
-                });
+                Ether = new EtherPortClient({ host: config.host, port: config.port});
+
+                if (config.reconnect) {
+                    let connection = 0;
+                    board = await new Board({
+                        port : Ether,
+                        repl : config.repl,
+                        timeout : config.timeout
+                    });
+
+                    console.log(board.io.debug)
+                    board.io.on("connect", async () => {
+                        if(connection > 0 ) {
+                            (config.onReady !== undefined) ? config.onReady(MethodNodeMCU) : null;
+                        } else {
+                            connection++;
+                            //AUTO CONNECT PING
+                            setInterval(function(){
+                                board.io.sysexCommand([0]);
+                            }, 1000);
+                        }
+                    });
+
+                }else{
+                    board = await new Board({
+                        port : Ether,
+                        repl : config.repl,
+                        timeout : config.timeout
+                    });
+                }
                 mBoard = board;
 
                 break;
@@ -87,25 +150,39 @@ async function NodeMCU(config ?: NodeMCUConfig) : Promise<typeof MethodNodeMCU> 
                 board = new Board({
                     port : config.port,
                     debug : config.debug,
-                    repl : config.repl
+                    repl : config.repl,
+                    timeout : config.timeout
                 });
                 mBoard = board;
                 break;
         }
 
+        // @ts-ignore
+        board.on("disconnect", async () => {
+            console.log("disconnect")
+        });
+        board.on("close", async () => {
+            boardStates = BOARD_STATE_CLOSE;
+            console.log("onClose");
+            await config?.onClose();
+        });
+
         board.on("ready", async () => {
             boardStates = BOARD_STATE_READY;
-            await config?.onReady(MethodNodeMCU);
+            (config.onReady !== undefined) ? await config.onReady(MethodNodeMCU) : null;
             await resolve(MethodNodeMCU);
         });
         board.on("connect", async () => {
             boardStates = BOARD_STATE_CONNECT;
-            await config?.onConnect();
+            (config.onConnect !== undefined) ? await config?.onConnect() : null;
+
         });
-        board.on("close", async () => {
-            boardStates = BOARD_STATE_CLOSE;
-            await config?.onClose();
-        });
+
+        // @ts-ignore
+        board.on("disconnect", async () => {
+            console.log("disconnect")
+        })
+
         board.on("fail", async (log) => {
             boardStates = BOARD_STATE_FAIL;
             await config?.onFail();
@@ -114,7 +191,7 @@ async function NodeMCU(config ?: NodeMCUConfig) : Promise<typeof MethodNodeMCU> 
 
         board.on("error", async (error) => {
             boardStates = BOARD_STATE_ERROR;
-            await config?.onError(error);
+            (config.onError !== undefined ) ? await config?.onError(error) : null;
             await rejected(error);
         });
     });

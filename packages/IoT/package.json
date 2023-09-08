@@ -24,6 +24,7 @@
     "arduino-firmata": "^0.3.4",
     "cpu-percentage": "^1.0.3",
     "etherport-client": "^0.1.4",
+    "firmata": "^2.3.0",
     "ip": "^1.1.8",
     "johnny-five": "^2.1.0",
     "macaddress": "^0.5.3",
