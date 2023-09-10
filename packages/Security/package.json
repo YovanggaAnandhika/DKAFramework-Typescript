@@ -1,6 +1,6 @@
 {
   "name": "@dkaframework/security",
-  "version": "1.0.149",
+  "version": "1.0.191",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "author": "Yovangga Anandhika",

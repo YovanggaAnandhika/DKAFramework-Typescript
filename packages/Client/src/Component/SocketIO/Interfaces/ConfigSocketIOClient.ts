@@ -12,7 +12,7 @@ export interface ConfigSocketIOClientInstanceSettingsEngineHTTPS {
     protocol : SOCKET_TYPE_HTTPS
 }
 
-export type ConfigSocketIOClientInstanceSettingsPingMode = "ON_EVENT" | "INTERVAL";
+export type ConfigSocketIOClientInstanceSettingsPingMode = "INTERVAL";
 export type ConfigSocketIOClientInstanceSettingsPingProtocol = "UDP" | "TCP";
 export interface ConfigSocketIOClientInstanceSettingsSocket extends Partial<ManagerOptions & SocketOptions>{
     pingMode ?: ConfigSocketIOClientInstanceSettingsPingMode;
@@ -34,7 +34,7 @@ export interface ConfigSocketIOClientInstanceEventsManager {
 
 }
 
-export type ConfigSocketIOClientInstanceEventsLatency = "GREAT" | "GOOD" | "ACCEPTABLE" | "BAD";
+export type ConfigSocketIOClientInstanceEventsLatency = "GREAT" | "GOOD" | "ACCEPTABLE" | "BAD" | "TIMEOUT";
 export interface ConfigSocketIOClientInstanceEvents {
     onConnect ?: () => void | undefined | Promise<void>,
     onDisconnect ?: (reason ?: Socket.DisconnectReason | undefined, description ?: DisconnectDescription | undefined) => void | undefined | Promise<void>,

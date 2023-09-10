@@ -182,6 +182,8 @@ export async function SocketIOServerInstances<Config extends ConfigSocketIOServe
                                 process.kill(process.pid);
                             });
 
+
+
                             if (config.namespaces !== undefined){
                                 Object.keys(config.namespaces).map( async (namespace) => {
                                     let mNamespace = SocketIO.of(namespace);
@@ -189,21 +191,6 @@ export async function SocketIOServerInstances<Config extends ConfigSocketIOServe
                                         mNamespace.use(config.namespaces[namespace].use);
                                     }
                                     mNamespace.on("connection",async (io) => {
-                                        io.on("ping", (startTime, cb) => {
-                                            if (typeof cb === "function") {
-                                                cb(startTime);
-                                                if (config.namespaces[namespace].onLatency !== undefined){
-                                                    let timeNowDiff = moment(moment.now());
-                                                    let latency = timeNowDiff.diff(startTime, 'millisecond');
-                                                    let typeLatency: ConfigSocketIOInstanceEventsLatency =
-                                                        (latency < 20) ? "GREAT" :
-                                                            (latency >= 20 && latency <= 40) ? "GOOD" :
-                                                                (latency > 40 && latency <= 100) ? "ACCEPTABLE" :
-                                                                    "BAD";
-                                                    config.namespaces[namespace].onLatency?.(latency, typeLatency);
-                                                }
-                                            }
-                                        });
                                         if (config.namespaces[namespace].onConnection !== undefined){
                                             await config.namespaces[namespace].onConnection(io, mNamespace);
                                         }
@@ -219,15 +206,18 @@ export async function SocketIOServerInstances<Config extends ConfigSocketIOServe
                                 })
                             }
 
+
+
                             /** Event on Connection Data **/
                             SocketIO.on("connection", async (io) => {
+
                                 io.on("ping", (startTime, cb) => {
                                     if (typeof cb === "function") {
                                         cb(startTime);
                                         if (config.events?.socket?.onLatency !== undefined){
                                             let timeNowDiff = moment(moment.now());
                                             let latency = timeNowDiff.diff(startTime, 'millisecond');
-                                            let typeLatency : ConfigSocketIOInstanceEventsLatency =
+                                            let typeLatency: ConfigSocketIOInstanceEventsLatency =
                                                 (latency < 20) ? "GREAT" :
                                                     (latency >= 20 && latency <= 40) ? "GOOD" :
                                                         (latency > 40 && latency <= 100) ? "ACCEPTABLE" :
@@ -237,6 +227,7 @@ export async function SocketIOServerInstances<Config extends ConfigSocketIOServe
 
                                     }
                                 });
+
                                 if (config.events?.socket?.onConnection !== undefined){
                                     await config.events?.socket?.onConnection?.(io, SocketIO);
                                 }

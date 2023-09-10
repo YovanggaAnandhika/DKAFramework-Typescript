@@ -15,12 +15,14 @@ export interface CertExtensionsKeyUsageCert {
     name: 'keyUsage',
     digitalSignature ?: boolean,
     nonRepudiation ?: boolean,
-    keyEncipherment ?: boolean
+    keyEncipherment ?: boolean,
+    dataEncipherment ?: boolean
 }
 
 export interface CertExtensionsNSCertType {
     name : "nsCertType",
-    server : boolean
+    server : boolean,
+    client : boolean
 }
 
 export interface CertExtensionsSubjectKeyIdentifier {
@@ -35,7 +37,8 @@ export interface CertExtensionsAuthorityKeyIdentifier {
 
 export interface CertExtensionsExtKeyUsage {
     name: "extKeyUsage",
-    serverAuth: boolean
+    serverAuth: boolean,
+    clientAuth: boolean,
 }
 
 export interface CertExtensionsSubjectAltNameTypes {

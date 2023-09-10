@@ -9,7 +9,7 @@ import {
     CertExtensionsSubjectAltName,
     CertExtensionsSubjectKeyIdentifier
 } from "./CertExtensions";
-import {pki} from "node-forge";
+import {md, pki} from "node-forge";
 
 
 export interface generateCACertificateFieldsDataAsShort {
@@ -33,7 +33,8 @@ export interface generateCASettingsKeys extends KeyPairsData {
 export interface generateCASettingsOptions {
     expiresYears ?: number | undefined,
     passphrase ?: string,
-    extensions ?: Array<CertExtensionsBasicConstraints | CertExtensionsKeyUsageCA>
+    digest ?: md.MessageDigest | undefined;
+    extensions ?: Array<CertExtensionsBasicConstraints | CertExtensionsKeyUsageCA | CertExtensionsSubjectAltName>
 }
 export interface generateCASettings {
     keys : generateCASettingsKeys;
@@ -75,6 +76,7 @@ export type generateCertSettingsExtensions = Array<
 export interface generateCertSettings {
     keys : generateCASettingsKeys;
     subject : generateCertSettingsFields;
+    digest ?: md.MessageDigest | undefined;
     expiresYears ?: number | undefined;
     extensions ?: generateCertSettingsExtensions
 }
@@ -106,12 +108,20 @@ export interface CertificateAuthorityDataValidity {
     notBefore : string,
     notAfter : string
 }
-export interface CertificateAuthorityData {
+export interface CertificateAuthorityDataDetails {
     certificate : CertificateAuthorityDataCert,
     privateKey : CertificateAuthorityDataPrivate,
     publicKey : CertificateAuthorityDataPublic;
     validity : CertificateAuthorityDataValidity
 }
+
+export type CertificateAuthorityData = CertificateAuthorityDataDetails
+
+export interface CertificateAuthorityRaw {
+    certificate : string,
+    privateKey : string
+}
+export type CertificateAuthority = CertificateAuthorityRaw | CertificateAuthorityDataDetails;
 
 
 
@@ -141,7 +151,17 @@ export interface CertificateData {
     publicKey : CertificateDataPublic;
     validity : CertificateDataValidity
 }
+export interface CertificateComparisonString {
+    parent : string,
+    child : string
+}
 
+export interface CertificateComparisonCert {
+    parent : pki.Certificate,
+    child : pki.Certificate
+}
+
+export type CertificateParentData = CertificateComparisonString | CertificateComparisonCert;
 export interface GenerateKeys extends RSAKeyPairOptions<"pem", "pem"> {
 
 }

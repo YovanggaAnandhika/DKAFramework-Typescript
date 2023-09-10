@@ -1,7 +1,8 @@
 {
   "name": "@dkaframework/client",
-  "version": "1.0.191",
-  "main": "index.js",
+  "version": "1.0.192",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
   "author": "Yovangga Anandhika",
   "license": "MIT",
   "private": false,
@@ -17,12 +18,15 @@
   "dependencies": {
     "lodash": "^4.17.21",
     "moment-timezone": "^0.5.43",
+    "node-cron": "^3.0.2",
+    "node-schedule": "^2.1.1",
     "socket.io-client": "^4.7.2",
     "ts-node": "^10.9.1",
     "web-pingjs": "^1.0.1"
   },
   "gitHead": "56b58b2fb5d929308fdb58761ca4c5b78568a9d1",
   "devDependencies": {
+    "@types/node-cron": "^3.0.8",
     "nodemon": "^3.0.1",
     "ts-node": "^10.9.1"
   }

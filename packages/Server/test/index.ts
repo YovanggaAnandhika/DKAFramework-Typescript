@@ -7,7 +7,21 @@ import * as path from "path";
     await Server({
         engine : Options.ENGINE.SOCKETIO,
         host : "0.0.0.0",
-        port : 3821,
+        port : 53310,
+        events : {
+            socket : {
+                onConnection : async (io) => {
+
+                    /*io.on("hello", async (data) => {
+                        console.log(data)
+                    });*/
+
+                },
+                onLatency : async (delay, type) => {
+                    console.log(`SERVER delay ${delay}, ${type}`)
+                }
+            }
+        },
         settings : {
             socket : {
                 pingInterval : 1000

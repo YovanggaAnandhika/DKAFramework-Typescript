@@ -4,12 +4,7 @@ import {Options, SocketIO} from "../src";
 
     SocketIO({
         host : Options.HOST.LOCALHOST,
-        port : 3821,
-        io : async (io) => {
-            io.on("hello", async (data) => {
-                io.emit('hello',{ halo : "hello from client"});
-            });
-        },
+        port : 53310,
         events : {
             onConnect : async () => {
               console.log("terhubung ke server");

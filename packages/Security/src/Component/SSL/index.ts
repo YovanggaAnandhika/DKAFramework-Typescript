@@ -1,16 +1,17 @@
 import * as Crypto from "crypto";
 import {md, pki, random, util} from "node-forge";
 import {
+    CertificateAuthority,
     CertificateAuthorityData,
-    CertificateData,
+    CertificateData, CertificateParentData,
     generateCASettings,
     generateCertSettings,
     GenerateKeys,
     KeyPairsData
 } from "./Types/GeneralCertOptionsMethod";
+import {merge} from "lodash";
 
-
-export class SSL {
+export class OpenSSL {
     generateKey(Options : GenerateKeys): KeyPairsData {
         if (Options.privateKeyEncoding.passphrase !== undefined){
             Options.privateKeyEncoding.cipher =  'aes-256-cbc';
@@ -51,7 +52,8 @@ export class SSL {
             if (CAOptions.keys?.encrypted){
                 try {
                     let getPrivateKeysFormat = pki.decryptRsaPrivateKey(CAOptions.keys.privateKey, CAOptions.options?.passphrase);
-                    await cert.sign(getPrivateKeysFormat, md.sha512.create());
+                    let digest = (CAOptions.options?.digest !== undefined) ? CAOptions.options.digest : md.sha512.create();
+                    await cert.sign(getPrivateKeysFormat, digest);
                     await resolve({
                         certificate : {
                             pem : pki.certificateToPem(cert),
@@ -75,8 +77,9 @@ export class SSL {
                 }
             }else{
                 if (CAOptions.keys?.privateKey !== undefined){
-                    let getPrivateKeysFormat = pki.privateKeyFromPem(CAOptions.keys?.privateKey)
-                    await cert.sign(getPrivateKeysFormat, md.sha512.create());
+                    let getPrivateKeysFormat = pki.privateKeyFromPem(CAOptions.keys?.privateKey);
+                    let digest = (CAOptions.options?.digest !== undefined) ? CAOptions.options.digest : md.sha512.create();
+                    await cert.sign(getPrivateKeysFormat, digest);
                     await resolve({
                         certificate : {
                             pem : pki.certificateToPem(cert),
@@ -102,9 +105,14 @@ export class SSL {
         });
     }
 
-    async generateCert(CARoot : CertificateAuthorityData, CertOptions : generateCertSettings) : Promise<CertificateData>{
+    async generateCert(CARoot : CertificateAuthority, CertOptions : generateCertSettings) : Promise<CertificateData>{
         //########################################
         let cert = pki.createCertificate();
+        //########################################
+        let CA = (typeof CARoot.certificate === "string") ?
+            pki.certificateFromPem(CARoot.certificate) : CARoot.certificate.rsa;
+        let privateKeyCA = (typeof CARoot.privateKey === "string") ?
+            pki.privateKeyFromPem(CARoot.privateKey) : CARoot.privateKey.rsa
         //########################################
         return new Promise(async (resolve, rejected) => {
             //##################################
@@ -117,10 +125,14 @@ export class SSL {
             //@############################################
             cert.setSubject(CertOptions.subject);
             //@############################################
-            cert.setIssuer(CARoot.certificate.rsa.subject.attributes);
+            cert.setIssuer(CA.subject.attributes);
             //@############################################
-            cert.setExtensions((CertOptions.extensions !== undefined) ? CertOptions.extensions : []);
-            await cert.sign(CARoot.privateKey.rsa, md.sha512.create());
+            let extCert = (CertOptions.extensions !== undefined) ?
+                CertOptions.extensions : [];
+            cert.setExtensions(extCert);
+            CertOptions.digest = (CertOptions.digest !== undefined) ? CertOptions.digest : md.sha512.create();
+
+            await cert.sign(privateKeyCA, CertOptions.digest);
             // Convert to PEM format
             await resolve({
                 certificate : {
@@ -143,6 +155,18 @@ export class SSL {
         })
     }
 
+
+    verify (comparison : CertificateParentData) : Boolean {
+        return (typeof comparison.parent === "string" && typeof comparison.child === "string") ?
+            pki.certificateFromPem(comparison.parent)
+                .verify(pki.certificateFromPem(comparison.child)) :
+            (typeof comparison.parent === "object" && typeof comparison.child === "object") ?
+                comparison.child
+                    .verify(comparison.parent) :
+                false;
+    }
+
+
     private makeNumberPositive (hexString : string) {
         let mostSignificativeHexDigitAsInt = parseInt(hexString[0], 16);
         if (mostSignificativeHexDigitAsInt < 8) return hexString;
@@ -157,4 +181,4 @@ export class SSL {
 
 }
 
-export default SSL;
+export default OpenSSL;

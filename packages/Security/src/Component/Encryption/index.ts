@@ -11,8 +11,6 @@ import {SecurityConfigJWTEngineOptions} from "./Interfaces/SecurityConfig";
 export class Encryption {
 
     private JWEEncryptor ?: JWE.Encryptor;
-
-
     private async getKeyBuffer(path: string): Promise<Buffer> {
         return new Promise(async (resolve, rejected) => {
             if (fs.existsSync(path)) {
@@ -20,10 +18,8 @@ export class Encryption {
             } else {
                 await resolve(Buffer.from(path))
             }
-        })
-
+        });
     }
-
     async encrypt(payloads: object, opts ?: SecurityConfigJWTEngineOptions) : Promise<any> {
         return new Promise(async (resolve, rejected) => {
             opts = merge(SecurityDefaultConfigJWEEncryptOptions, opts);
@@ -39,15 +35,6 @@ export class Encryption {
                             this.JWEEncryptor = JWE.createEncrypt(opts?.JWE as JWE.EncryptOptions, JWKKey);
                             /** Update from buffer step 2 **/
                             await this.JWEEncryptor.update(buffer);
-
-                            /*sign.final()
-                                .then(async (resolve) => {
-                                    console.log(resolve.signResult)
-                                })
-                                .catch(async (error) => {
-                                    console.log(error);
-                                })*/
-
                             /** finish and close encrypt progress step 3 **/
                             await this.JWEEncryptor.final()
                                 .then(async (encryptText) => {

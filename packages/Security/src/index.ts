@@ -1,10 +1,10 @@
 import Encryption from "./Component/Encryption";
-import SSL from "./Component/SSL";
+import OpenSSL from "./Component/SSL";
 
 
 export const Security = {
     Encryption : Encryption,
-    SSL : SSL
+    OpenSSL : OpenSSL
 }
 
 export default Security

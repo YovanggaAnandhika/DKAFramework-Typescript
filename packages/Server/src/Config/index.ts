@@ -33,7 +33,7 @@ export const ConfigServerHost = {
 }
 
 export const ConfigServerPort = {
-    DEFAULT : 51397
+    DEFAULT : 53310
 }
 
 
