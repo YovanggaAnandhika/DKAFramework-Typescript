@@ -56,7 +56,8 @@ Us For More Information.
 -->
 
 <p style="text-align:center">
-<a href="https://www.buymeacoffee.com/celiduba" target="_blank"><img src="https://cdn.buymeacoffee.com/buttons/default-red.png" alt="Buy Me A Coffee" height="40" width="170" ></a>
+![alt text](http://url/to/img.png)
+<!-- <a href="https://www.buymeacoffee.com/celiduba" target="_blank"><img src="https://cdn.buymeacoffee.com/buttons/default-red.png" alt="Buy Me A Coffee" height="40" width="170" ></a> -->
 </p>
 
 ---
