@@ -9,6 +9,7 @@ export const ConfigDefaultSocketIOClient : ConfigSocketIOClient = {
         socket : {
             secure : false,
             timeout : 8000,
+            autoConnect : false,
             pingMode : "INTERVAL",
             pingDelay : 4000,
             transports : ["websocket", "polling"]
@@ -25,9 +26,10 @@ export const ConfigDefaultSocketIOClientHTTPS : ConfigSocketIOClient = {
             secure : true,
             timeout : 8000,
             pingMode : "INTERVAL",
+            autoConnect : false,
             pingDelay : 4000,
             transports : ["websocket", "polling"],
-            rejectUnauthorized : false
-        }
+            rejectUnauthorized : false,
+        },
     }
 }

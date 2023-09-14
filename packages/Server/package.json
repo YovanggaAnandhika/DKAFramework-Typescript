@@ -32,9 +32,9 @@
   "license": "MIT",
   "private": false,
   "scripts": {
-    "test": "nodemon --watch src --watch test --exec ts-node test/index.ts",
-    "js": "node test/test.js",
     "client": "nodemon --watch src --watch test/index.ts --exec ts-node test/index.ts",
+    "server": "nodemon --watch src --watch test --exec ts-node test/server.ts",
+    "js": "node test/test.js",
     "action:clean": "tsc --build --clean",
     "action:compile": "tsc --build",
     "action:copy": "tscp",

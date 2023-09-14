@@ -1,16 +1,20 @@
 import {io, Socket} from "socket.io-client";
-import {ConfigSocketIOClient, ConfigSocketIOClientInstanceEventsLatency} from "./Interfaces/ConfigSocketIOClient";
+import {
+    ConfigSocketIOClient,
+    ConfigSocketIOClientInstanceEventsLatencyType
+} from "./Interfaces/ConfigSocketIOClient";
 import {ConfigDefaultSocketIOClient, ConfigDefaultSocketIOClientHTTPS} from "./Config";
 import _ from "lodash";
 import moment, {Moment} from "moment-timezone";
 
-let PingObserver : NodeJS.Timeout;
+let PingObserver : NodeJS.Timer;
 /**
  *
  * @param config ConfigSocketIOClient
  * @constructor
  */
 export function SocketIO(config : ConfigSocketIOClient) : Socket {
+    moment.locale("id");
     //#####################################################################
     config = (config.settings?.socket?.secure) ?
         _.merge(ConfigDefaultSocketIOClientHTTPS,config) :
@@ -24,30 +28,42 @@ export function SocketIO(config : ConfigSocketIOClient) : Socket {
 
     if (config.io !== undefined) config.io(socket);
 
-    let pingCommand = () => {
-        let timeNow = moment(moment.now());
-        // volatile, so the packet will be discarded if the socket is not connected
-        socket.volatile.emit("ping", timeNow, (starTime: Moment) => {
-            let timeNowDiff = moment(moment.now());
-            let latency = timeNowDiff.diff(starTime, 'millisecond');
-            let typeLatency: ConfigSocketIOClientInstanceEventsLatency = (latency < 20) ? "GREAT" :
-                (latency >= 20 && latency <= 40) ? "GOOD" :
-                    (latency > 40 && latency <= 100) ? "ACCEPTABLE" :
-                        "BAD";
-
-            config.events?.onLatency?.(latency, typeLatency);
-        });
-
-        PingObserver = setTimeout(async () => {
-            await pingCommand();
-            clearTimeout(PingObserver);
-        }, config.settings?.socket?.pingDelay)
-    }
-
     //console.log(cron.getTasks());
     if (config.events !== undefined) {
         socket.on("connect", () => {
-            pingCommand();
+            //########
+            PingObserver = setInterval(() => {
+                let timeNow = moment(moment.now());
+                // volatile, so the packet will be discarded if the socket is not connected
+                socket.volatile.emit("_ping", timeNow, (startTime: Moment) => {
+                    let timeNowDiff = moment(moment.now());
+                    let duration = moment.duration(timeNowDiff.diff(startTime));
+                    let typeLatency: ConfigSocketIOClientInstanceEventsLatencyType = (duration.milliseconds() < 20) ? "GREAT" :
+                        (duration.milliseconds() >= 20 && duration.milliseconds() <= 40) ? "GOOD" :
+                            (duration.milliseconds() > 40 && duration.milliseconds() <= 100) ? "ACCEPTABLE" :
+                                "BAD";
+                    //console.log(`DKA Delay ${latency}`)
+                    config.events?.onLatency?.({
+                        delay : duration.milliseconds(),
+                        type : typeLatency,
+                        time : {
+                            duration : duration,
+                            startTime : {
+                                Iso : timeNow.toISOString(),
+                                Humanize : timeNow.format("HH:mm:ss DD-MM-YYYY"),
+                                unix : timeNow.unix()
+                            },
+                            endTime : {
+                                Iso : timeNowDiff.toISOString(),
+                                Humanize : timeNowDiff.format("HH:mm:ss DD-MM-YYYY"),
+                                unix : timeNowDiff.unix()
+                            }
+                        }
+                    });
+                });
+                //
+            }, config.settings?.socket?.pingDelay)
+            //###############################################################################
             if (config.events?.onConnect !== undefined){
                 config.events?.onConnect?.();
             }
@@ -58,7 +74,8 @@ export function SocketIO(config : ConfigSocketIOClient) : Socket {
         if (config.events.onDisconnect !== undefined){
             socket.on("disconnect", config.events.onDisconnect);
             if (config.events?.onLatency !== undefined && config.settings?.socket?.pingMode === "INTERVAL")
-                clearTimeout(PingObserver);
+                clearInterval(PingObserver);
+
         }
 
         if (config.events.onConnectError !== undefined){
@@ -94,3 +111,5 @@ export function SocketIO(config : ConfigSocketIOClient) : Socket {
     return socket;
 
 }
+
+export default SocketIO;

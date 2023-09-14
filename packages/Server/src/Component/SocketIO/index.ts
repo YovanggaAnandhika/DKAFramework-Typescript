@@ -1,6 +1,6 @@
 import {ConfigSocketIOServer, ConfigSocketIOServerSettingsHTTP} from "./Interfaces/ConfigSocketIOServer";
 import {
-    ConfigSocketIOInstanceEventsLatency,
+    ConfigSocketIOInstanceEventsLatencyType,
     SOCKET_TYPE_HTTP,
     SOCKET_TYPE_HTTP2,
     SOCKET_TYPE_HTTPS
@@ -26,8 +26,7 @@ import {CallbackServerSocketIOComponent} from "../../Interfaces/CallbackServerIn
 import SocketIOEngineHeaders from "./Component/SocketIOEngineHeaders";
 import {SocketIOMiddleware} from "./Component/SocketIOMiddleware";
 import tcpPortUsed from "tcp-port-used";
-import moment from "moment-timezone";
-
+import moment, { Moment } from "moment-timezone";
 
 export async function SocketIOServerInstances<Config extends ConfigSocketIOServer>(config : Config) : Promise<CallbackServerSocketIOComponent> {
     //################ Declaration Variable ###########################
@@ -72,21 +71,41 @@ export async function SocketIOServerInstances<Config extends ConfigSocketIOServe
                                         mNamespace.use(config.namespaces[namespace].use);
                                     }
                                     mNamespace.on("connection",async (io) => {
-                                        io.on("ping", (startTime, cb) => {
+
+                                        io.on("_ping", (startTime : Moment, cb) => {
                                             if (typeof cb === "function") {
                                                 cb(startTime);
+                                                startTime = moment(startTime);
                                                 if (config.namespaces[namespace].onLatency !== undefined){
                                                     let timeNowDiff = moment(moment.now());
-                                                    let latency = timeNowDiff.diff(startTime, 'millisecond');
-                                                    let typeLatency: ConfigSocketIOInstanceEventsLatency =
-                                                        (latency < 20) ? "GREAT" :
-                                                            (latency >= 20 && latency <= 40) ? "GOOD" :
-                                                                (latency > 40 && latency <= 100) ? "ACCEPTABLE" :
+                                                    let duration = moment.duration(timeNowDiff.diff(startTime));
+                                                    let typeLatency: ConfigSocketIOInstanceEventsLatencyType =
+                                                        (duration.milliseconds() < 20) ? "GREAT" :
+                                                            (duration.milliseconds() >= 20 && duration.milliseconds() <= 40) ? "GOOD" :
+                                                                (duration.milliseconds() > 40 && duration.milliseconds() <= 100) ? "ACCEPTABLE" :
                                                                     "BAD";
-                                                    config.namespaces[namespace].onLatency?.(latency, typeLatency);
+                                                    config.namespaces[namespace].onLatency?.({
+                                                        delay : duration.milliseconds(),
+                                                        type : typeLatency,
+                                                        time : {
+                                                            duration : duration,
+                                                            startTime : {
+                                                                Iso : startTime.toISOString(),
+                                                                Humanize : startTime.format("HH:mm:ss DD-MM-YYYY"),
+                                                                unix : startTime.unix()
+                                                            },
+                                                            endTime : {
+                                                                Iso : timeNowDiff.toISOString(),
+                                                                Humanize : timeNowDiff.format("HH:mm:ss DD-MM-YYYY"),
+                                                                unix : timeNowDiff.unix()
+                                                            }
+                                                        }
+                                                    });
                                                 }
+
                                             }
                                         });
+
                                         if (config.namespaces[namespace].onConnection !== undefined){
                                             await config.namespaces[namespace].onConnection(io, mNamespace);
                                         }
@@ -101,22 +120,41 @@ export async function SocketIOServerInstances<Config extends ConfigSocketIOServe
                             }
                             /** Event on Connection Data **/
                             SocketIO.on("connection", async (io) => {
-                                io.on("ping", (startTime,cb) => {
-                                    if (typeof cb === "function"){
+
+                                io.on("_ping", (startTime : Moment, cb) => {
+                                    if (typeof cb === "function") {
                                         cb(startTime);
+                                        startTime = moment(startTime);
                                         if (config.events?.socket?.onLatency !== undefined){
                                             let timeNowDiff = moment(moment.now());
-                                            let latency = timeNowDiff.diff(startTime, 'millisecond');
-                                            let typeLatency: ConfigSocketIOInstanceEventsLatency =
-                                                (latency < 20) ? "GREAT" :
-                                                    (latency >= 20 && latency <= 40) ? "GOOD" :
-                                                        (latency > 40 && latency <= 100) ? "ACCEPTABLE" :
+                                            let duration = moment.duration(timeNowDiff.diff(startTime));
+                                            let typeLatency: ConfigSocketIOInstanceEventsLatencyType =
+                                                (duration.milliseconds() < 20) ? "GREAT" :
+                                                    (duration.milliseconds() >= 20 && duration.milliseconds() <= 40) ? "GOOD" :
+                                                        (duration.milliseconds() > 40 && duration.milliseconds() <= 100) ? "ACCEPTABLE" :
                                                             "BAD";
-                                            config.events?.socket?.onLatency?.(latency, typeLatency);
+                                            config.events?.socket?.onLatency?.({
+                                                delay : duration.milliseconds(),
+                                                type : typeLatency,
+                                                time : {
+                                                    duration : duration,
+                                                    startTime : {
+                                                        Iso : startTime.toISOString(),
+                                                        Humanize : startTime.format("HH:mm:ss DD-MM-YYYY"),
+                                                        unix : startTime.unix()
+                                                    },
+                                                    endTime : {
+                                                        Iso : timeNowDiff.toISOString(),
+                                                        Humanize : timeNowDiff.format("HH:mm:ss DD-MM-YYYY"),
+                                                        unix : timeNowDiff.unix()
+                                                    }
+                                                }
+                                            });
                                         }
-                                    }
 
+                                    }
                                 });
+
                                 if (config.events?.socket?.onConnection !== undefined){
                                     await config.events?.socket?.onConnection?.(io, SocketIO);
                                 }
@@ -183,7 +221,6 @@ export async function SocketIOServerInstances<Config extends ConfigSocketIOServe
                             });
 
 
-
                             if (config.namespaces !== undefined){
                                 Object.keys(config.namespaces).map( async (namespace) => {
                                     let mNamespace = SocketIO.of(namespace);
@@ -191,6 +228,41 @@ export async function SocketIOServerInstances<Config extends ConfigSocketIOServe
                                         mNamespace.use(config.namespaces[namespace].use);
                                     }
                                     mNamespace.on("connection",async (io) => {
+
+                                        io.on("_ping", (startTime : Moment, cb) => {
+                                            if (typeof cb === "function") {
+                                                cb(startTime);
+                                                startTime = moment(startTime);
+                                                if (config.namespaces[namespace].onLatency !== undefined){
+                                                    let timeNowDiff = moment(moment.now());
+                                                    let duration = moment.duration(timeNowDiff.diff(startTime));
+                                                    let typeLatency: ConfigSocketIOInstanceEventsLatencyType =
+                                                        (duration.milliseconds() < 20) ? "GREAT" :
+                                                            (duration.milliseconds() >= 20 && duration.milliseconds() <= 40) ? "GOOD" :
+                                                                (duration.milliseconds() > 40 && duration.milliseconds() <= 100) ? "ACCEPTABLE" :
+                                                                    "BAD";
+                                                    config.namespaces[namespace].onLatency?.({
+                                                        delay : duration.milliseconds(),
+                                                        type : typeLatency,
+                                                        time : {
+                                                            duration : duration,
+                                                            startTime : {
+                                                                Iso : startTime.toISOString(),
+                                                                Humanize : startTime.format("HH:mm:ss DD-MM-YYYY"),
+                                                                unix : startTime.unix()
+                                                            },
+                                                            endTime : {
+                                                                Iso : timeNowDiff.toISOString(),
+                                                                Humanize : timeNowDiff.format("HH:mm:ss DD-MM-YYYY"),
+                                                                unix : timeNowDiff.unix()
+                                                            }
+                                                        }
+                                                    });
+                                                }
+
+                                            }
+                                        });
+
                                         if (config.namespaces[namespace].onConnection !== undefined){
                                             await config.namespaces[namespace].onConnection(io, mNamespace);
                                         }
@@ -206,23 +278,38 @@ export async function SocketIOServerInstances<Config extends ConfigSocketIOServe
                                 })
                             }
 
-
-
                             /** Event on Connection Data **/
                             SocketIO.on("connection", async (io) => {
 
-                                io.on("ping", (startTime, cb) => {
+                                io.on("_ping", (startTime : Moment, cb) => {
                                     if (typeof cb === "function") {
                                         cb(startTime);
+                                        startTime = moment(startTime);
                                         if (config.events?.socket?.onLatency !== undefined){
                                             let timeNowDiff = moment(moment.now());
-                                            let latency = timeNowDiff.diff(startTime, 'millisecond');
-                                            let typeLatency: ConfigSocketIOInstanceEventsLatency =
-                                                (latency < 20) ? "GREAT" :
-                                                    (latency >= 20 && latency <= 40) ? "GOOD" :
-                                                        (latency > 40 && latency <= 100) ? "ACCEPTABLE" :
+                                            let duration = moment.duration(timeNowDiff.diff(startTime));
+                                            let typeLatency: ConfigSocketIOInstanceEventsLatencyType =
+                                                (duration.milliseconds() < 20) ? "GREAT" :
+                                                    (duration.milliseconds() >= 20 && duration.milliseconds() <= 40) ? "GOOD" :
+                                                        (duration.milliseconds() > 40 && duration.milliseconds() <= 100) ? "ACCEPTABLE" :
                                                             "BAD";
-                                            config.events?.socket?.onLatency?.(latency, typeLatency);
+                                            config.events?.socket?.onLatency?.({
+                                                delay : duration.milliseconds(),
+                                                type : typeLatency,
+                                                time : {
+                                                    duration : duration,
+                                                    startTime : {
+                                                        Iso : startTime.toISOString(),
+                                                        Humanize : startTime.format("HH:mm:ss DD-MM-YYYY"),
+                                                        unix : startTime.unix()
+                                                    },
+                                                    endTime : {
+                                                        Iso : timeNowDiff.toISOString(),
+                                                        Humanize : timeNowDiff.format("HH:mm:ss DD-MM-YYYY"),
+                                                        unix : timeNowDiff.unix()
+                                                    }
+                                                }
+                                            });
                                         }
 
                                     }
@@ -299,21 +386,41 @@ export async function SocketIOServerInstances<Config extends ConfigSocketIOServe
                                     }
 
                                     mNamespace.on("connection",async (io) => {
-                                        io.on("ping", (startTime, cb) => {
+
+                                        io.on("_ping", (startTime : Moment, cb) => {
                                             if (typeof cb === "function") {
                                                 cb(startTime);
+                                                startTime = moment(startTime);
                                                 if (config.namespaces[namespace].onLatency !== undefined){
                                                     let timeNowDiff = moment(moment.now());
-                                                    let latency = timeNowDiff.diff(startTime, 'millisecond');
-                                                    let typeLatency: ConfigSocketIOInstanceEventsLatency =
-                                                        (latency < 20) ? "GREAT" :
-                                                            (latency >= 20 && latency <= 40) ? "GOOD" :
-                                                                (latency > 40 && latency <= 100) ? "ACCEPTABLE" :
+                                                    let duration = moment.duration(timeNowDiff.diff(startTime));
+                                                    let typeLatency: ConfigSocketIOInstanceEventsLatencyType =
+                                                        (duration.milliseconds() < 20) ? "GREAT" :
+                                                            (duration.milliseconds() >= 20 && duration.milliseconds() <= 40) ? "GOOD" :
+                                                                (duration.milliseconds() > 40 && duration.milliseconds() <= 100) ? "ACCEPTABLE" :
                                                                     "BAD";
-                                                    config.namespaces[namespace].onLatency?.(latency, typeLatency);
+                                                    config.namespaces[namespace].onLatency?.({
+                                                        delay : duration.milliseconds(),
+                                                        type : typeLatency,
+                                                        time : {
+                                                            duration : duration,
+                                                            startTime : {
+                                                                Iso : startTime.toISOString(),
+                                                                Humanize : startTime.format("HH:mm:ss DD-MM-YYYY"),
+                                                                unix : startTime.unix()
+                                                            },
+                                                            endTime : {
+                                                                Iso : timeNowDiff.toISOString(),
+                                                                Humanize : timeNowDiff.format("HH:mm:ss DD-MM-YYYY"),
+                                                                unix : timeNowDiff.unix()
+                                                            }
+                                                        }
+                                                    });
                                                 }
+
                                             }
                                         });
+
                                         if (config.namespaces[namespace].onConnection !== undefined){
                                             await config.namespaces[namespace].onConnection(io, mNamespace);
                                         }
@@ -329,22 +436,41 @@ export async function SocketIOServerInstances<Config extends ConfigSocketIOServe
                             }
                             /** Event on Connection Data **/
                             SocketIO.on("connection", async (io) => {
-                                io.on("ping", (startTime, cb) => {
+
+                                io.on("_ping", (startTime : Moment, cb) => {
                                     if (typeof cb === "function") {
                                         cb(startTime);
+                                        startTime = moment(startTime);
                                         if (config.events?.socket?.onLatency !== undefined){
                                             let timeNowDiff = moment(moment.now());
-                                            let latency = timeNowDiff.diff(startTime, 'millisecond');
-                                            let typeLatency: ConfigSocketIOInstanceEventsLatency =
-                                                (latency < 20) ? "GREAT" :
-                                                    (latency >= 20 && latency <= 40) ? "GOOD" :
-                                                        (latency > 40 && latency <= 100) ? "ACCEPTABLE" :
+                                            let duration = moment.duration(timeNowDiff.diff(startTime));
+                                            let typeLatency: ConfigSocketIOInstanceEventsLatencyType =
+                                                (duration.milliseconds() < 20) ? "GREAT" :
+                                                    (duration.milliseconds() >= 20 && duration.milliseconds() <= 40) ? "GOOD" :
+                                                        (duration.milliseconds() > 40 && duration.milliseconds() <= 100) ? "ACCEPTABLE" :
                                                             "BAD";
-                                            config.events?.socket?.onLatency?.(latency, typeLatency);
+                                            config.events?.socket?.onLatency?.({
+                                                delay : duration.milliseconds(),
+                                                type : typeLatency,
+                                                time : {
+                                                    duration : duration,
+                                                    startTime : {
+                                                        Iso : startTime.toISOString(),
+                                                        Humanize : startTime.format("HH:mm:ss DD-MM-YYYY"),
+                                                        unix : startTime.unix()
+                                                    },
+                                                    endTime : {
+                                                        Iso : timeNowDiff.toISOString(),
+                                                        Humanize : timeNowDiff.format("HH:mm:ss DD-MM-YYYY"),
+                                                        unix : timeNowDiff.unix()
+                                                    }
+                                                }
+                                            });
                                         }
 
                                     }
                                 });
+
                                 if (config.events?.socket?.onConnection !== undefined){
                                     await config.events?.socket?.onConnection?.(io, SocketIO);
                                 }
@@ -407,19 +533,37 @@ export async function SocketIOServerInstances<Config extends ConfigSocketIOServe
                                 Object.keys(config.namespaces).map( async (namespace) => {
                                     let mNamespace = SocketIO.of(namespace);
                                     mNamespace.on("connection",async (io) => {
-                                        io.on("ping", (startTime, cb) => {
+                                        io.on("_ping", (startTime : Moment, cb) => {
                                             if (typeof cb === "function") {
                                                 cb(startTime);
+                                                startTime = moment(startTime);
                                                 if (config.namespaces[namespace].onLatency !== undefined){
                                                     let timeNowDiff = moment(moment.now());
-                                                    let latency = timeNowDiff.diff(startTime, 'millisecond');
-                                                    let typeLatency: ConfigSocketIOInstanceEventsLatency =
-                                                        (latency < 20) ? "GREAT" :
-                                                            (latency >= 20 && latency <= 40) ? "GOOD" :
-                                                                (latency > 40 && latency <= 100) ? "ACCEPTABLE" :
+                                                    let duration = moment.duration(timeNowDiff.diff(startTime));
+                                                    let typeLatency: ConfigSocketIOInstanceEventsLatencyType =
+                                                        (duration.milliseconds() < 20) ? "GREAT" :
+                                                            (duration.milliseconds() >= 20 && duration.milliseconds() <= 40) ? "GOOD" :
+                                                                (duration.milliseconds() > 40 && duration.milliseconds() <= 100) ? "ACCEPTABLE" :
                                                                     "BAD";
-                                                    config.namespaces[namespace].onLatency?.(latency, typeLatency);
+                                                    config.namespaces[namespace].onLatency?.({
+                                                        delay : duration.milliseconds(),
+                                                        type : typeLatency,
+                                                        time : {
+                                                            duration : duration,
+                                                            startTime : {
+                                                                Iso : startTime.toISOString(),
+                                                                Humanize : startTime.format("HH:mm:ss DD-MM-YYYY"),
+                                                                unix : startTime.unix()
+                                                            },
+                                                            endTime : {
+                                                                Iso : timeNowDiff.toISOString(),
+                                                                Humanize : timeNowDiff.format("HH:mm:ss DD-MM-YYYY"),
+                                                                unix : timeNowDiff.unix()
+                                                            }
+                                                        }
+                                                    });
                                                 }
+
                                             }
                                         });
                                         if (config.namespaces[namespace].onConnection !== undefined){
@@ -438,19 +582,37 @@ export async function SocketIOServerInstances<Config extends ConfigSocketIOServe
 
                             /** Event on Connection Data **/
                             SocketIO.on("connection", async (io) => {
-                                io.on("ping", (startTime, cb) => {
+                                io.on("_ping", (startTime : Moment, cb) => {
                                     if (typeof cb === "function") {
                                         cb(startTime);
+                                        startTime = moment(startTime);
                                         if (config.events?.socket?.onLatency !== undefined){
                                             let timeNowDiff = moment(moment.now());
-                                            let latency = timeNowDiff.diff(startTime, 'millisecond');
-                                            let typeLatency: ConfigSocketIOInstanceEventsLatency =
-                                                (latency < 20) ? "GREAT" :
-                                                    (latency >= 20 && latency <= 40) ? "GOOD" :
-                                                        (latency > 40 && latency <= 100) ? "ACCEPTABLE" :
+                                            let duration = moment.duration(timeNowDiff.diff(startTime));
+                                            let typeLatency: ConfigSocketIOInstanceEventsLatencyType =
+                                                (duration.milliseconds() < 20) ? "GREAT" :
+                                                    (duration.milliseconds() >= 20 && duration.milliseconds() <= 40) ? "GOOD" :
+                                                        (duration.milliseconds() > 40 && duration.milliseconds() <= 100) ? "ACCEPTABLE" :
                                                             "BAD";
-                                            config.events?.socket?.onLatency?.(latency, typeLatency);
+                                            config.events?.socket?.onLatency?.({
+                                                delay : duration.milliseconds(),
+                                                type : typeLatency,
+                                                time : {
+                                                    duration : duration,
+                                                    startTime : {
+                                                        Iso : startTime.toISOString(),
+                                                        Humanize : startTime.format("HH:mm:ss DD-MM-YYYY"),
+                                                        unix : startTime.unix()
+                                                    },
+                                                    endTime : {
+                                                        Iso : timeNowDiff.toISOString(),
+                                                        Humanize : timeNowDiff.format("HH:mm:ss DD-MM-YYYY"),
+                                                        unix : timeNowDiff.unix()
+                                                    }
+                                                }
+                                            });
                                         }
+
                                     }
                                 });
                                 if (config.events?.socket?.onConnection !== undefined){

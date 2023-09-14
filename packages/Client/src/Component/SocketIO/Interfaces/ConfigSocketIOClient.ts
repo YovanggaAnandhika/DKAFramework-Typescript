@@ -3,6 +3,7 @@ import {SOCKET_ENGINE, SOCKET_TYPE_HTTP, SOCKET_TYPE_HTTPS} from "../Types/Types
 import {GlobalClientConfigInterfaces} from "../../../Interfaces/ConfigClientInterfaces";
 import {ManagerOptions, Socket, SocketOptions} from "socket.io-client";
 import {DisconnectDescription} from "socket.io-client/build/esm-debug/socket";
+import moment from "moment-timezone";
 
 export interface ConfigSocketIOClientInstanceSettingsEngineHTTP {
     protocol : SOCKET_TYPE_HTTP
@@ -34,12 +35,31 @@ export interface ConfigSocketIOClientInstanceEventsManager {
 
 }
 
-export type ConfigSocketIOClientInstanceEventsLatency = "GREAT" | "GOOD" | "ACCEPTABLE" | "BAD" | "TIMEOUT";
+export type ConfigSocketIOClientInstanceEventsLatencyType = "GREAT" | "GOOD" | "ACCEPTABLE" | "BAD" | "TIMEOUT";
+
+export interface ConfigSocketIOClientInstanceEventsLatencyTime {
+    duration : moment.Duration,
+    endTime : {
+        Iso : string,
+        Humanize : string,
+        unix : number
+    },
+    startTime : {
+        Iso : string,
+        Humanize : string,
+        unix : number
+    },
+}
+export interface ConfigSocketIOClientInstanceEventsLatency {
+    delay : number,
+    type : ConfigSocketIOClientInstanceEventsLatencyType,
+    time : ConfigSocketIOClientInstanceEventsLatencyTime
+}
 export interface ConfigSocketIOClientInstanceEvents {
     onConnect ?: () => void | undefined | Promise<void>,
     onDisconnect ?: (reason ?: Socket.DisconnectReason | undefined, description ?: DisconnectDescription | undefined) => void | undefined | Promise<void>,
     onConnectError ?: (error ?: Error | undefined) => void | undefined | Promise<void>,
-    onLatency ?: (delay : number, type : ConfigSocketIOClientInstanceEventsLatency) => Promise<void> | void | undefined;
+    onLatency ?: (responseLatency : ConfigSocketIOClientInstanceEventsLatency) => Promise<void> | void | undefined;
     Manager ?: ConfigSocketIOClientInstanceEventsManager | undefined
 }
 export interface ConfigSocketIOClientInstance {

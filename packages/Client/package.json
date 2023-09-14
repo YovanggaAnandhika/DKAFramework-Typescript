@@ -1,18 +1,20 @@
 {
   "name": "@dkaframework/client",
-  "version": "1.0.192",
+  "version": "1.0.193",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
+  "module": "dist/DKAClientFramework.js",
   "author": "Yovangga Anandhika",
   "license": "MIT",
   "private": false,
   "scripts": {
-    "action:clean": "tsc --build --clean",
-    "action:compile": "tsc --build",
+    "action:clean": "rimraf dist",
+    "action:compile:cjs": "tsc --build ",
     "action:copy": "tscp",
     "test": "nodemon --watch src --watch test --exec ts-node test/index.ts",
-    "build": "yarn run action:clean && yarn run action:compile && yarn run action:copy",
-    "prepublish": "yarn run action:clean && yarn run action:compile && yarn run action:copy",
+    "build": "yarn run action:clean && yarn run action:compile:cjs && yarn run action:copy",
+    "build-umd": "webpack --mode production",
+    "prepublish": "yarn run action:clean && yarn run action:compile:cjs && yarn run action:copy",
     "login": "npm login"
   },
   "dependencies": {
@@ -28,6 +30,9 @@
   "devDependencies": {
     "@types/node-cron": "^3.0.8",
     "nodemon": "^3.0.1",
-    "ts-node": "^10.9.1"
+    "rimraf": "^5.0.1",
+    "ts-loader": "^9.4.4",
+    "ts-node": "^10.9.1",
+    "webpack-cli": "^5.1.4"
   }
 }

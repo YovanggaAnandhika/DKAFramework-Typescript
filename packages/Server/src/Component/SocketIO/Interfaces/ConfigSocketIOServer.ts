@@ -1,6 +1,6 @@
 import {GlobalServerConfigInterfacesSettingsLogger} from "../../../Interfaces/ConfigServerInterfaces";
 import {
-    ConfigSocketIOInstanceEventsLatency,
+    ConfigSocketIOInstanceEventsLatencyType,
     SOCKET_ENGINE,
     SOCKET_TYPE_HTTP,
     SOCKET_TYPE_HTTP2,
@@ -56,9 +56,30 @@ export interface ConfigSocketIOServerSettings {
     logger ?: GlobalServerConfigInterfacesSettingsLogger
 }
 
+
+export interface ConfigSocketIOServerInstanceEventsLatencyTime {
+    duration : moment.Duration,
+    endTime : {
+        Iso : string,
+        Humanize : string,
+        unix : number
+    },
+    startTime : {
+        Iso : string,
+        Humanize : string,
+        unix : number
+    },
+}
+export interface ConfigSocketIOServerInstanceEventsLatency {
+    delay : number,
+    type : ConfigSocketIOInstanceEventsLatencyType,
+    time : ConfigSocketIOServerInstanceEventsLatencyTime
+}
+
+
 export interface ConfigSocketIOServerEventsSocket {
     onConnection ?: (io : Socket<DefaultEventsMap, DefaultEventsMap, any>, server : Server<DefaultEventsMap, DefaultEventsMap, any>) => Promise<void>,
-    onLatency ?: (delay : number, type : ConfigSocketIOInstanceEventsLatency) => Promise<void> | void | undefined;
+    onLatency ?: (responseLatency : ConfigSocketIOServerInstanceEventsLatency) => Promise<void> | void | undefined;
     onDisconnection ?: (reason : any) => Promise<void> | void,
 }
 
@@ -74,7 +95,7 @@ export interface ConfigSocketIOServerEvents {
 export interface ConfigSocketIOServerEventsNamespace {
     use ?: SocketIOMiddlewareUse | undefined;
     onConnection ?: (io : Socket<DefaultEventsMap, DefaultEventsMap, any>, namespace : Namespace<DefaultEventsMap, DefaultEventsMap, any>) => Promise<void> | void | undefined,
-    onLatency ?: (delay : number, type : ConfigSocketIOInstanceEventsLatency) => Promise<void> | void | undefined;
+    onLatency ?: (responseLatency : ConfigSocketIOServerInstanceEventsLatency) => Promise<void> | void | undefined;
     onDisconnection ?: (reason : any) => Promise<void> | void,
 }
 export interface ConfigSocketIOServerInstancesNamespaces {

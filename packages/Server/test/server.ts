@@ -5,14 +5,17 @@ import * as path from "path";
 (async () => {
 
     await Server({
-        engine : Options.ENGINE.WEBPACK,
+        engine : Options.ENGINE.SOCKETIO,
         host : Options.HOST.WILDCARD,
-        port : 53310,
-        webpack : {
-            entry : path.join(__dirname, "./app.tsx")
-        },
-        webpackDev : {
-            open : true
+        port : 53319,
+        events : {
+            socket : {
+                onConnection : async (io) => {
+                    io.on("offer", async (data) => {
+                        console.log(data)
+                    })
+                }
+            }
         }
     }).then(async (resultServ) => {
         console.log("server berhasil dijalankan")

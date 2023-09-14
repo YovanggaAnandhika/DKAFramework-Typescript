@@ -2,18 +2,18 @@ import {Options, SocketIO} from "../src";
 
 (async () => {
 
-    SocketIO({
+    let io = SocketIO({
         host : Options.HOST.LOCALHOST,
         port : 53310,
         events : {
             onConnect : async () => {
-              console.log("terhubung ke server");
+
             },
             onDisconnect : async (reason,desc ) => {
                 console.log(reason)
             },
-            onLatency : async (delay, type) => {
-              console.log(`delay ${delay} ms, ${type}`);
+            onLatency : async (responseLatency) => {
+              console.log(`CLIENT delay ${responseLatency.delay} ms`);
             },
             Manager : {
                 onReconnectAttempt : async (attempt) => {

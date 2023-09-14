@@ -2,15 +2,14 @@
   // Change this to match your project
   "include": [ "src/**/*" ],
   "compilerOptions": {
-    "target": "ES2015",
-    "module": "UMD",
+    "target": "ES2021",
+    "module": "CommonJS",
     "lib": [
-      "dom"
+      "dom", "ES5", "ES2021"
     ],
     // Tells TypeScript to read JS files, as
     // Generate d.ts files
     "declaration": true,
-    "allowUmdGlobalAccess": true,
     "rootDir": "src",
     // Types should go into this directory.
     // Removing this would place the .d.ts files
@@ -19,11 +18,11 @@
     "outDir": "dist",
     // go to js file when using IDE functions like
     // "Go to Definition" in VSCode
-    "declarationMap": true,
+    /*"declarationMap": true,*/
     "strict": true,
     "esModuleInterop": true,
-    "moduleResolution": "Node"
-    //"resolveJsonModule": true
+    "moduleResolution": "Node",
+    "resolveJsonModule": true
   },
   "exclude": [
     "node_modules",

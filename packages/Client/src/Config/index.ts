@@ -29,3 +29,5 @@ const ConfigClientOptions = {
 }
 
 export const Options = ConfigClientOptions;
+
+export default ConfigClientOptions;

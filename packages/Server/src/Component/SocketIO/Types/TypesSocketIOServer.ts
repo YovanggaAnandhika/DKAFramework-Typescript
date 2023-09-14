@@ -15,7 +15,7 @@ export const SOCKET_TYPE_HTTPS : SOCKET_TYPE_HTTPS = "HTTPS";
 export const SOCKET_TYPE_HTTP2 : SOCKET_TYPE_HTTP2 = "HTTP2";
 export const SOCKET_TYPE_FASTIFY : SOCKET_TYPE_FASTIFY = "FASTIFY";
 
-export type ConfigSocketIOInstanceEventsLatency = "GREAT" | "GOOD" | "ACCEPTABLE" | "BAD";
+export type ConfigSocketIOInstanceEventsLatencyType = "GREAT" | "GOOD" | "ACCEPTABLE" | "BAD";
 
 export type SocketIOError = (error ?: ExtendedError) => void | undefined;
 export type SocketIOSocketServer = Server<DefaultEventsMap, DefaultEventsMap, DefaultEventsMap, any>;
