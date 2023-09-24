@@ -11,9 +11,7 @@ import * as path from "path";
         events : {
             socket : {
                 onConnection : async (io) => {
-                    io.on("offer", async (data) => {
-                        console.log(data)
-                    })
+                    console.log(io.id)
                 }
             }
         }

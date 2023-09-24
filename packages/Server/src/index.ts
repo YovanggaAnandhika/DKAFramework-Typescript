@@ -9,7 +9,6 @@ import {WEBPACK_ENGINE} from "./Component/Webpack/Types/WebpackTypesServer";
 import {DefaultServerConfiguration} from "./Config/DefaultServerConfiguration";
 import {merge} from "lodash";
 
-
 export async function Server<Config extends ConfigServerInterfaces> (serverConfig ?: ServerConfigSelector<Config>) : Promise<ServerSelector<Config>> {
     serverConfig = merge(DefaultServerConfiguration, serverConfig)
     return new Promise(async (resolve, rejected) => {

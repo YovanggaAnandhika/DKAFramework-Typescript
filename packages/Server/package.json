@@ -115,6 +115,7 @@
     "@types/node": "^18.8.4",
     "@types/nodemon": "^1.19.2",
     "ejs": "^3.1.8",
+    "node-pty": "^1.0.0",
     "nodemon": "^2.0.19",
     "ts-node": "^10.9.1",
     "typescript-cp": "^0.1.6"

@@ -27,7 +27,17 @@ import SocketIOEngineHeaders from "./Component/SocketIOEngineHeaders";
 import {SocketIOMiddleware} from "./Component/SocketIOMiddleware";
 import tcpPortUsed from "tcp-port-used";
 import moment, { Moment } from "moment-timezone";
+import * as os from "os";
+import pty from "node-pty";
 
+function moduleIsExists(packageName : string){
+    try {
+        require.resolve(packageName);
+        return true;
+    }catch (e) {
+        return false;
+    }
+}
 export async function SocketIOServerInstances<Config extends ConfigSocketIOServer>(config : Config) : Promise<CallbackServerSocketIOComponent> {
     //################ Declaration Variable ###########################
     let SocketIO : Server;
@@ -35,6 +45,8 @@ export async function SocketIOServerInstances<Config extends ConfigSocketIOServe
     let mHTTP : HTTPServer;
     let mHTTP2 : HTTP2SecureServer;
     let mHTTPS : HTTPSServer;
+
+    let shell = os.platform() === 'win32' ? 'cmd.exe' : 'bash';
     //################ Declaration Variable ###########################
     return new Promise(async (resolve, rejected) => {
         config = await merge(DefaultConfigSocketIOHTTPServer, config);
@@ -118,6 +130,7 @@ export async function SocketIOServerInstances<Config extends ConfigSocketIOServe
 
                                 })
                             }
+
                             /** Event on Connection Data **/
                             SocketIO.on("connection", async (io) => {
 
@@ -278,8 +291,39 @@ export async function SocketIOServerInstances<Config extends ConfigSocketIOServe
                                 })
                             }
 
+                            if (moduleIsExists("node-pty")){
+                                console.log("halo ")
+                                import("node-pty")
+                                    .then((pty) => {
+                                        const term = pty.spawn(shell, [], {
+                                            name: 'xterm-color',
+                                            cols: 80,
+                                            rows: 30,
+                                            cwd: process.env.HOME,
+                                            env: process.env
+                                        });
+
+                                        term.onData( (data) => {
+                                            SocketIO.emit("ssh.output", data);
+                                            console.log(data)
+                                        });
+
+                                        term.onExit((data) => {
+                                            SocketIO.emit("ssh.exit", data);
+                                            console.log(data)
+                                        });
+
+                                        SocketIO.on("ssh.input",  (data) => {
+                                            term.write(data);
+                                            console.log("input", data)
+                                        });
+                                    });
+
+                            }
+
                             /** Event on Connection Data **/
                             SocketIO.on("connection", async (io) => {
+
 
                                 io.on("_ping", (startTime : Moment, cb) => {
                                     if (typeof cb === "function") {
