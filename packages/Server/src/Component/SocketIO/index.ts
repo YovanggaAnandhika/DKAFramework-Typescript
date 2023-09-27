@@ -28,7 +28,6 @@ import {SocketIOMiddleware} from "./Component/SocketIOMiddleware";
 import tcpPortUsed from "tcp-port-used";
 import moment, { Moment } from "moment-timezone";
 import * as os from "os";
-import pty from "node-pty";
 
 function moduleIsExists(packageName : string){
     try {
@@ -82,6 +81,7 @@ export async function SocketIOServerInstances<Config extends ConfigSocketIOServe
                                     if (config.namespaces[namespace].use !== undefined){
                                         mNamespace.use(config.namespaces[namespace].use);
                                     }
+
                                     mNamespace.on("connection",async (io) => {
 
                                         io.on("_ping", (startTime : Moment, cb) => {
@@ -96,6 +96,7 @@ export async function SocketIOServerInstances<Config extends ConfigSocketIOServe
                                                             (duration.milliseconds() >= 20 && duration.milliseconds() <= 40) ? "GOOD" :
                                                                 (duration.milliseconds() > 40 && duration.milliseconds() <= 100) ? "ACCEPTABLE" :
                                                                     "BAD";
+
                                                     config.namespaces[namespace].onLatency?.({
                                                         delay : duration.milliseconds(),
                                                         type : typeLatency,
@@ -291,39 +292,8 @@ export async function SocketIOServerInstances<Config extends ConfigSocketIOServe
                                 })
                             }
 
-                            if (moduleIsExists("node-pty")){
-                                console.log("halo ")
-                                import("node-pty")
-                                    .then((pty) => {
-                                        const term = pty.spawn(shell, [], {
-                                            name: 'xterm-color',
-                                            cols: 80,
-                                            rows: 30,
-                                            cwd: process.env.HOME,
-                                            env: process.env
-                                        });
-
-                                        term.onData( (data) => {
-                                            SocketIO.emit("ssh.output", data);
-                                            console.log(data)
-                                        });
-
-                                        term.onExit((data) => {
-                                            SocketIO.emit("ssh.exit", data);
-                                            console.log(data)
-                                        });
-
-                                        SocketIO.on("ssh.input",  (data) => {
-                                            term.write(data);
-                                            console.log("input", data)
-                                        });
-                                    });
-
-                            }
-
                             /** Event on Connection Data **/
                             SocketIO.on("connection", async (io) => {
-
 
                                 io.on("_ping", (startTime : Moment, cb) => {
                                     if (typeof cb === "function") {
