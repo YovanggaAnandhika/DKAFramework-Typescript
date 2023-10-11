@@ -57,7 +57,7 @@ export class Escpos<Config extends EscposConfig> {
         }
     }
     //######################################################
-    constructor(escposConfig : EscposCheckerConfig<Config>) {
+    constructor(escposConfig ?: EscposCheckerConfig<Config>) {
         let logger = (escposConfig.state === DEVELOPMENT) ?
             (Escpos.checkModuleExist("winston")) ? require("winston").createLogger({
                 transports : [ new (require("winston")).transports.Console() ]
