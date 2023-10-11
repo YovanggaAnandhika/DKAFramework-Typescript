@@ -125,7 +125,6 @@ export class MariaDB implements MariaDBClassInterfaces {
         switch (this.mConfig.engine) {
             case "Connection" :
                 this.mInstance = createConnection(this.mConfig);
-
                 break;
             case "PoolConnection" :
                 this.mInstance = createPool(this.mConfig);
@@ -151,31 +150,17 @@ export class MariaDB implements MariaDBClassInterfaces {
             let ifNotExists = (mRules.ifNotExist !== undefined && mRules.ifNotExist) ? `IF NOT EXISTS` : ``;
             let characterSet = (mRules.character !== undefined) ? `CHARACTER SET ${mRules.character}` : ``;
             let collation = (mRules.collation !== undefined) ? `COLLATE ${mRules.collation}` : ``;
-            if (mRules.encryption !== undefined){
-                if (require.resolve("@dkaframework/security")){
-                    let mEncryption = require("@dkaframework/security").default;
-                    let mDatabase = new mEncryption(mRules.encryption).encodeIvSync(DatabaseName);
-                    mQuery = `CREATE DATABASE ${ifNotExists} \`${mDatabase}\` ${characterSet} ${collation};`;
-                    this.mMethod = "CREATE_DB";
-                    await this.rawQuerySync<CallbackCreateDatabase>(mQuery, [], { ifNotExist : mRules.ifNotExist})
-                        .then(async (result) => {
-                            await resolve(result);
-                        }).catch(async (error) => {
-                            await rejected(<CallbackError>error);
-                        });
-                }else{
-                    rejected(<CallbackError>{ status : false, code : 500, msg : `Encryption Module is Declare. but module not installed, please installed first "@dkaframework/security" `});
-                }
-            }else{
-                mQuery = `CREATE DATABASE ${ifNotExists} \`${DatabaseName}\` ${characterSet} ${collation};`;
-                this.mMethod = "CREATE_DB";
-                await this.rawQuerySync<CallbackCreateDatabase>(mQuery, [], { ifNotExist : mRules.ifNotExist})
-                    .then(async (result) => {
-                        await resolve(result);
-                    }).catch(async (error) => {
-                        await rejected(<CallbackError>error);
-                    });
-            }
+            mQuery = `CREATE DATABASE ${ifNotExists} \`${DatabaseName}\` ${characterSet} ${collation};`;
+            if (mRules.useDB)
+                mQuery += `USE \`${DatabaseName}\`;`;
+            //###########################################
+            this.mMethod = "CREATE_DB";
+            await this.rawQuerySync<CallbackCreateDatabase>(mQuery, [], { ifNotExist : mRules.ifNotExist})
+                .then(async (result) => {
+                    await resolve(result);
+                }).catch(async (error) => {
+                    await rejected(<CallbackError>error);
+                });
         });
     }
 
@@ -198,19 +183,7 @@ export class MariaDB implements MariaDBClassInterfaces {
                 switch (value.type) {
                     case "PRIMARY_KEY" :
                         let autoIncrement = (value.autoIncrement) ? "AUTO_INCREMENT" : "";
-                        if (mRules.encryption !== undefined) {
-                            if (require.resolve("@dkaframework/security")) {
-                                let mEncryption = require("@dkaframework/security").default;
-                                let mColoumnName = new mEncryption(mRules.encryption).encodeIvSync(value.coloumn);
-                                let mTableNameEncrypt = (mRules.settings?.coloumn) ? mColoumnName : value.coloumn;
-                                mQuery += ` \`${mTableNameEncrypt}\` BIGINT PRIMARY KEY ${autoIncrement}`;
-                            }else{
-                                return { status : false, code : 500, msg : `Encryption Module is Declare. but module not installed, please installed first "@dkaframework/security" `};
-                            }
-                        }else{
-                            mQuery += ` \`${value.coloumn}\` BIGINT PRIMARY KEY ${autoIncrement}`;
-                        }
-
+                        mQuery += ` \`${value.coloumn}\` BIGINT PRIMARY KEY ${autoIncrement}`;
                         break;
                     case "VARCHAR" :
                         length = (value.length !== undefined) ? value.length : 20;
@@ -219,26 +192,13 @@ export class MariaDB implements MariaDBClassInterfaces {
                         break;
                     case "LONGTEXT" :
                         mDefault = (value.default === null) ? `DEFAULT NULL` : `NOT NULL`;
-                        if (mRules.encryption !== undefined) {
-                            if (require.resolve("@dkaframework/security")) {
-                                let mEncryption = require("@dkaframework/security").default;
-                                let mColoumnName = new mEncryption(mRules.encryption).encodeIvSync(value.coloumn);
-                                let mTableNameEncrypt = (mRules.settings?.coloumn) ? mColoumnName : value.coloumn;
-                                mQuery += ` \`${mTableNameEncrypt}\` LONGTEXT ${mDefault}`;
-                            }else{
-                                return { status : false, code : 500, msg : `Encryption Module is Declare. but module not installed, please installed first "@dkaframework/security" `};
-                            }
-                        }else{
-                            mQuery += ` \`${value.coloumn}\` LONGTEXT ${mDefault}`;
-                        }
-
+                        mQuery += ` \`${value.coloumn}\` LONGTEXT ${mDefault}`;
                         break;
                     case "ENUM" :
                         mDefault = (value.default === null) ? `DEFAULT NULL` : ` DEFAULT '${value.default}'`;
                         let ms = `'${value.values.join(`','`)}'`;
                         mQuery += ` \`${value.coloumn}\` ENUM(${ms}) ${mDefault}`;
                         break;
-
                 }
                 mQuery += `,`;
             });
@@ -248,8 +208,8 @@ export class MariaDB implements MariaDBClassInterfaces {
 
             let mIfNotExist = (mRules.ifNotExist) ? "IF NOT EXISTS " : "";
             let mEngine = (mRules.engine !== undefined) ? `ENGINE ${mRules.engine}` : ``;
-
-            mFinalQuery = `CREATE TABLE ${mIfNotExist}\`${TableName}\`(${mQuery}) ${mEngine};`;
+            let db = (mRules.database !== undefined) ? `\`${mRules.database}\`.` : ``;
+            mFinalQuery = `CREATE TABLE ${mIfNotExist}${db}\`${TableName}\`(${mQuery}) ${mEngine};`;
             this.mMethod = "CREATE_TABLE";
 
             await this.rawQuerySync<CallbackCreateTable>(mFinalQuery,[], { ifNotExist : mRules.ifNotExist })
@@ -284,7 +244,7 @@ export class MariaDB implements MariaDBClassInterfaces {
      */
     async Insert(TableName : string, Rules : RulesInsert = InsertDataConfig) : Promise<CallbackInsert> {
         this.timeStart = new Date().getTime();
-        await merge(Rules,InsertDataConfig);
+        await merge(Rules, InsertDataConfig);
         return new Promise(async (resolve, rejected) => {
             if (Rules?.data !== undefined && isObject(Rules?.data)){
                 this.mKey = [];
@@ -296,8 +256,8 @@ export class MariaDB implements MariaDBClassInterfaces {
                         this.mVal.push(`"${ Rules?.data[key]}"`);
                     }
                 });
-
-                this.SqlScript = `INSERT INTO \`${TableName}\` (${this.mKey})VALUES (${this.mVal}) `;
+                let db = (Rules.database !== undefined) ? `\`${Rules.database}\`.` : ``;
+                this.SqlScript = `INSERT INTO ${db}\`${TableName}\` (${this.mKey})VALUES (${this.mVal}) `;
             }else if (isArray(Rules?.data)){
                 //@@@@@@@@@@@@@@@@@@@
                 this.mVal = [];
@@ -319,7 +279,8 @@ export class MariaDB implements MariaDBClassInterfaces {
                     this.mVal.push(`(${this.mSetData})`)
                 });
                 //************************************************************
-                this.SqlScript = `INSERT INTO ${TableName} (${this.mKey})VALUES ${this.mVal} `;
+                let db = (Rules.database !== undefined) ? `\`${Rules.database}\`.` : ``;
+                this.SqlScript = `INSERT INTO ${db}${TableName} (${this.mKey})VALUES ${this.mVal} `;
             }
             //$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
             this.mMethod = "INSERT";

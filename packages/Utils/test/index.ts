@@ -1,7 +1,6 @@
 import utils from "../src";
 import {MessageMedia, Client, LocalAuth} from "whatsapp-web.js";
 
-/** **/
 /*let data = utils.Functions.Component.TimeManagement.estimationCostFromTime({
     data : {
         hours : 2,

@@ -68,6 +68,7 @@ export interface RulesSelectColumn {
 }
 export interface RulesSelect extends Rules {
     join ?: RulesSelectJoin | undefined,
+    database ?: string | undefined,
     search? : Array<RulesSelectSearch | string> | RulesSelectSearch | undefined,
     column? : Array<RulesSelectColumn> | Array<string> | undefined,
     limit? : number | undefined,
@@ -157,13 +158,15 @@ export interface RulesCreateTable extends Rules {
     data : Array<CreateTypeColoumn>,
     ifNotExist ?: boolean,
     engine ?: string,
+    database ?: string | undefined,
     settings ?: RulesCreateTableSettings | undefined
 }
 
 export interface RulesCreateDatabase extends Rules {
     character ?: string | undefined,
     ifNotExist ?: boolean | undefined,
-    collation ?: string | undefined
+    collation ?: string | undefined,
+    useDB ?: boolean | undefined
 }
 
 export interface RulesInsertSettings {
@@ -173,6 +176,7 @@ export interface RulesInsertSettings {
 }
 export interface RulesInsert extends Rules {
     data? : Object | Array<Object | String> | false | any,
+    database ?: string | undefined
     settings ?: RulesInsertSettings | undefined
 }
 

@@ -60,8 +60,6 @@ export async function FASTIFY<Config extends ConfigFastifyServer>(configServer :
             })
         }
 
-
-
         //#######################################################################################################################################
 
         mFastify.listen({ port : configServer.port, host : configServer.host }, async (error) => {

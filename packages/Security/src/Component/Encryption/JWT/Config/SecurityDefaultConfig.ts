@@ -1,8 +1,7 @@
-import {JWEOptions, JWKOptions, SecurityConfigJWTEngineOptions} from "../Interfaces/SecurityConfig";
+import {JWEOptions, JWKOptions, JWTConfig, SecurityConfigJWTEngineOptions} from "../Interfaces/SecurityConfig";
 import path from "path";
 
 export const SecurityDefaultConfigJWEEncryptOptionsJWK : JWKOptions = {
-    key : path.join(__dirname, "./../Cert/Server/public.key"),
     form : "pem"
 }
 
@@ -21,12 +20,25 @@ export const SecurityDefaultConfigJWEEncryptOptions : SecurityConfigJWTEngineOpt
 
 
 export const SecurityDefaultConfigJWEDecryptOptionsJWK : JWKOptions = {
-    key : path.join(__dirname, "./../Cert/Server/public.key"),
-    form : "pem"
+    form : "pem",
 }
 
 export const SecurityDefaultConfigJWEDecryptOptions : SecurityConfigJWTEngineOptions = {
     JWK : SecurityDefaultConfigJWEDecryptOptionsJWK,
     JWE : SecurityDefaultConfigJWEOptionsJWE
+}
+
+export const SecurityDefaultConfigJWTConstructor : JWTConfig = {
+    keyPair : {
+        modulusLength : 4096,
+        privateKeyEncoding : {
+            type : "pkcs8",
+            format : "pem"
+        },
+        publicKeyEncoding : {
+            type : "spki",
+            format : "pem"
+        }
+    }
 }
 

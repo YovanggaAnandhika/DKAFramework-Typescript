@@ -7,4 +7,5 @@ export const Security = {
     OpenSSL : OpenSSL
 }
 
+export { Encryption, OpenSSL }
 export default Security
