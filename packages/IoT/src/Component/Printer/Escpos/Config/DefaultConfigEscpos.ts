@@ -11,7 +11,6 @@ export const DefaultConfigUSB : EscposUSB = {
         encoding : "GB18030",
         autoClose : true,
         autoCut : true,
-        autoClearJobPrevious : false,
         showLibrary : false,
         showSystem : false,
         showNetwork : false

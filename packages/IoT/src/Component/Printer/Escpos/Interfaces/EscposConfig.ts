@@ -15,7 +15,6 @@ export interface EscposPrinterSettingsUSB {
     encoding ?: string | undefined,
     autoClose ?: boolean | undefined,
     autoCut ?: boolean | undefined,
-    autoClearJobPrevious ?: boolean | undefined,
     showLibrary ?: boolean | undefined,
     showSystem ?: boolean | undefined
     showNetwork ?: boolean | undefined
