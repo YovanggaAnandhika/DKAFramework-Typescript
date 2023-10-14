@@ -104,7 +104,7 @@ export class Escpos<Config extends EscposConfig> {
                             //### device Open Connection
                             this.adapter?.open(async (error) => {
                                 if (!error){
-                                    this.printer = new Printer(this.adapter, merge(this.config?.settings));
+                                    this.printer = new Printer(this.adapter, this.config?.settings);
                                     await this.printer
                                         .align("CT")
                                         .style("");
