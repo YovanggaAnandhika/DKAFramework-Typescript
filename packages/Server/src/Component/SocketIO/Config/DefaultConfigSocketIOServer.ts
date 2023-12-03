@@ -19,6 +19,7 @@ export const DefaultConfigSocketIOHTTPServer : ConfigSocketIOServer = {
             cors : {
                 origin : "*",
             },
+            perMessageDeflate : false,
             pingProtocol : "TCP",
             pingInterval : 1000,
             pingTimeout : 5000,
@@ -49,6 +50,7 @@ export const DefaultConfigSocketIOHTTPSServer : ConfigSocketIOServer = {
             cors : {
                 origin : "*"
             },
+            perMessageDeflate : false,
             pingProtocol : "TCP",
             maxHttpBufferSize : 1e8,
             pingInterval : 1000,
@@ -81,6 +83,7 @@ export const DefaultConfigSocketIOHTTP2Server : ConfigSocketIOServer = {
             cors : {
                 origin : "*"
             },
+            perMessageDeflate : false,
             pingProtocol : "TCP",
             pingInterval : 1000,
             pingTimeout : 5000,

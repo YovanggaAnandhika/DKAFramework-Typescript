@@ -1,7 +1,5 @@
-import {FastifyPluginOptions} from "fastify";
+import {FastifyInstance, FastifyPluginOptions} from "fastify";
 import {mFastify} from "../index";
-
-
 export type FASTIFY_ENGINE = "FASTIFY"
 export const FASTIFY_ENGINE : FASTIFY_ENGINE = "FASTIFY"
 

@@ -29,12 +29,26 @@ export const DefaultConfigFastifyServer : ConfigFastifyServer = {
                 cors : {
                     origin : "*",
                 },
+                perMessageDeflate : false,
                 pingInterval : 1000,
                 pingTimeout : 5000,
                 connectTimeout : 8000
             }
         },
-        formBody : { enabled : true }
+        formBody : {
+            enabled : true,
+            options : {
+                bodyLimit : 1e10
+            }
+        },
+        cookie : {
+            enabled : true,
+            options : {
+                secret : "@qdj392jd39jje0302jjjsaa",
+                hook : "onRequest",
+                parseOptions : {}
+            }
+        }
     },
     settings : {
         engine : {

@@ -8,7 +8,11 @@ import {
     FastifyPluginOptions,
     onRequestHookHandler,
 } from "fastify";
+import { ServerOptions as SocketServerOptions } from "socket.io"
 import {DEVELOPMENT, PRODUCTION} from "../../../Types/ConfigServerTypes";
+import {FastifyCorsOptions} from "@fastify/cors";
+import {FastifyFormbodyOptions} from "@fastify/formbody";
+import {FastifyCookieOptions} from "@fastify/cookie";
 
 
 export interface ConfigFastifyServerSettingsEngineHttp {
@@ -42,16 +46,42 @@ export interface ConfigFastifyServerHooks {
     onRequest ?: (req : onRequestHookHandler) => Promise<void>
 }
 
+export interface ConfigFastifyDecorator {
+    [ name : string ] : any
+}
 
-export interface ConfigFastifyServerInstancesPluginOptions {
+export interface ConfigFastifyDecoratorRequest {
+    [ name : string ] : any
+}
+
+export interface ConfigFastifyDecoratorReply {
+    [ name : string ] : any
+}
+
+export interface ConfigFastifyServerInstancesPluginOptionsFormBody {
     enabled ?: boolean | undefined,
-    options ?: FastifyPluginOptions | undefined
+    options ?: FastifyPluginOptions & FastifyFormbodyOptions | undefined
+}
+export interface ConfigFastifyServerInstancesPluginOptionsCors {
+    enabled ?: boolean | undefined,
+    options ?: FastifyPluginOptions & FastifyCorsOptions | undefined
+}
+//Partial<SocketServerOptions>
+export interface ConfigFastifyServerInstancesPluginOptionsSocketIO {
+    enabled ?: boolean | undefined,
+    options ?: FastifyPluginOptions & Partial<SocketServerOptions> | undefined
+}
+
+export interface ConfigFastifyServerInstancesPluginOptionsCookie {
+    enabled ?: boolean | undefined,
+    options ?: FastifyPluginOptions & FastifyCookieOptions | undefined
 }
 
 export interface ConfigFastifyServerInstancesPlugin {
-    formBody ?: ConfigFastifyServerInstancesPluginOptions | undefined,
-    cors ?: ConfigFastifyServerInstancesPluginOptions | undefined,
-    socketIO ?: ConfigFastifyServerInstancesPluginOptions | undefined,
+    formBody ?: ConfigFastifyServerInstancesPluginOptionsFormBody | undefined,
+    cors ?: ConfigFastifyServerInstancesPluginOptionsCors | undefined,
+    socketIO ?: ConfigFastifyServerInstancesPluginOptionsSocketIO | undefined,
+    cookie ?: ConfigFastifyServerInstancesPluginOptionsCookie | undefined
 }
 
 
@@ -64,6 +94,9 @@ export type ConfigFastifyServerInstances = {
      * @type ConfigFastifyServerMain
      */
     app ?: ConfigFastifyServerMain | undefined,
+    decorator ?: ConfigFastifyDecorator | undefined,
+    decoratorRequest ?: ConfigFastifyDecoratorRequest | undefined,
+    decoratorReply ?: ConfigFastifyDecoratorReply | undefined,
     hooks ?: ConfigFastifyServerHooks | undefined,
     plugin ?: ConfigFastifyServerInstancesPlugin | undefined,
     getConfig ?: (config : ConfigFastifyServer) => Promise<void> | void

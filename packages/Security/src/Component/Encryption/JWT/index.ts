@@ -42,6 +42,7 @@ export class JWT {
     async encrypt(payloads: object | string, opts ?: SecurityConfigJWTEngineOptions) : Promise<string> {
         return new Promise(async (resolve, rejected) => {
             opts = merge(SecurityDefaultConfigJWEEncryptOptions, opts);
+
             // extract payload data
             let payloadsData = (typeof payloads === "object") ? JSON.stringify(payloads) : payloads;
             let buffer = Buffer.from(payloadsData);
@@ -60,7 +61,7 @@ export class JWT {
                                 await this.JWEEncryptor.final()
                                     .then(async (encryptText) => {
                                         let base64 = Buffer.from(encryptText,"utf-8").toString("base64url");
-                                        await resolve(`DKA.${base64}`);
+                                        await resolve(`${base64}`);
                                     })
                                     .catch(async (error) => {
                                         await rejected({status: false, code: 503, msg: `error final get Encryption text`, error : error})
@@ -90,20 +91,15 @@ export class JWT {
                     let JWKKey = await JWK.asKey(key, opts?.JWK?.form, opts?.JWK?.extras);
                     await keystore.add(JWKKey);
                     try {
-                        if (data.split(".").length > 0 && data.split(".")[0] === "DKA"){
-                            let headerSplit = data.split(".")[1];
-                            let base64decode = Buffer.from(headerSplit,"base64url").toString("utf-8");
-                            let outPut = parse.compact(base64decode)
-                            let decryptedVal = await outPut.perform(keystore);
-                            // @ts-ignore
-                            let claims = Buffer.from(decryptedVal.plaintext);
-                            try {
-                                await resolve(JSON.parse(claims.toString()) as object)
-                            }catch (e) {
-                                await resolve(claims.toString() as string)
-                            }
-                        }else{
-                            await rejected({ status : false, code : 504, msg : `invalid decode data. header invalid.`});
+                        let base64decode = Buffer.from(data,"base64url").toString("utf-8");
+                        let outPut = parse.compact(base64decode)
+                        let decryptedVal = await outPut.perform(keystore);
+                        // @ts-ignore
+                        let claims = Buffer.from(decryptedVal.plaintext);
+                        try {
+                            await resolve(JSON.parse(claims.toString()) as object)
+                        }catch (e) {
+                            await resolve(claims.toString() as string)
                         }
                     }catch (e) {
                         await rejected({ status : false, code : 503, msg : `illegal or Unaccepted private key format. PRIVATE_KEY_UNVALID`});
@@ -113,29 +109,22 @@ export class JWT {
                         let mKey = await this.getKeyLocation(opts.JWK.key);
                         try {
                             let getPrivateKeysFormat = pki.decryptRsaPrivateKey(mKey, opts?.JWK?.passphrase);
-                            //console.log(data)
                             let mPem = pki.privateKeyToPem(getPrivateKeysFormat)
                             let mBuffer = Buffer.from(mPem);
                             /** get JWKKey from Buffer **/
                             let JWKKey = await JWK.asKey(mBuffer, opts?.JWK?.form, opts?.JWK?.extras);
                             await keystore.add(JWKKey);
                             try {
-                                if (data.split(".").length > 0 && data.split(".")[0] === "DKA"){
-                                    let headerSplit = data.split(".")[1];
-                                    let base64decode = Buffer.from(headerSplit,"base64url").toString("utf-8");
-                                    let outPut = parse.compact(base64decode)
-                                    let decryptedVal = await outPut.perform(keystore);
-                                    // @ts-ignore
-                                    let claims = Buffer.from(decryptedVal.plaintext);
-                                    try {
-                                        await resolve(JSON.parse(claims.toString()) as object)
-                                    }catch (e) {
-                                        await resolve(claims.toString() as string)
-                                    }
-                                }else{
-                                    await rejected({ status : false, code : 504, msg : `invalid decode data. header invalid.`});
+                                let base64decode = Buffer.from(data,"base64url").toString("utf-8");
+                                let outPut = parse.compact(base64decode)
+                                let decryptedVal = await outPut.perform(keystore);
+                                // @ts-ignore
+                                let claims = Buffer.from(decryptedVal.plaintext);
+                                try {
+                                    await resolve(JSON.parse(claims.toString()) as object)
+                                }catch (e) {
+                                    await resolve(claims.toString() as string)
                                 }
-
                             }catch (e) {
                                 await rejected({ status : false, code : 503, msg : `illegal or Unaccepted private key format. PRIVATE_KEY_UNVALID`});
                             }

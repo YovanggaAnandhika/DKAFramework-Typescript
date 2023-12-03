@@ -128,6 +128,7 @@ export class MariaDB implements MariaDBClassInterfaces {
                 break;
             case "PoolConnection" :
                 this.mInstance = createPool(this.mConfig);
+
                 break;
             case "PoolClusterConnection" :
                 this.mInstance = createPoolCluster(this.mConfig);
@@ -168,9 +169,7 @@ export class MariaDB implements MariaDBClassInterfaces {
      * @method
      */
     async CreateTable(TableName: string, Rules : RulesCreateTable = CreateTableConfig): Promise<CallbackCreateTable> {
-        let mRules : RulesCreateTable = await merge(CreateTableConfig, {
-            encryption : this.mConfig.encryption
-        }, Rules);
+        let mRules : RulesCreateTable = Rules;
         this.timeStart = new Date().getTime();
 
         let mQuery = ``;
@@ -185,17 +184,31 @@ export class MariaDB implements MariaDBClassInterfaces {
                         let autoIncrement = (value.autoIncrement) ? "AUTO_INCREMENT" : "";
                         mQuery += ` \`${value.coloumn}\` BIGINT PRIMARY KEY ${autoIncrement}`;
                         break;
+                    case "BIGINT" :
+                        let unique = (value.unique) ? "UNIQUE" : "";
+                        mDefault = (value.default === null || value.default === undefined) ? `DEFAULT NULL` :
+                            (value.default === "NOT NULL") ? `${value.default}` : value.default;
+                        mQuery += ` \`${value.coloumn}\` BIGINT ${mDefault} ${unique}`;
+                        (value.index) ? mQuery += `INDEX (\`${value.coloumn}\`),` : null;
+                        break;
                     case "VARCHAR" :
                         length = (value.length !== undefined) ? value.length : 20;
-                        mDefault = (value.default === null) ? `DEFAULT NULL` : `NOT NULL`;
+                        mDefault = (value.default === null || value.default === undefined) ? `DEFAULT NULL` :
+                            (value.default === "NOT NULL") ? `${value.default}` : value.default;
                         mQuery += ` \`${value.coloumn}\` VARCHAR(${length}) ${mDefault}`;
                         break;
+                    case "TIMESTAMP" :
+                        mDefault = (value.default === null || value.default === undefined) ? `DEFAULT NULL` :
+                            (value.default === "CURRENT_TIMESTAMP") ? `DEFAULT ${value.default}` : value.default;
+                        mQuery += ` \`${value.coloumn}\` TIMESTAMP ${mDefault} `;
+                        break;
                     case "LONGTEXT" :
-                        mDefault = (value.default === null) ? `DEFAULT NULL` : `NOT NULL`;
-                        mQuery += ` \`${value.coloumn}\` LONGTEXT ${mDefault}`;
+                        let uniques = (value.unique) ? "UNIQUE" : "";
+                        mDefault = (value.default === null || value.default === undefined) ? `DEFAULT NULL` : value.default;
+                        mQuery += ` \`${value.coloumn}\` LONGTEXT ${mDefault} ${uniques}`;
                         break;
                     case "ENUM" :
-                        mDefault = (value.default === null) ? `DEFAULT NULL` : ` DEFAULT '${value.default}'`;
+                        mDefault = (value.default === null || value.default === undefined) ? `DEFAULT NULL` : ` DEFAULT '${value.default}'`;
                         let ms = `'${value.values.join(`','`)}'`;
                         mQuery += ` \`${value.coloumn}\` ENUM(${ms}) ${mDefault}`;
                         break;
@@ -414,7 +427,8 @@ export class MariaDB implements MariaDBClassInterfaces {
             const selectParentAs = (mRules.as !== undefined && mRules.as !== false) ? ` AS \`${mRules.as}\` ` : ` `;
             await checkJoin
                 .then(async (innerType) => {
-                    const mSQL = `SELECT ${SelectColumn} FROM \`${TableName}\`${selectParentAs}${innerType}${UpdateWhere}${SelectOrderBy}${SelectLimit};`;
+                    const DBName = (mRules.database !== undefined) ? `\`${mRules.database}\`.` : ``;
+                    const mSQL = `SELECT ${SelectColumn} FROM ${DBName}\`${TableName}\`${selectParentAs}${innerType}${UpdateWhere}${SelectOrderBy}${SelectLimit};`;
 
                     this.mMethod = "READ";
                     await this.rawQuerySync<CallbackSelect>(mSQL,[])
@@ -482,7 +496,8 @@ export class MariaDB implements MariaDBClassInterfaces {
 
             const UpdateWhere = (Rule.search !== false) ? `WHERE ${this.mSearchAdd}` : ``;
 
-            const mSQL = `UPDATE \`${TableName}\` SET ${this.mKey} ${UpdateWhere} `;
+            const db = (Rule.database !== undefined) ? `\`${Rule.database}\`.` : ``;
+            const mSQL = `UPDATE ${db}\`${TableName}\` SET ${this.mKey} ${UpdateWhere} `;
             this.mMethod = "UPDATE";
             await this.rawQuerySync<CallbackUpdate>(mSQL, [])
                 .then(async (result) => {
@@ -529,8 +544,8 @@ export class MariaDB implements MariaDBClassInterfaces {
             });
 
             const DeleteWhere = (Rule.search !== false) ? `WHERE ${this.mWhere}` : ``;
-
-            const SqlScript = `DELETE FROM \`${TableName}\` ${DeleteWhere} `;
+            const TablesName = (Rule.database !== undefined) ? `\`${Rule.database}\`.` : ``;
+            const SqlScript = `DELETE FROM ${TablesName}\`${TableName}\` ${DeleteWhere} `;
             this.mMethod = "DELETE";
             await this.rawQuerySync<CallbackDelete>(SqlScript, [])
                 .then(async (result) => {
@@ -943,7 +958,6 @@ export class MariaDB implements MariaDBClassInterfaces {
                                             });
                                         })
                                 });
-
                             //End After Get Connection
                         })
                         .catch(async (error) => {

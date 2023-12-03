@@ -1,13 +1,13 @@
 {
   // Change this to match your project
   "include": [
-    "src/**/*",
+    "src/**/*"
   ],
   "compilerOptions": {
     "target": "ES2021",
     "module": "CommonJS",
     "typeRoots": [
-      "node_modules/@types",
+      "node_modules/@Types",
       "node_modules/types-fastify-socket.io"
     ],
     "lib": [

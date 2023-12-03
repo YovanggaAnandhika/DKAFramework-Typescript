@@ -19,7 +19,6 @@ import {
     DefaultConfigSocketIOHTTPSServer
 } from "./Config/DefaultConfigSocketIOServer";
 import {merge} from "lodash";
-import {FastifyInstance} from "fastify";
 import {PRODUCTION} from "../../Types/ConfigServerTypes";
 import {Options} from "../../index";
 import {CallbackServerSocketIOComponent} from "../../Interfaces/CallbackServerInterfaces";
@@ -40,12 +39,9 @@ function moduleIsExists(packageName : string){
 export async function SocketIOServerInstances<Config extends ConfigSocketIOServer>(config : Config) : Promise<CallbackServerSocketIOComponent> {
     //################ Declaration Variable ###########################
     let SocketIO : Server;
-    let FastifyServer : FastifyInstance;
     let mHTTP : HTTPServer;
     let mHTTP2 : HTTP2SecureServer;
     let mHTTPS : HTTPSServer;
-
-    let shell = os.platform() === 'win32' ? 'cmd.exe' : 'bash';
     //################ Declaration Variable ###########################
     return new Promise(async (resolve, rejected) => {
         config = await merge(DefaultConfigSocketIOHTTPServer, config);
@@ -124,7 +120,7 @@ export async function SocketIOServerInstances<Config extends ConfigSocketIOServe
                                         }
                                         if (config.namespaces[namespace].onDisconnection !== undefined){
                                             mNamespace.on("disconnect",(reason) => {
-                                                config.namespaces[namespace].onDisconnection(reason);
+                                                config.namespaces[namespace].onDisconnection(reason,io, SocketIO);
                                             });
                                         }
                                     });
@@ -176,7 +172,7 @@ export async function SocketIOServerInstances<Config extends ConfigSocketIOServe
                                 //** Event On Disconnection Data **/
                                 if (config.events?.socket?.onDisconnection !== undefined){
                                     io.on("disconnect", async (reason) => {
-                                        await config.events?.socket?.onDisconnection?.(reason);
+                                        await config.events?.socket?.onDisconnection?.(reason, io, SocketIO);
                                     });
                                 }
                                 //** End Event On Disconnection Data **/
@@ -284,7 +280,7 @@ export async function SocketIOServerInstances<Config extends ConfigSocketIOServe
 
                                         if (config.namespaces[namespace].onDisconnection !== undefined){
                                             mNamespace.on("disconnect",(reason) => {
-                                                config.namespaces[namespace].onDisconnection(reason);
+                                                config.namespaces[namespace].onDisconnection(reason,io, SocketIO);
                                             });
                                         }
                                     });
@@ -336,7 +332,7 @@ export async function SocketIOServerInstances<Config extends ConfigSocketIOServe
                                 //** Event On Disconnection Data **/
                                 if (config.events?.socket?.onDisconnection !== undefined){
                                     io.on("disconnect", async (reason) => {
-                                        await config.events?.socket?.onDisconnection?.(reason);
+                                        await config.events?.socket?.onDisconnection?.(reason,io, SocketIO);
                                     });
                                 }
                                 //** End Event On Disconnection Data **/
@@ -441,7 +437,7 @@ export async function SocketIOServerInstances<Config extends ConfigSocketIOServe
 
                                         if (config.namespaces[namespace].onDisconnection !== undefined){
                                             mNamespace.on("disconnect",(reason) => {
-                                                config.namespaces[namespace].onDisconnection(reason);
+                                                config.namespaces[namespace].onDisconnection(reason,io, SocketIO);
                                             });
                                         }
                                     });
@@ -491,7 +487,7 @@ export async function SocketIOServerInstances<Config extends ConfigSocketIOServe
                                 //** Event On Disconnection Data **/
                                 if (config.events?.socket?.onDisconnection !== undefined){
                                     io.on("disconnect", async (reason) => {
-                                        await config.events?.socket?.onDisconnection?.(reason);
+                                        await config.events?.socket?.onDisconnection?.(reason,io, SocketIO);
                                     });
                                 }
                                 //** End Event On Disconnection Data **/
@@ -586,7 +582,8 @@ export async function SocketIOServerInstances<Config extends ConfigSocketIOServe
 
                                         if (config.namespaces[namespace].onDisconnection !== undefined){
                                             mNamespace.on("disconnect",(reason) => {
-                                                config.namespaces[namespace].onDisconnection(reason);
+
+                                                config.namespaces[namespace].onDisconnection(reason,io, SocketIO);
                                             });
                                         }
                                     });
@@ -635,7 +632,7 @@ export async function SocketIOServerInstances<Config extends ConfigSocketIOServe
                                 //** Event On Disconnection Data **/
                                 if (config.events?.socket?.onDisconnection !== undefined){
                                     io.on("disconnect", async (reason) => {
-                                        await config.events?.socket?.onDisconnection?.(reason);
+                                        await config.events?.socket?.onDisconnection?.(reason,io, SocketIO);
                                     });
                                 }
                                 //** End Event On Disconnection Data **/

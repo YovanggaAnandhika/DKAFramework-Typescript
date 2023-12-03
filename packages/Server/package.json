@@ -1,6 +1,6 @@
 {
   "name": "@dkaframework/server",
-  "version": "1.0.191",
+  "version": "1.0.205",
   "homepage": "https://github.com/YovanggaAnandhika/DKAFramework-Typescript-Server.git",
   "description": "The Multi Framework Server Function. Part Module Of DKAFramework",
   "keywords": [
@@ -17,13 +17,13 @@
   ],
   "bugs": {
     "url": "https://github.com/YovanggaAnandhika/DKAFramework-Typescript-Server/issues",
-    "email": "dhikaprivate@gmail.com"
+    "email": "dka.tech.dev@gmail.com"
   },
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "author": {
     "name": "Yovangga Anandhika",
-    "email": "dhikaprivate@gmail.com"
+    "email": "dka.tech.dev@gmail.com"
   },
   "repository": {
     "type": "git",
@@ -32,7 +32,7 @@
   "license": "MIT",
   "private": false,
   "scripts": {
-    "client": "nodemon --watch src --watch test/index.ts --exec ts-node test/index.ts",
+    "client": "ts-node test/index.ts",
     "server": "nodemon --watch src --watch test --exec ts-node test/server.ts",
     "js": "node test/test.js",
     "action:clean": "tsc --build --clean",
@@ -49,6 +49,7 @@
     "@babel/preset-react": "^7.18.6",
     "@babel/preset-typescript": "^7.21.5",
     "@dkaframework/security": "^2.0.19",
+    "@fastify/cookie": "^9.2.0",
     "@fastify/cors": "^8.2.1",
     "@fastify/formbody": "^7.4.0",
     "@types/cli-progress": "^3.11.0",
@@ -56,7 +57,6 @@
     "@types/ping": "^0.4.1",
     "@types/react": "^18.0.20",
     "@types/react-dom": "^18.0.6",
-    "@types/socket.io": "^3.0.2",
     "@types/tcp-port-used": "^1.0.1",
     "@types/ws": "^8.5.4",
     "ansi-colors": "^4.1.3",
@@ -71,6 +71,7 @@
     "express": "^4.18.2",
     "fastify": "^4.5.3",
     "fastify-socket.io": "^4.0.0",
+    "fastify-vhost": "^1.3.5",
     "file-loader": "^6.2.0",
     "greenlock": "^4.0.4",
     "html-webpack-plugin": "^5.5.0",
@@ -114,6 +115,7 @@
     "@types/cloudflare": "^2.7.9",
     "@types/node": "^18.8.4",
     "@types/nodemon": "^1.19.2",
+    "@types/socket.io": "^3.0.2",
     "ejs": "^3.1.8",
     "node-pty": "^1.0.0",
     "nodemon": "^2.0.19",

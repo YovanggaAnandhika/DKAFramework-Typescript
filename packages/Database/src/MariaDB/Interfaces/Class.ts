@@ -84,11 +84,13 @@ export interface RulesUpdateSearch {
 
 export interface RulesUpdate extends Rules {
     search : Array<RulesUpdateSearch | string> | RulesUpdateSearch | undefined,
-    data : Object | Array<Object | String> | false | any
+    data : Object | Array<Object | String> | false | any,
+    database ?: string | undefined
 }
 
 export interface RulesDelete extends Rules {
     search : Array<Object | String> | Object | false | any,
+    database ?: string | undefined
 }
 
 export interface ExtendsOptionsCreateDatabaseSettings {
@@ -108,9 +110,9 @@ export type ExtendsOptions = ExtendsOptionsCreateDatabase;
 export interface RulesCreateDataBigInt {
     coloumn : string,
     type : "BIGINT",
-    index : boolean,
-    unique : boolean,
-    default ?: null | any
+    index ?: boolean,
+    unique ?: boolean,
+    default ?: null | "NOT NULL" | string
 }
 
 export type RulesCreateDataPrimary = {
@@ -123,6 +125,7 @@ export type RulesCreateDataPrimary = {
 export type RulesCreateDataLongText = {
     coloumn : string,
     type : "LONGTEXT",
+    unique ?: boolean,
     default ?: null | any | string
 }
 
@@ -130,14 +133,20 @@ export type RulesCreateDataVarchar = {
     coloumn : string,
     type : "VARCHAR",
     length ?: number | undefined,
-    default : null | "NOT_NULL" | string
+    default ?: null | "NOT NULL" | string
+}
+
+export type RulesCreateDataTimestamp = {
+    coloumn : string,
+    type : "TIMESTAMP",
+    default ?: null | "CURRENT_TIMESTAMP" | "NOT NULL"
 }
 
 export type RulesCreateDataEnum = {
     coloumn : string,
     type : "ENUM",
     values : Array<string | number>,
-    default : number | string | null
+    default ?: number | string | null
 }
 
 export type CreateTypeColoumn =
@@ -145,7 +154,8 @@ export type CreateTypeColoumn =
     RulesCreateDataBigInt |
     RulesCreateDataVarchar |
     RulesCreateDataEnum |
-    RulesCreateDataLongText;
+    RulesCreateDataLongText |
+    RulesCreateDataTimestamp;
 
 
 export interface RulesCreateTableSettings {

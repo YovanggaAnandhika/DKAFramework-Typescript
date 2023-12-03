@@ -1,4 +1,3 @@
-import fastify, {FastifyInstance} from "fastify";
 import {ConfigFastifyServer} from "./Interfaces/ConfigFastifyServer";
 import {CallbackFastifyServer} from "./Interfaces/CallbackFastifyServer";
 import {merge} from "lodash";
@@ -13,6 +12,10 @@ import {FastifyPlugins} from "./Component/FastifyPlugins";
 import {Options} from "../../index";
 import {DEVELOPMENT} from "../../Types/ConfigServerTypes";
 import isElectron from "is-electron";
+
+import fastify, {FastifyInstance} from "fastify";
+import "../../Types/SocketIOTypes";
+import {FastifyDecorator} from "./Component/FastifyDecorator";
 
 export let mFastify : FastifyInstance
 
@@ -30,34 +33,42 @@ export async function FASTIFY<Config extends ConfigFastifyServer>(configServer :
                 break;
             case Options.SETTINGS.ENGINE.PROTOCOL.HTTP2 :
                 await merge(configServer.settings.engine, fastifyEngineSettingsDefaultHTTP2);
-                console.log(configServer.settings.engine.options)
                 mFastify = fastify(configServer.settings?.engine.options);
                 break;
         }
 
         await FastifyPlugins(mFastify, configServer);
         await FastifyHooks(mFastify, configServer);
+        await FastifyDecorator(mFastify, configServer);
+
         //###################################################
         //(configServer.app !== undefined) ? await configServer.app(mFastify) : null;
         mFastify = (configServer.app !== undefined) ? await mFastify.register(configServer.app as typeof mFastify.register.arguments) : mFastify;
         configServer.host = (configServer.state === DEVELOPMENT || configServer.state === undefined) ? configServer.host : Options.HOST.WILDCARD;
-
         //#######################################################################################################################################
         if (isElectron()){
             if (require.resolve("electron")){
                 let { app } = require("electron");
-                await app.on("before-quit", async () => {
-                    await mFastify.close();
+
+                await app.on("before-quit", () => {
+                    mFastify.close();
+                    process.kill(process.pid)
+                    process.exit(0);
                 });
 
-                process.on("SIGINT", async () => {
-                    await mFastify.close();
+                process.on("SIGINT", () => {
+                    mFastify.close();
+                    process.kill(process.pid)
+                    process.exit(0);
                 })
             }
         }else{
-            process.on("SIGINT", async () => {
-                await mFastify.close();
-            })
+
+            process.on("SIGINT", () => {
+                mFastify.close();
+                process.kill(process.pid);
+                process.exit(0);
+            });
         }
 
         //#######################################################################################################################################

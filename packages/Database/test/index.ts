@@ -1,9 +1,21 @@
-import path from "path";
+import Database from "../src";
 
 (async () => {
-    let sqlite3 = require('@journeyapps/sqlcipher').verbose();
-    const db = new sqlite3.Database(path.join(__dirname,'./test.db'));
-    db.run("PRAGMA cipher_compatibility = 4");
+    let db = await new Database.MariaDB({
+        host : "dkaserver.my.id",
+        user : "developer",
+        password : "Cyberhack2010",
+        database : "dka_product_parking"
+    });
+
+    db.Baca(`dka_data_ticket_in`)
+        .then(async (result) => {
+            console.log(result)
+        })
+
+        .catch(async (error) => {
+            console.error(error)
+        })
 })();
 
 

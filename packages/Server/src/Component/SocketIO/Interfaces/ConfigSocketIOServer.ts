@@ -6,7 +6,7 @@ import {
     SOCKET_TYPE_HTTP2,
     SOCKET_TYPE_HTTPS,
     SocketIOMiddlewareUse,
-    SocketIOSocketIO
+    SocketIOSocketIO, SocketIOSocketMiddlewareSocket, SocketIOSocketServer
 } from "../Types/TypesSocketIOServer";
 import {Namespace, Server, ServerOptions as SocketServerOptions, Socket} from "socket.io";
 import {RequestListener, ServerOptions as HTTPServerOptions} from "http";
@@ -80,7 +80,7 @@ export interface ConfigSocketIOServerInstanceEventsLatency {
 export interface ConfigSocketIOServerEventsSocket {
     onConnection ?: (io : Socket<DefaultEventsMap, DefaultEventsMap, any>, server : Server<DefaultEventsMap, DefaultEventsMap, any>) => Promise<void>,
     onLatency ?: (responseLatency : ConfigSocketIOServerInstanceEventsLatency) => Promise<void> | void | undefined;
-    onDisconnection ?: (reason : any) => Promise<void> | void,
+    onDisconnection ?: (reason : any, io : SocketIOSocketMiddlewareSocket, server : Server<DefaultEventsMap, DefaultEventsMap, any>) => Promise<void> | void,
 }
 
 export interface ConfigSocketIOServerEventsServer {
@@ -96,7 +96,7 @@ export interface ConfigSocketIOServerEventsNamespace {
     use ?: SocketIOMiddlewareUse | undefined;
     onConnection ?: (io : Socket<DefaultEventsMap, DefaultEventsMap, any>, namespace : Namespace<DefaultEventsMap, DefaultEventsMap, any>) => Promise<void> | void | undefined,
     onLatency ?: (responseLatency : ConfigSocketIOServerInstanceEventsLatency) => Promise<void> | void | undefined;
-    onDisconnection ?: (reason : any) => Promise<void> | void,
+    onDisconnection ?: (reason : any, io : SocketIOSocketMiddlewareSocket, server : Server<DefaultEventsMap, DefaultEventsMap, any>) => Promise<void> | void,
 }
 export interface ConfigSocketIOServerInstancesNamespaces {
     [ name : string ] : ConfigSocketIOServerEventsNamespace,

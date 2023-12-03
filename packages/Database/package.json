@@ -1,6 +1,6 @@
 {
   "name": "@dkaframework/database",
-  "version": "1.0.165",
+  "version": "1.0.179",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "author": {
@@ -19,7 +19,6 @@
   },
   "dependencies": {
     "@dkaframework/security": "latest",
-    "@journeyapps/sqlcipher": "^5.3.1",
     "@types/jsbn": "^1.2.30",
     "@types/lodash": "^4.0.0",
     "firebase": "^9.13.0",
