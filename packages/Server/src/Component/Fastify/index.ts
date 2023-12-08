@@ -12,16 +12,15 @@ import {FastifyPlugins} from "./Component/FastifyPlugins";
 import {Options} from "../../index";
 import {DEVELOPMENT} from "../../Types/ConfigServerTypes";
 import isElectron from "is-electron";
-
 import fastify, {FastifyInstance} from "fastify";
-import "../../Types/SocketIOTypes";
-import {FastifyDecorator} from "./Component/FastifyDecorator";
 
-export let mFastify : FastifyInstance
+/*import "./Types/ExtendFastifyModulesTypes";*/
+
+export let mFastify : FastifyInstance;
 
 export async function FASTIFY<Config extends ConfigFastifyServer>(configServer : Config) : Promise<CallbackFastifyServer> {
     return new Promise(async (resolve, rejected) => {
-        await merge(configServer, DefaultConfigFastifyServer)
+        await merge(configServer, DefaultConfigFastifyServer);
         switch (configServer.settings.engine.type) {
             case Options.SETTINGS.ENGINE.PROTOCOL.HTTP :
                 await merge(configServer.settings.engine, fastifyEngineSettingsDefaultHTTP);
@@ -39,7 +38,6 @@ export async function FASTIFY<Config extends ConfigFastifyServer>(configServer :
 
         await FastifyPlugins(mFastify, configServer);
         await FastifyHooks(mFastify, configServer);
-        await FastifyDecorator(mFastify, configServer);
 
         //###################################################
         //(configServer.app !== undefined) ? await configServer.app(mFastify) : null;
@@ -70,7 +68,6 @@ export async function FASTIFY<Config extends ConfigFastifyServer>(configServer :
                 process.exit(0);
             });
         }
-
         //#######################################################################################################################################
 
         mFastify.listen({ port : configServer.port, host : configServer.host }, async (error) => {
@@ -82,7 +79,7 @@ export async function FASTIFY<Config extends ConfigFastifyServer>(configServer :
                 await rejected({ status : true, code : 500, msg : `Server is Not Successfully Running`, error : error});
                 await process.exit();
             }
-        })
+        });
 
     })
 }

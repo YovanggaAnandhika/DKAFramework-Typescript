@@ -18,7 +18,8 @@ export interface GlobalServerConfigInterfaces {
     port ?: number | undefined
 }
 
-export type ConfigServerInterfaces = ConfigSocketIOServer | ConfigFastifyServer | ConfigUDPServer | ConfigWebpackServer
+export type MultipleConfigServerInterfaces = Array<ConfigServerInterfaces>;
+export type ConfigServerInterfaces = ConfigSocketIOServer | ConfigFastifyServer | ConfigUDPServer | ConfigWebpackServer;
 /*export type ConfigServerInterfaces = GlobalServerConfigInterfaces*/
 
 export interface ExtendedError extends Error {

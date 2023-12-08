@@ -7,6 +7,7 @@ import {
 } from "../Interfaces/ConfigFastifyServer";
 import {readFileSync} from "fs";
 import path from "path";
+import ejs from "ejs";
 
 
 export const DefaultConfigFastifyServer : ConfigFastifyServer = {
@@ -21,6 +22,13 @@ export const DefaultConfigFastifyServer : ConfigFastifyServer = {
                 origin : "*",
             }
         },
+        view : [
+            {
+                engine : {
+                    ejs : ejs
+                }
+            }
+        ],
         socketIO : {
             enabled : true,
             options : {
@@ -63,9 +71,7 @@ export const DefaultConfigFastifyServer : ConfigFastifyServer = {
 export const fastifyEngineSettingsDefaultHTTP : ConfigFastifyServerSettingsEngineHttp = {
     type : "HTTP",
     options : {
-        http : {
-
-        }
+        
     }
 }
 

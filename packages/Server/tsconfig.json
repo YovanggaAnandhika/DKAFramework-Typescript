@@ -8,7 +8,7 @@
     "module": "CommonJS",
     "typeRoots": [
       "node_modules/@Types",
-      "node_modules/types-fastify-socket.io"
+      "node_modules/fastify-socket.io"
     ],
     "lib": [
       "es2017",
@@ -31,7 +31,6 @@
     // "Go to Definition" in VSCode
     "declarationMap": true,
     "esModuleInterop": true,
-    "experimentalDecorators": true,
     "resolveJsonModule": true
   },
   "exclude": [

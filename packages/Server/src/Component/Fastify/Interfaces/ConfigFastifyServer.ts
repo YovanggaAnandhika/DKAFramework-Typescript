@@ -3,8 +3,8 @@ import {GlobalServerConfigInterfacesSettingsLogger} from "../../../Interfaces/Co
 import {
     FastifyHttp2Options,
     FastifyHttp2SecureOptions,
-    FastifyHttpOptions,
     FastifyHttpsOptions,
+    FastifyServerOptions,
     FastifyPluginOptions,
     onRequestHookHandler,
 } from "fastify";
@@ -13,11 +13,12 @@ import {DEVELOPMENT, PRODUCTION} from "../../../Types/ConfigServerTypes";
 import {FastifyCorsOptions} from "@fastify/cors";
 import {FastifyFormbodyOptions} from "@fastify/formbody";
 import {FastifyCookieOptions} from "@fastify/cookie";
+import {FastifyViewOptions} from "@fastify/view";
 
 
 export interface ConfigFastifyServerSettingsEngineHttp {
     type ?: "HTTP",
-    options ?: FastifyHttpOptions<any>
+    options ?: FastifyServerOptions
 }
 
 export interface ConfigFastifyServerSettingsEngineHttps {
@@ -27,7 +28,7 @@ export interface ConfigFastifyServerSettingsEngineHttps {
 
 export interface ConfigFastifyServerSettingsEngineHttp2 {
     type ?: "HTTP2",
-    options ?: FastifyHttp2SecureOptions<any> | FastifyHttp2Options<any> | FastifyHttpOptions<any>
+    options ?: FastifyHttp2SecureOptions<any> | FastifyHttp2Options<any> | FastifyServerOptions<any>
 }
 
 export interface ConfigFastifyServerInstancesPluginNgrok {
@@ -46,22 +47,14 @@ export interface ConfigFastifyServerHooks {
     onRequest ?: (req : onRequestHookHandler) => Promise<void>
 }
 
-export interface ConfigFastifyDecorator {
-    [ name : string ] : any
-}
-
-export interface ConfigFastifyDecoratorRequest {
-    [ name : string ] : any
-}
-
-export interface ConfigFastifyDecoratorReply {
-    [ name : string ] : any
-}
-
 export interface ConfigFastifyServerInstancesPluginOptionsFormBody {
     enabled ?: boolean | undefined,
     options ?: FastifyPluginOptions & FastifyFormbodyOptions | undefined
 }
+
+export type ConfigFastifyServerInstancesPluginOptionsView  = Array<FastifyPluginOptions & FastifyViewOptions>
+
+
 export interface ConfigFastifyServerInstancesPluginOptionsCors {
     enabled ?: boolean | undefined,
     options ?: FastifyPluginOptions & FastifyCorsOptions | undefined
@@ -81,7 +74,8 @@ export interface ConfigFastifyServerInstancesPlugin {
     formBody ?: ConfigFastifyServerInstancesPluginOptionsFormBody | undefined,
     cors ?: ConfigFastifyServerInstancesPluginOptionsCors | undefined,
     socketIO ?: ConfigFastifyServerInstancesPluginOptionsSocketIO | undefined,
-    cookie ?: ConfigFastifyServerInstancesPluginOptionsCookie | undefined
+    cookie ?: ConfigFastifyServerInstancesPluginOptionsCookie | undefined,
+    view ?: ConfigFastifyServerInstancesPluginOptionsView | undefined
 }
 
 
@@ -94,9 +88,6 @@ export type ConfigFastifyServerInstances = {
      * @type ConfigFastifyServerMain
      */
     app ?: ConfigFastifyServerMain | undefined,
-    decorator ?: ConfigFastifyDecorator | undefined,
-    decoratorRequest ?: ConfigFastifyDecoratorRequest | undefined,
-    decoratorReply ?: ConfigFastifyDecoratorReply | undefined,
     hooks ?: ConfigFastifyServerHooks | undefined,
     plugin ?: ConfigFastifyServerInstancesPlugin | undefined,
     getConfig ?: (config : ConfigFastifyServer) => Promise<void> | void

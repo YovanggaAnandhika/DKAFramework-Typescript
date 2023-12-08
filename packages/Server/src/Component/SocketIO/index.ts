@@ -26,7 +26,6 @@ import SocketIOEngineHeaders from "./Component/SocketIOEngineHeaders";
 import {SocketIOMiddleware} from "./Component/SocketIOMiddleware";
 import tcpPortUsed from "tcp-port-used";
 import moment, { Moment } from "moment-timezone";
-import * as os from "os";
 
 function moduleIsExists(packageName : string){
     try {

@@ -20,7 +20,7 @@ export async function Server<Config extends ConfigServerInterfaces> (serverConfi
                     })
                     .catch(async (error) => {
                         await rejected(error)
-                    })
+                    });
                 break;
             case SOCKET_ENGINE :
                 await require("./Component/SocketIO").default(serverConfig)
