@@ -5,9 +5,12 @@ import {Options, Server} from "./../src";
     Server({
         engine : Options.ENGINE.FASTIFY,
         host : Options.HOST.WILDCARD,
-        port : 2813,
+        port : 2814,
         app : (apps, opts, next) => {
 
+            apps.get("/", (req, res) => {
+                res.send("halo")
+            });
 
             next();
         }
@@ -15,5 +18,9 @@ import {Options, Server} from "./../src";
         console.log(res)
     }).catch(async (error) => {
         console.log(error)
-    })
+    });
+
+
+
+
 })();

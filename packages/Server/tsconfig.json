@@ -4,18 +4,11 @@
     "src/**/*"
   ],
   "compilerOptions": {
-    "target": "ES2021",
+    "target": "ES2022",
     "module": "CommonJS",
     "typeRoots": [
-      "node_modules/@Types",
-      "node_modules/fastify-socket.io"
-    ],
-    "lib": [
-      "es2017",
-      "es7",
-      "es5",
-      "es6",
-      "dom"
+      "node_modules/@types",
+      "node_modules/types-fastify-socket.io"
     ],
     // Tells TypeScript to read JS files, as
     // Generate d.ts files

@@ -14,9 +14,11 @@ import {DEVELOPMENT} from "../../Types/ConfigServerTypes";
 import isElectron from "is-electron";
 import fastify, {FastifyInstance} from "fastify";
 
-/*import "./Types/ExtendFastifyModulesTypes";*/
+import "./Types/ExtendedFastifyTypes";
 
 export let mFastify : FastifyInstance;
+
+
 
 export async function FASTIFY<Config extends ConfigFastifyServer>(configServer : Config) : Promise<CallbackFastifyServer> {
     return new Promise(async (resolve, rejected) => {
@@ -36,8 +38,8 @@ export async function FASTIFY<Config extends ConfigFastifyServer>(configServer :
                 break;
         }
 
-        await FastifyPlugins(mFastify, configServer);
         await FastifyHooks(mFastify, configServer);
+        await FastifyPlugins(mFastify, configServer);
 
         //###################################################
         //(configServer.app !== undefined) ? await configServer.app(mFastify) : null;

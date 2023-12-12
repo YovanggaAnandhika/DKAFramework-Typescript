@@ -8,8 +8,15 @@ import {
 import {readFileSync} from "fs";
 import path from "path";
 import ejs from "ejs";
+import {FastifyPluginOptions} from "fastify";
+import {FastifyViewOptions} from "@fastify/view";
 
 
+export const DefaultConfigFastifyPluginView : FastifyPluginOptions & FastifyViewOptions = {
+    engine : {
+        ejs : ejs
+    }
+}
 export const DefaultConfigFastifyServer : ConfigFastifyServer = {
     engine : Options.ENGINE.FASTIFY,
     host : Options.HOST.LOCALHOST,
@@ -22,13 +29,7 @@ export const DefaultConfigFastifyServer : ConfigFastifyServer = {
                 origin : "*",
             }
         },
-        view : [
-            {
-                engine : {
-                    ejs : ejs
-                }
-            }
-        ],
+        view : [],
         socketIO : {
             enabled : true,
             options : {

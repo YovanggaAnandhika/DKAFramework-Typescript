@@ -8,14 +8,12 @@ import Database from "../src";
         database : "dka_product_parking"
     });
 
-    db.Baca(`dka_data_ticket_in`)
-        .then(async (result) => {
-            console.log(result)
-        })
+    db.Baca(``, {
+        search : {
+            coloumName : "nama",
 
-        .catch(async (error) => {
-            console.error(error)
-        })
+        }
+    })
 })();
 
 
