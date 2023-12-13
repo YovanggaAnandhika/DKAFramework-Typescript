@@ -4,26 +4,35 @@ import {merge} from "lodash";
 // install escpos-usb adapter module manually
 import {Image, Printer} from "@node-escpos/core";
 import USB, {TDevice} from "@node-escpos/usb-adapter";
-import NETWORK from "@node-escpos/serialport-adapter";
+import SERIAL from "@node-escpos/serialport-adapter";
+import NETWORK from "@node-escpos/network-adapter";
+
 
 import printServer from "@node-escpos/server";
 // Select the adapter based on your printer type
-import {EscposConfig, EscposNetwork, EscposUSB} from "./Interfaces/EscposConfig";
-import {DEVELOPMENT, ESCPOS_NETWORK, ESCPOS_USB} from "./Types/EscposTypes";
-import {DefaultConfigNetwork, DefaultConfigUSB} from "./Config/DefaultConfigEscpos";
+import {
+    EscposConfig,
+    EscposNetwork,
+    EscposPrinterSettingsServer,
+    EscposSerial,
+    EscposUSB
+} from "./Interfaces/EscposConfig";
+import {DEVELOPMENT, ESCPOS_NETWORK, ESCPOS_SERIAL, ESCPOS_USB} from "./Types/EscposTypes";
+import {DefaultConfigNetwork, DefaultConfigSerial, DefaultConfigUSB} from "./Config/DefaultConfigEscpos";
 import {EscposCheckerConfig} from "./Types/EscposCheckerConfig";
 
 import EscposOptions from "./Const";
 import * as os from "os";
 import * as macaddress from "macaddress";
 import * as ip from "ip";
+import printer from "../index";
 
 const CPUUsage = require("cpu-percentage");
 
 export class Escpos<Config extends EscposConfig> {
     //######################################################
     private config : EscposConfig | undefined;
-    private adapter : USB | NETWORK | undefined = undefined;
+    private adapter : USB | SERIAL | NETWORK | undefined = undefined;
     private device : TDevice | undefined = undefined;
     private printer : Printer<any> | undefined = undefined;
     static Image : typeof Image = Image;
@@ -74,9 +83,83 @@ export class Escpos<Config extends EscposConfig> {
                 this.config = configNetwork;
                 logger?.info(`connection via network attached`);
                 break;
+            case ESCPOS_SERIAL :
+                let configSerial : EscposSerial = merge(DefaultConfigSerial, escposConfig);
+                this.config = configSerial;
+                logger?.info(`connection via network attached`);
+                break;
         }
     }
 
+    async Server(configServer : EscposPrinterSettingsServer){
+        //@######################################################################
+        let logger = (this.config.state === DEVELOPMENT) ?
+            (Escpos.checkModuleExist("winston")) ? require("winston").createLogger({
+                transports : [ new (require("winston")).transports.Console() ]
+            }) : undefined : undefined;
+        //@#######################################################################
+        return new Promise(async (resolve, rejected) => {
+            switch (this.config?.connection) {
+                case ESCPOS_USB:
+                    let config : EscposUSB = this.config;
+                    if (USB.findPrinter().length > 0){
+                        let mDevice = await (USB.findPrinter());
+
+                        if (this.config.identify !== undefined && config.identify.vendorId !== undefined && config.identify.productId !== undefined){
+                            this.device = mDevice.find((device) => device.deviceDescriptor.idVendor === config.identify.vendorId && device.deviceDescriptor.idProduct === config.identify.productId);
+                            if (this.device !== undefined){
+                                logger?.info(`device 0x${this.device.deviceDescriptor.idVendor}:0x${this.device.deviceDescriptor.idProduct} is found`);
+                            }
+                        }else{
+                            this.device = mDevice[0];
+                            logger?.info(`device 0x${this.device.deviceDescriptor.idVendor}:0x${this.device.deviceDescriptor.idProduct} is selected default`);
+                        }
+                        if (this.device !== undefined){
+                            this.adapter = new USB(this.device);
+                            //### device Open Connection
+                            this.adapter?.open(async (error) => {
+                                if (!error){
+                                    let server = new printServer(this.adapter);
+                                    if (configServer.onListening !== undefined){
+                                        server.on("listening", configServer.onListening)
+                                    }
+                                    if (configServer.onError !== undefined){
+                                        server.on("error", configServer.onError)
+                                    }
+
+                                    server.on("close", () => {
+                                        process.exit(0);
+                                        process.kill(process.pid);
+                                    })
+
+                                    process.on("SIGTERM", () => {
+                                        server.close((error) => {
+                                            if (configServer.onClose !== undefined){
+                                                configServer.onClose?.(error);
+                                            }
+                                        });
+                                    })
+                                    server.listen(configServer.port, configServer.host, async () => {
+                                        await resolve({ status : true, code : 200, msg : `server print is started`, config : configServer})
+                                    })
+
+                                }else{
+                                    await rejected({ status : false, code : 500, msg : `failed to open connection printer device`, error : error})
+                                }
+                            })
+                        }else{
+                            await rejected({ status : false, code : 404, msg : `device find by vendor product printer not exist`})
+                        }
+                    }else{
+                        await rejected({ status : false, code : 404, msg : `device printer not detected`})
+                    }
+                    break;
+                default :
+                    await rejected({ status : false, code : 500, msg : `connection type not implementated now. coming soon`})
+                    break;
+            }
+        });
+    }
 
     async Job(printer : (printer : Printer<any>) => void) : Promise<any>{
         //@######################################################################
@@ -197,6 +280,7 @@ export class Escpos<Config extends EscposConfig> {
                     }
                     break;
                 case ESCPOS_NETWORK:
+                    this.adapter = new NETWORK(this.config.address, this.config.port, this.config.timeout)
                     this.adapter.open(async (error) => {
                         if (!error){
                             this.printer = new Printer(this.adapter, merge(this.config?.settings));
@@ -219,6 +303,9 @@ export class Escpos<Config extends EscposConfig> {
                             await rejected({ status : false, code : 500, msg : `failed to open connection printer device`, error : error})
                         }
                     });
+                    break;
+                default :
+                    await rejected({ status : false, code : 500, msg : `connection type not implementated now. coming soon`})
                     break;
             }
         });

@@ -40,7 +40,7 @@ export async function Server<Config extends ConfigServerInterfaces> (serverConfi
                     })
                     .catch(async (error) => {
                         await rejected(error)
-                    })
+                    });
                 break;
             case UDP_ENGINE :
                 await require("./Component/UDP").default(serverConfig)
