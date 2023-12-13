@@ -25,7 +25,6 @@ import EscposOptions from "./Const";
 import * as os from "os";
 import * as macaddress from "macaddress";
 import * as ip from "ip";
-import printer from "../index";
 
 const CPUUsage = require("cpu-percentage");
 
@@ -283,8 +282,71 @@ export class Escpos<Config extends EscposConfig> {
                     this.adapter = new NETWORK(this.config.address, this.config.port, this.config.timeout)
                     this.adapter.open(async (error) => {
                         if (!error){
-                            this.printer = new Printer(this.adapter, merge(this.config?.settings));
+                            this.printer = new Printer(this.adapter, this.config?.settings);
+                            await this.printer
+                                .align("CT")
+                                .style("");
+                            //** get Functionable user command
                             await printer(this.printer);
+                            //** Show Separator **/
+                            if (this.config?.settings?.showLibrary || this.config?.settings?.showNetwork || this.config?.settings?.showSystem){
+                                this.printer
+                                    .feed(1)
+                                    .text(`============================================`)
+                            }
+                            if (this.config?.settings?.showSystem){
+                                this.SystemInfo = {
+                                    CPUUsage : `${Math.floor(CPUUsage().percent)} %`,
+                                    totalMemory : Escpos.formatMemoryUsage(os.totalmem()),
+                                    memoryUsed : Escpos.formatMemoryUsage(os.totalmem() - os.freemem()),
+                                    os : `${os.platform()} ${os.arch()}`
+                                }
+
+                                this.printer.text(`System Information`);
+                                this.printer.text(`OS : ${this.SystemInfo.os}`)
+                                this.printer.text(`CPU Usage : ${this.SystemInfo.CPUUsage}`)
+                                this.printer.text(`memory : ${this.SystemInfo.memoryUsed} / ${this.SystemInfo.totalMemory}`)
+                                this.printer.text(`-------------------------------------------`)
+
+                            }
+                            /** show Network **/
+                            if (this.config?.settings?.showNetwork){
+                                this.printer.text(`Network Information`);
+                                let macAddress : string = "00:00:00:00:00:01"
+                                await macaddress.one()
+                                    .then( (mMacAddress) => {
+                                        macAddress = mMacAddress;
+                                        macAddress = macAddress.replace("-",":");
+                                        macAddress = macAddress.toUpperCase();
+
+                                    })
+                                    .catch(async (error) => {
+                                        macAddress = "00:00:00:00:00:02";
+                                    });
+                                this.printer.text(`${macAddress} - ${ip.address()}`)
+                                this.printer.text(`-------------------------------------------`)
+                            }
+                            /** show Banner Options **/
+                            if (this.config?.settings?.showLibrary){
+                                let PackagePath = path.join(__dirname,"./../../../../package.json");
+                                if (fs.existsSync(PackagePath)){
+                                    let mPackage = require(PackagePath)
+                                    this.printer
+                                        .align("CT")
+                                        .style("B")
+                                        .size(0,0)
+                                        .text(`${mPackage.name} - V.${mPackage.version}`)
+                                        .style("I")
+                                        .text(`${mPackage.author.name} - ${mPackage.author.email}`)
+                                        .text(`${mPackage.author.url}`)
+                                }
+                            }
+                            if (this.config?.settings?.showLibrary || this.config?.settings?.showNetwork || this.config?.settings?.showSystem){
+                                this.printer
+                                    .style(``)
+                                    .text(`============================================`)
+                                    .feed(2)
+                            }
                             if (this.config?.settings?.autoCut){
                                 this.printer.cut();
                             }
@@ -296,11 +358,11 @@ export class Escpos<Config extends EscposConfig> {
                                     .catch(async (error) => {
                                         await rejected({ status : false, code : 505, msg : `error close print detected`, error : error})
                                     })
-                            }else{
+                            } else{
                                 await resolve({ status : true, code : 200, msg : "successfully to print job"});
                             }
                         }else{
-                            await rejected({ status : false, code : 500, msg : `failed to open connection printer device`, error : error})
+                            await rejected({ status : false, code : 500, msg : `failed to connect connection printer device`, error : error})
                         }
                     });
                     break;
