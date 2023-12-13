@@ -6,6 +6,7 @@ import {Image, Printer} from "@node-escpos/core";
 import USB, {TDevice} from "@node-escpos/usb-adapter";
 import NETWORK from "@node-escpos/serialport-adapter";
 
+import printServer from "@node-escpos/server";
 // Select the adapter based on your printer type
 import {EscposConfig, EscposNetwork, EscposUSB} from "./Interfaces/EscposConfig";
 import {DEVELOPMENT, ESCPOS_NETWORK, ESCPOS_USB} from "./Types/EscposTypes";
@@ -75,6 +76,7 @@ export class Escpos<Config extends EscposConfig> {
                 break;
         }
     }
+
 
     async Job(printer : (printer : Printer<any>) => void) : Promise<any>{
         //@######################################################################

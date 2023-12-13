@@ -1,6 +1,5 @@
 import {ConnectionConfig, PoolClusterConfig, PoolConfig} from "mariadb"
 import {db_createConnection, db_createPoolClusterConnection, db_createPoolConnection, Priodic} from "../Type/types";
-import {ConfigConstructor} from "@dkaframework/security/dist/Interfaces/Config";
 
 
 export interface MariaDBConstructorConfigAutoBackup {
@@ -16,7 +15,6 @@ export interface MariaDBConstructorConfigAutoBackup {
 export interface MariaDBConstructorConfigGeneral extends ConnectionConfig, PoolConfig, PoolClusterConfig {
     engine? : db_createConnection | db_createPoolConnection | db_createPoolClusterConnection,
     autoBackup ?: MariaDBConstructorConfigAutoBackup,
-    encryption ?: ConfigConstructor | undefined,
 }
 
 export interface MariaDBPoolClusterObjectList extends PoolClusterConfig {

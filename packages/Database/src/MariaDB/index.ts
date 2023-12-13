@@ -140,9 +140,7 @@ export class MariaDB implements MariaDBClassInterfaces {
 
     async CreateDB(DatabaseName : string, Rules : RulesCreateDatabase = CreateDatabaseConfig) : Promise<CallbackCreateDatabase> {
 
-        let mRules: RulesCreateDatabase = await merge(CreateDatabaseConfig,{
-            encryption : this.mConfig.encryption
-        }, Rules);
+        let mRules: RulesCreateDatabase = await merge(CreateDatabaseConfig, Rules);
         this.timeStart = new Date().getTime();
 
         let mQuery = ``;

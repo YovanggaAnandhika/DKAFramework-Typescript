@@ -7,7 +7,7 @@ import figlet from "figlet";
 import {Command} from "commander";
 import * as process from "process";
 
-const inquirer = require('inquirer');
+import inquirer, { PromptFunction } from "inquirer";
 
 function checkModuleExist(name : string){
     try {
@@ -21,36 +21,22 @@ function checkModuleExist(name : string){
 (async () => {
     await clear();
     const program = new Command();
-    await console.log(chalk.whiteBright(
-            figlet.textSync('DKA-CLI', { horizontalLayout: 'default' })
+    await console.log(chalk.redBright(
+            figlet.textSync('DKA-FRAMEWORK', { horizontalLayout: 'default', width : 350 })
         )
     );
 
     const Packages = fs.existsSync(path.join(__dirname, "./../package.json")) ? require("./../package.json") : undefined;
 
-    // @ts-ignore
+    program
+        .name(`${Packages.name}`)
+        .version(`${Packages.version}`)
+        .description(`${Packages.description}`);
 
     program
-        .version(`${Packages.version}`)
-        .description(`${Packages.description}`)
-        .command("create-server-app", "create a project with DKA Framework")
-        .action(async (action) => {
-            //let mCurrentDir = (action.args.name !== undefined) ? path.join(process.cwd(), `${action.args.name}`) : path.join(process.cwd());
-            // @ts-ignore
-            inquirer.prompt([
-                {
-                    name : "lang",
-                    type : "list",
-                    message : "select your language ?",
-                    choices: ['Indonesia', 'English'],
-                    filter(val : string) {
-                        return val.toLowerCase();
-                    },
-                }
-            ])
-        })
-
-    await program.parse(process.argv.slice(1))
-    //program.parse(process.argv)
+        .option('-cx, --create',"Create")
+        .option('-db, --create',"Create")
+    await program.parse()
+   //program.parse(process.argv)
 
 })();

@@ -7,11 +7,9 @@ import {
     CallbackSelect,
     CallbackUpdate
 } from "./Callback";
-import {ConfigConstructor} from "@dkaframework/security/dist/Interfaces/Config";
 
 export interface Rules {
-    as? : false | string,
-    encryption ?: ConfigConstructor | undefined
+    as? : false | string
 }
 
 export interface RulesSelectOrderBy {
@@ -101,7 +99,6 @@ export interface ExtendsOptionsCreateDatabaseSettings {
 }
 export interface ExtendsOptionsCreateDatabase {
     ifNotExist ?: boolean | undefined,
-    encryption ?: ConfigConstructor | undefined,
     settings ?: ExtendsOptionsCreateDatabaseSettings | undefined
 }
 

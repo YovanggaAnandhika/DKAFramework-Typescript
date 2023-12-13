@@ -6,9 +6,10 @@
   "author": "Yovangga Anandhika",
   "license": "MIT",
   "private": false,
-  "description": "",
+  "description": "The Dka Program Enterpreter Automatically",
   "scripts": {
-    "clean" : "tsc --clean",
+    "dka": "yarn run build && dka",
+    "clean": "tsc --clean",
     "build": "tsc --build",
     "postpack": "yarn run build"
   },
@@ -33,7 +34,7 @@
     "@inquirer/prompts": "^1.0.3",
     "@types/clear": "^0.1.2",
     "@types/figlet": "^1.5.5",
-    "@types/inquirer": "^9.0.3",
+    "@types/inquirer": "^9.0.7",
     "@types/lodash": "^4.14.182",
     "@types/mute-stream": "^0.0.1",
     "@types/node": "^18.7.14",

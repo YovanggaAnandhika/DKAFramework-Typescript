@@ -15,6 +15,7 @@ import isElectron from "is-electron";
 import fastify, {FastifyInstance} from "fastify";
 
 import "./Types/ExtendedFastifyTypes";
+import tcpPortUsed from "tcp-port-used";
 
 export let mFastify : FastifyInstance;
 
@@ -71,17 +72,26 @@ export async function FASTIFY<Config extends ConfigFastifyServer>(configServer :
             });
         }
         //#######################################################################################################################################
-
-        mFastify.listen({ port : configServer.port, host : configServer.host }, async (error) => {
-            if (!error){
-                (configServer.getConfig !== undefined) ? configServer.getConfig(configServer) : null;
-                await resolve({ status : true, code : 200, msg : `Server is Successfully Running`, config : configServer });
-            }else{
-                (configServer.getConfig !== undefined) ? configServer.getConfig(configServer) : null;
-                await rejected({ status : true, code : 500, msg : `Server is Not Successfully Running`, error : error});
-                await process.exit();
-            }
-        });
+        tcpPortUsed.check(configServer.port as number,configServer.host)
+            .then(async (inUse) => {
+                if (!inUse) {
+                    mFastify.listen({ port : configServer.port, host : configServer.host }, async (error) => {
+                        if (!error){
+                            (configServer.getConfig !== undefined) ? configServer.getConfig(configServer) : null;
+                            await resolve({ status : true, code : 200, msg : `Server is Successfully Running`, config : configServer });
+                        }else{
+                            (configServer.getConfig !== undefined) ? configServer.getConfig(configServer) : null;
+                            await rejected({ status : true, code : 500, msg : `Server is Not Successfully Running`, error : error});
+                            await process.exit();
+                        }
+                    });
+                }else{
+                    await rejected({ status : false, code : 502, msg : `Port in Used. Try another port. or kill process ${configServer.port} on this machine`})
+                }
+            })
+            .catch(async (error) => {
+                await rejected({ status : false, code : 500, msg : `error Check TCP Port Used`, error : error})
+            });
 
     })
 }

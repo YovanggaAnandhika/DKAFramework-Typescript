@@ -5,8 +5,8 @@ import IoT from "../src";
 
 
     let printer = new IoT.Printer.Escpos({
-        state : "DEVELOPMENT",
-        connection : "ESCPOS_USB"
+        state : IoT.Printer.Escpos.Options.STATE.DEVELOPMENT,
+        connection : IoT.Printer.Escpos.Options.CONNECTION.ESCPOS_USB
     })
     await printer.Job(async (print) => {
         print.barcode(281881818323,"CODE39",{ height : 60,width : 1, includeParity : false})
@@ -17,7 +17,7 @@ import IoT from "../src";
         print.feed(1)
     }).catch(async (error) => {
         console.error(error)
-    } )
+    })
 
 
 
