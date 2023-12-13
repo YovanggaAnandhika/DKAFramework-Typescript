@@ -1,6 +1,6 @@
 {
   "name": "@dkaframework/server",
-  "version": "1.0.232",
+  "version": "1.0.233",
   "homepage": "https://github.com/YovanggaAnandhika/DKAFramework-Typescript-Server.git",
   "description": "The Multi Framework Server Function. Part Module Of DKAFramework",
   "keywords": [
@@ -78,7 +78,6 @@
     "greenlock": "^4.0.4",
     "html-webpack-plugin": "^5.5.0",
     "is-admin": "^4.0.0",
-    "is-electron": "^2.2.2",
     "is-port-reachable": "^4.0.0",
     "lodash": "^4.17.21",
     "moment": "^2.29.4",

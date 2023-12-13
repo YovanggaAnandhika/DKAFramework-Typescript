@@ -11,7 +11,6 @@ import {FastifyHooks} from "./Component/FastifyHooks";
 import {FastifyPlugins} from "./Component/FastifyPlugins";
 import {Options} from "../../index";
 import {DEVELOPMENT} from "../../Types/ConfigServerTypes";
-import isElectron from "is-electron";
 import fastify, {FastifyInstance} from "fastify";
 
 import "./Types/ExtendedFastifyTypes";
@@ -20,6 +19,25 @@ import tcpPortUsed from "tcp-port-used";
 export let mFastify : FastifyInstance;
 
 
+function isElectron() {
+    // Renderer process
+    // @ts-ignore
+    if (typeof window !== 'undefined' && typeof window.process === 'object' && window.process.type === 'renderer') {
+        return true;
+    }
+
+    // Main process
+    if (typeof process !== 'undefined' && typeof process.versions === 'object' && !!process.versions.electron) {
+        return true;
+    }
+
+    // Detect the user agent when the `nodeIntegration` option is set to false
+    if (typeof navigator === 'object' && typeof navigator.userAgent === 'string' && navigator.userAgent.indexOf('Electron') >= 0) {
+        return true;
+    }
+
+    return false;
+}
 
 export async function FASTIFY<Config extends ConfigFastifyServer>(configServer : Config) : Promise<CallbackFastifyServer> {
     return new Promise(async (resolve, rejected) => {
@@ -47,6 +65,7 @@ export async function FASTIFY<Config extends ConfigFastifyServer>(configServer :
         mFastify = (configServer.app !== undefined) ? await mFastify.register(configServer.app as typeof mFastify.register.arguments) : mFastify;
         configServer.host = (configServer.state === DEVELOPMENT || configServer.state === undefined) ? configServer.host : Options.HOST.WILDCARD;
         //#######################################################################################################################################
+
         if (isElectron()){
             if (require.resolve("electron")){
                 let { app } = require("electron");
@@ -64,7 +83,6 @@ export async function FASTIFY<Config extends ConfigFastifyServer>(configServer :
                 })
             }
         }else{
-
             process.on("SIGINT", () => {
                 mFastify.close();
                 process.kill(process.pid);
@@ -93,7 +111,7 @@ export async function FASTIFY<Config extends ConfigFastifyServer>(configServer :
                 await rejected({ status : false, code : 500, msg : `error Check TCP Port Used`, error : error})
             });
 
-    })
+    });
 }
 
 
