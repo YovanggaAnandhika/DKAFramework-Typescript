@@ -1,6 +1,6 @@
 {
   "name": "@dkaframework/server",
-  "version": "1.0.233",
+  "version": "1.0.234",
   "homepage": "https://github.com/YovanggaAnandhika/DKAFramework-Typescript-Server.git",
   "description": "The Multi Framework Server Function. Part Module Of DKAFramework",
   "keywords": [
@@ -52,6 +52,10 @@
     "@fastify/cors": "^8.2.1",
     "@fastify/formbody": "^7.4.0",
     "@fastify/view": "^8.2.0",
+    "@node-escpos/adapter": "^0.0.1",
+    "@node-escpos/core": "^0.4.0",
+    "@node-escpos/serialport-adapter": "^1.0.0",
+    "@node-escpos/usb-adapter": "^0.3.1",
     "@types/cli-progress": "^3.11.0",
     "@types/lodash": "^4.14.182",
     "@types/ping": "^0.4.1",

@@ -6,10 +6,12 @@ import {UDP_ENGINE} from "../Component/UDP/Types/TypesUDPServer";
 import {CallbackUDPServer} from "../Component/UDP/Interfaces/CallbackUDPServer";
 import {WEBPACK_ENGINE} from "../Component/Webpack/Types/WebpackTypesServer";
 import {CallbackWebpackServer} from "../Component/Webpack/Interfaces/CallbackWebpackServer";
+import {ESCPOS_ENGINE} from "../Component/Escpos/Types/EscposTypes";
 
 
 export type ServerSelector<Config> = Config extends { engine ?: typeof SOCKET_ENGINE | undefined } ? CallbackSocketIOServer<Config> :
     Config extends { engine ?: typeof FASTIFY_ENGINE | undefined } ? CallbackFastifyServer :
         Config extends { engine ?: typeof UDP_ENGINE | undefined } ? CallbackUDPServer :
-            Config extends { engine ?: typeof WEBPACK_ENGINE | undefined } ? CallbackWebpackServer
-            : Config;
+            Config extends { engine ?: typeof WEBPACK_ENGINE | undefined } ? CallbackWebpackServer :
+                Config extends { engine ?: typeof ESCPOS_ENGINE | undefined } ? any
+                    : Config;

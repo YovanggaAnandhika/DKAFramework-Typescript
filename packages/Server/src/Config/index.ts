@@ -8,6 +8,8 @@ import {
 import {DEVELOPMENT, PRODUCTION} from "../Types/ConfigServerTypes";
 import {UDP_ENGINE} from "../Component/UDP/Types/TypesUDPServer";
 import {WEBPACK_ENGINE} from "../Component/Webpack/Types/WebpackTypesServer";
+import {ESCPOS_ENGINE, ESCPOS_NETWORK, ESCPOS_SERIAL, ESCPOS_USB} from "../Component/Escpos/Types/EscposTypes";
+import {MODE_USB} from "@dkaframework/iot/dist/Component/Arduino/NodeMCU/Interfaces/NodeMCUConfig";
 
 
 export const ConfigServerEngineFastify : FASTIFY_ENGINE = "FASTIFY"
@@ -15,10 +17,13 @@ export const ConfigServerEngineSocketIO : SOCKET_ENGINE = "SOCKET.IO"
 export const ConfigServerEngineUDP : UDP_ENGINE = "USER_DATA_PROTOCOL"
 export const ConfigServerEngineWebpack : WEBPACK_ENGINE = "WEBPACK";
 
+export const ConfigServerEngineEscpos : ESCPOS_ENGINE = "ESCPOS";
+
 export const ConfigServerEngine = {
     FASTIFY : ConfigServerEngineFastify,
     SOCKETIO : ConfigServerEngineSocketIO,
     UDP : ConfigServerEngineUDP,
+    ESCPOS : ConfigServerEngineEscpos,
     WEBPACK : ConfigServerEngineWebpack
 }
 
@@ -49,10 +54,17 @@ export const ConfigServerSettingsEngine = {
 export const ConfigServerSettings = {
     ENGINE : ConfigServerSettingsEngine
 }
+
+export const ConfigServerConnection = {
+    USB : ESCPOS_USB,
+    NETWORK : ESCPOS_NETWORK,
+    SERIAL : ESCPOS_SERIAL
+}
 export const ConfigServer = {
     STATE : ConfigServerState,
     HOST : ConfigServerHost,
     PORT : ConfigServerPort,
+    CONNECTION : ConfigServerConnection,
     ENGINE : ConfigServerEngine,
     SETTINGS : ConfigServerSettings
 }

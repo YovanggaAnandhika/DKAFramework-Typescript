@@ -7,8 +7,6 @@ import IoT from "../src";
     let printer = new IoT.Printer.Escpos({
         state : IoT.Printer.Escpos.Options.STATE.DEVELOPMENT,
         connection : IoT.Printer.Escpos.Options.CONNECTION.ESCPOS_NETWORK,
-        address : "127.0.0.1",
-        port : 2332,
         settings : {
             showSystem : true
         }

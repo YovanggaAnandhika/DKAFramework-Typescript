@@ -1,4 +1,11 @@
-import {TYPE_ALL_STATES, TYPE_ESCPOS_NETWORK, TYPE_ESCPOS_SERIAL, TYPE_ESCPOS_USB} from "../Types/EscposTypes";
+import {
+    ESCPOS_ENGINE,
+    TYPE_ALL_STATES,
+    TYPE_ESCPOS_NETWORK,
+    TYPE_ESCPOS_SERIAL,
+    TYPE_ESCPOS_USB
+} from "../Types/EscposTypes";
+import {DEVELOPMENT, PRODUCTION} from "../../../Types/ConfigServerTypes";
 
 
 export interface EscposPrinterSettingsNetwork {
@@ -11,23 +18,17 @@ export interface EscposPrinterSettingsNetwork {
     showNetwork ?: boolean | undefined
 }
 
-export interface EscposPrinterSettingsSerial {
-    encoding ?: string | undefined,
-    autoClose ?: boolean | undefined,
-    autoCut ?: boolean | undefined,
-    autoClearJobPrevious ?: boolean | undefined,
-    showLibrary ?: boolean | undefined,
-    showSystem ?: boolean | undefined
-    showNetwork ?: boolean | undefined
+export interface EscposPrinterSettingsSerial extends EscposPrinterSettingGlobal {
+    encoding ?: string | undefined
 }
 
-export interface EscposPrinterSettingsUSB {
-    encoding ?: string | undefined,
-    autoClose ?: boolean | undefined,
-    autoCut ?: boolean | undefined,
-    showLibrary ?: boolean | undefined,
-    showSystem ?: boolean | undefined
-    showNetwork ?: boolean | undefined
+export interface EscposPrinterSettingGlobal {
+    host : string | undefined
+    port : number | undefined,
+}
+
+export interface EscposPrinterSettingsUSB extends EscposPrinterSettingGlobal {
+    encoding ?: string | undefined
 
 }
 
@@ -50,6 +51,7 @@ export interface EscposNetwork {
 
 export interface EscposSerial {
     state ?: TYPE_ALL_STATES,
+    engine ?: ESCPOS_ENGINE | undefined,
     connection ?: TYPE_ESCPOS_SERIAL | undefined
     port ?: string | undefined,
     settings ?: EscposPrinterSettingsSerial | undefined
@@ -61,7 +63,8 @@ export interface EscposUSBIdentifyVendorProduct {
     productId ?: number | undefined,
 }
 export interface EscposUSB {
-    state ?: TYPE_ALL_STATES,
+    state ?: DEVELOPMENT | PRODUCTION
+    engine ?: ESCPOS_ENGINE | undefined,
     connection ?: TYPE_ESCPOS_USB | undefined
     identify ?: EscposUSBIdentifyVendorProduct,
     autoDetectUSB ?: boolean | undefined,
@@ -69,4 +72,4 @@ export interface EscposUSB {
 }
 
 
-export type EscposConfig = EscposUSB | EscposNetwork | EscposSerial;
+export type EscposConfig = EscposUSB | EscposSerial;

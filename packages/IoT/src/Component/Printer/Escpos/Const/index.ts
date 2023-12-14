@@ -1,4 +1,4 @@
-import {DEVELOPMENT, ESCPOS_NETWORK, ESCPOS_USB, PRODUCTION} from "../Types/EscposTypes";
+import {DEVELOPMENT, ESCPOS_NETWORK, ESCPOS_SERIAL, ESCPOS_USB, PRODUCTION} from "../Types/EscposTypes";
 
 
 export const EscposOptions = {
@@ -6,10 +6,13 @@ export const EscposOptions = {
         DEVELOPMENT : DEVELOPMENT,
         PRODUCTION : PRODUCTION
     },
+    HOST : {
+      WILDCARD : "0.0.0.0",
+      LOCALHOST : "127.0.0.1"
+    },
     CONNECTION : {
         ESCPOS_USB : ESCPOS_USB,
-        ESCPOS_NETWORK : ESCPOS_NETWORK
+        ESCPOS_NETWORK : ESCPOS_NETWORK,
+        ESCPOS_SERIAL : ESCPOS_SERIAL
     }
 }
-
-export default EscposOptions;

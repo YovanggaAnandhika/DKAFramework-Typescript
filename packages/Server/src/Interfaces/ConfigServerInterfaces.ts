@@ -3,6 +3,7 @@ import {ConfigFastifyServer} from "../Component/Fastify/Interfaces/ConfigFastify
 import {DEVELOPMENT, PRODUCTION} from "../Types/ConfigServerTypes";
 import {ConfigUDPServer} from "../Component/UDP/Interfaces/ConfigUDPServer";
 import {ConfigWebpackServer} from "../Component/Webpack/Interfaces/WebpackConfigServer";
+import {EscposConfig} from "../Component/Escpos/interfaces/EscposConfig";
 
 
 export interface GlobalServerConfigInterfacesSettingsLogger {
@@ -19,7 +20,7 @@ export interface GlobalServerConfigInterfaces {
 }
 
 export type MultipleConfigServerInterfaces = Array<ConfigServerInterfaces>;
-export type ConfigServerInterfaces = ConfigSocketIOServer | ConfigFastifyServer | ConfigUDPServer | ConfigWebpackServer;
+export type ConfigServerInterfaces = ConfigSocketIOServer | EscposConfig | ConfigFastifyServer | ConfigUDPServer | ConfigWebpackServer;
 /*export type ConfigServerInterfaces = GlobalServerConfigInterfaces*/
 
 export interface ExtendedError extends Error {

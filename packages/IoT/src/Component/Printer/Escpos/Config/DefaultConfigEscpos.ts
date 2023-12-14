@@ -21,7 +21,7 @@ export const DefaultConfigNetwork : EscposNetwork = {
     state : DEVELOPMENT,
     connection : ESCPOS_NETWORK,
     address : "127.0.0.1",
-    port : 5022,
+    port : 5331,
     timeout : 10000,
     settings : {
         encoding : "GB18030",
