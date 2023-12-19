@@ -1,6 +1,6 @@
 import {ConfigFastifyServer} from "./Interfaces/ConfigFastifyServer";
 import {CallbackFastifyServer} from "./Interfaces/CallbackFastifyServer";
-import {merge} from "lodash";
+import {merge, mergeWith} from "lodash";
 
 import DefaultConfigFastifyServer, {
     fastifyEngineSettingsDefaultHTTP,
@@ -41,7 +41,7 @@ function isElectron() {
 
 export async function FASTIFY<Config extends ConfigFastifyServer>(configServer : Config) : Promise<CallbackFastifyServer> {
     return new Promise(async (resolve, rejected) => {
-        await merge(configServer, DefaultConfigFastifyServer);
+        await mergeWith(configServer, DefaultConfigFastifyServer);
         switch (configServer.settings.engine.type) {
             case Options.SETTINGS.ENGINE.PROTOCOL.HTTP :
                 await merge(configServer.settings.engine, fastifyEngineSettingsDefaultHTTP);

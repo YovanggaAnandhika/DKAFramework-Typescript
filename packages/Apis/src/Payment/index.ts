@@ -2,7 +2,6 @@ import BRI from "./BRI";
 import {BCA} from "./BCA";
 import {QRIS} from "./QRIS";
 
-
 const Payment = {
     BRI : BRI,
     BCA : BCA,

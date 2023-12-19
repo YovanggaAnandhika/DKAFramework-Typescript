@@ -4,7 +4,7 @@ import {Options, Server} from "./../src";
 
     Server({
         engine : Options.ENGINE.ESCPOS,
-        connection : Options.CONNECTION.USB
+        connection : Options.CONNECTION.USB,
     }).then(async (res) => {
         console.log(res)
     }).catch(async (error) => {

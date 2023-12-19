@@ -17,7 +17,7 @@ export class JWT {
     private JWEEncryptor ?: JWE.Encryptor;
 
     private async getKeyBuffer(path: string): Promise<Buffer> {
-        return new Promise(async (resolve, rejected) => {
+        return new Promise(async (resolve) => {
             if (fs.existsSync(path)) {
                 resolve(fs.readFileSync(path))
             } else {

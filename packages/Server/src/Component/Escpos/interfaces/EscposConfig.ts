@@ -5,6 +5,7 @@ import {
     TYPE_ESCPOS_SERIAL,
     TYPE_ESCPOS_USB
 } from "../Types/EscposTypes";
+import {TDevice} from "@node-escpos/usb-adapter";
 import {DEVELOPMENT, PRODUCTION} from "../../../Types/ConfigServerTypes";
 
 
@@ -59,15 +60,37 @@ export interface EscposSerial {
 
 
 export interface EscposUSBIdentifyVendorProduct {
-    vendorId ?: number | undefined,
-    productId ?: number | undefined,
+    vendorId : number,
+    productId : number,
 }
+
+export interface EscposUSBIdentifySerial {
+    serialNumber : string
+}
+
+export interface EscposUSBEvents {
+    USB ?: EscposUSBEventsUSB | undefined,
+    Server ?: EscposUSBEventsServer | undefined
+}
+export interface EscposUSBEventsUSB {
+    onAttach ?: (device ?: TDevice | undefined) => void | Promise<void> | undefined,
+    onDetach ?: (device ?: TDevice | undefined) => void | Promise<void> | undefined;
+    onError ?: (error ?: Error | undefined) => void | Promise<void> | undefined;
+}
+
+export interface EscposUSBEventsServer {
+    onListening ?: () => void | Promise<void> | undefined
+    onClose ?: () => void | Promise<void> | undefined
+    onError ?: (error ?: Error | undefined) => void | Promise<void> | undefined
+}
+
 export interface EscposUSB {
     state ?: DEVELOPMENT | PRODUCTION
     engine ?: ESCPOS_ENGINE | undefined,
     connection ?: TYPE_ESCPOS_USB | undefined
-    identify ?: EscposUSBIdentifyVendorProduct,
+    identify ?: EscposUSBIdentifyVendorProduct | EscposUSBIdentifySerial | undefined,
     autoDetectUSB ?: boolean | undefined,
+    Events ?: EscposUSBEvents | undefined
     settings ?: EscposPrinterSettingsUSB | undefined
 }
 
