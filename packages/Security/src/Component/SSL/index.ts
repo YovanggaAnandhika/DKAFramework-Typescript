@@ -1,15 +1,14 @@
 import * as Crypto from "crypto";
-import {md, pki, random, util} from "node-forge";
+import {md, pki, random, util, pem} from "node-forge";
 import {
-    CertificateAuthority,
-    CertificateAuthorityData,
+    CertificateAuthority, CertificateAuthorityData,
     CertificateData, CertificateParentData,
     generateCASettings,
     generateCertSettings,
     GenerateKeys,
     KeyPairsData
 } from "./Types/GeneralCertOptionsMethod";
-import {merge} from "lodash";
+import errorToJson from "error-to-json";
 
 export class OpenSSL {
     generateKey(Options : GenerateKeys): KeyPairsData {
@@ -17,20 +16,18 @@ export class OpenSSL {
             Options.privateKeyEncoding.cipher =  'aes-256-cbc';
             Options.privateKeyEncoding.passphrase = 'Cyberhack2010';
         }
-
         let {privateKey, publicKey} = Crypto.generateKeyPairSync("rsa", Options);
         return {
             privateKey: privateKey,
-            publicKey: publicKey,
-            encrypted : (Options.privateKeyEncoding.passphrase !== undefined)
+            publicKey: publicKey
         }
     }
 
-    async generateCA(CAOptions : generateCASettings) : Promise<CertificateAuthorityData> {
-        return new Promise(async (resolve, reject) => {
-            //########################################
-            let cert = pki.createCertificate();
-            //########################################
+    generateCA(CAOptions : generateCASettings) : Promise<CertificateAuthorityData> {
+        //########################################
+        let cert = pki.createCertificate();
+        //########################################
+        return new Promise((resolve, reject) => {
             //###################################################
             cert.publicKey = pki.publicKeyFromPem(CAOptions.keys.publicKey);
             //########################################
@@ -38,87 +35,140 @@ export class OpenSSL {
             //########################################
             cert.validity.notBefore = new Date();
             cert.validity.notAfter = new Date();
-
+            // set validity #####################################
             (CAOptions.options?.expiresYears !== undefined) ?
                 cert.validity.notAfter.setFullYear(cert.validity.notBefore.getFullYear() + CAOptions.options.expiresYears) :
                 cert.validity.notAfter.setFullYear(cert.validity.notBefore.getFullYear() + 5);
-
-
             // here we set subject and issuer as the same one
             cert.setSubject(CAOptions.attrs);
             cert.setIssuer(CAOptions.attrs);
             cert.setExtensions((CAOptions.options?.extensions !== undefined) ? CAOptions.options.extensions : []);
-
-            if (CAOptions.keys?.encrypted){
-                try {
-                    let getPrivateKeysFormat = pki.decryptRsaPrivateKey(CAOptions.keys.privateKey, CAOptions.options?.passphrase);
-                    let digest = (CAOptions.options?.digest !== undefined) ? CAOptions.options.digest : md.sha512.create();
-                    await cert.sign(getPrivateKeysFormat, digest);
-                    await resolve({
-                        certificate : {
-                            pem : pki.certificateToPem(cert),
-                            rsa : cert
-                        },
-                        publicKey : {
-                          pem : CAOptions.keys.publicKey,
-                          rsa : pki.publicKeyFromPem(CAOptions.keys.publicKey)
-                        },
-                        privateKey : {
-                            rsa : getPrivateKeysFormat,
-                            pem : CAOptions.keys.privateKey
-                        },
-                        validity : {
-                            notBefore : cert.validity.notBefore.toISOString(),
-                            notAfter :  cert.validity.notAfter.toISOString()
+            //#####################################################################
+            let digest = (CAOptions.options?.digest !== undefined) ? CAOptions.options.digest : md.sha512.create();
+            //######################################################################
+            try {
+                let ObjectPEM = pem.decode(CAOptions.keys.privateKey)[0];
+                switch (ObjectPEM.type) {
+                    case "PRIVATE KEY" :
+                        let privateKey = pki.privateKeyFromPem(CAOptions.keys.privateKey);
+                        cert.sign(privateKey, digest);
+                        return resolve({
+                            certificate : pki.certificateToPem(cert),
+                            validity : {
+                                notBefore : cert.validity.notBefore.toISOString(),
+                                notAfter :  cert.validity.notAfter.toISOString()
+                            }
+                        });
+                    case "ENCRYPTED PRIVATE KEY" :
+                        if (CAOptions.options?.passphrase !== undefined && CAOptions.options?.passphrase !== ""){
+                            try {
+                                let privateKey = pki.decryptRsaPrivateKey(CAOptions.keys.privateKey, CAOptions.options?.passphrase);
+                                cert.sign(privateKey, digest);
+                                return resolve({
+                                    certificate : pki.certificateToPem(cert),
+                                    validity : {
+                                        notBefore : cert.validity.notBefore.toISOString(),
+                                        notAfter :  cert.validity.notAfter.toISOString()
+                                    }
+                                });
+                            }catch (error) {
+                                reject({ status : false, code : 400, msg : `error decode private key with passphrase. passphrase not match`, error : errorToJson(error as Error)});
+                            }
+                        }else{
+                            return reject({ status : false, code : 400, msg : `private keys is "ENCRYPTED PRIVATE KEY". require options.passphrase `});
                         }
-                    });
-                }catch (e) {
-                    await reject({ status : false, code : 500, msg : `error decrypted key for cert. passphrase may not match`})
+                        break;
+                    default :
+                        return reject({ status : false, code : 503, msg : `unknown pem type. illegal pem type`});
                 }
-            }else{
-                if (CAOptions.keys?.privateKey !== undefined){
-                    let getPrivateKeysFormat = pki.privateKeyFromPem(CAOptions.keys?.privateKey);
-                    let digest = (CAOptions.options?.digest !== undefined) ? CAOptions.options.digest : md.sha512.create();
-                    await cert.sign(getPrivateKeysFormat, digest);
-                    await resolve({
-                        certificate : {
-                            pem : pki.certificateToPem(cert),
-                            rsa : cert
-                        },
-                        privateKey : {
-                            pem : CAOptions.keys.privateKey,
-                            rsa : getPrivateKeysFormat
-                        },
-                        publicKey : {
-                            pem : CAOptions.keys.publicKey,
-                            rsa : pki.publicKeyFromPem(CAOptions.keys.publicKey)
-                        },
-                        validity : {
-                            notBefore : cert.validity.notBefore.toISOString(),
-                            notAfter :  cert.validity.notAfter.toISOString()
-                        }
-                    });
-                }else{
-                    await reject({ status : false, code : 500, msg : `options "keys.privateKey" not Exists`});
-                }
+            }catch (error) {
+                return reject({ status : false, code : 503, msg : `private key pem not valid format`, error : errorToJson(error as Error)});
             }
         });
     }
 
-    async generateCert(CARoot : CertificateAuthority, CertOptions : generateCertSettings) : Promise<CertificateData>{
+    generateCert(CARoot : CertificateAuthority, CertOptions : generateCertSettings) : Promise<CertificateData>{
         //########################################
         let cert = pki.createCertificate();
         //########################################
-        let CA = (typeof CARoot.certificate === "string") ?
-            pki.certificateFromPem(CARoot.certificate) : CARoot.certificate.rsa;
-        let privateKeyCA = (typeof CARoot.privateKey === "string") ?
-            pki.privateKeyFromPem(CARoot.privateKey) : CARoot.privateKey.rsa
-        //########################################
         return new Promise(async (resolve, rejected) => {
-            //##################################
+            //########################################
+            CertOptions.digest = (CertOptions.digest !== undefined) ? CertOptions.digest : md.sha512.create();
+            try {
+                let ObjectPEM = pem.decode(CARoot.privateKey)[0];
+                let CA : { certificate : pki.Certificate, privateKey : pki.PrivateKey };
+                //############################################################
+                switch (ObjectPEM.type) {
+                    case "PRIVATE KEY" :
+                        CA = {
+                            certificate : pki.certificateFromPem(CARoot.certificate),
+                            privateKey : pki.privateKeyFromPem(CARoot.privateKey)
+                        }
+                        cert.publicKey = pki.publicKeyFromPem(CertOptions.keys.publicKey);
+                        cert.serialNumber = this.randomSerialNumber();
+                        (CertOptions?.expiresYears !== undefined) ?
+                            cert.validity.notAfter.setFullYear(cert.validity.notBefore.getFullYear() + CertOptions.expiresYears) :
+                            cert.validity.notAfter.setFullYear(cert.validity.notBefore.getFullYear() + 5);
+                        //@############################################
+                        cert.setSubject(CertOptions.subject);
+                        //@############################################
+                        cert.setIssuer(CA.certificate.subject.attributes);
+                        //@############################################
+                        let extCert = (CertOptions.extensions !== undefined) ? CertOptions.extensions : [];
+                        cert.setExtensions(extCert);
+                        //@########################################################################################################
+                        await cert.sign(CA.privateKey, CertOptions.digest);
+                        //@########################################################################################################
+                        return resolve({
+                            certificate : pki.certificateToPem(cert),
+                            validity : {
+                                notBefore : cert.validity.notBefore.toISOString(),
+                                notAfter :  cert.validity.notAfter.toISOString()
+                            }
+                        });
+                    case "ENCRYPTED PRIVATE KEY" :
+                        if (CARoot.passphrase !== undefined && CARoot.passphrase !== ""){
+                            let privateKey = pki.decryptRsaPrivateKey(CARoot.privateKey, CARoot.passphrase);
+                            if (privateKey === null) return rejected({ status : false, code : 400, msg : `error decode private key with passphrase. passphrase not match`});
+                            CA = {
+                                certificate : pki.certificateFromPem(CARoot.certificate),
+                                privateKey : privateKey
+                            }
+                            cert.publicKey = pki.publicKeyFromPem(CertOptions.keys.publicKey);
+                            cert.serialNumber = this.randomSerialNumber();
+                            (CertOptions?.expiresYears !== undefined) ?
+                                cert.validity.notAfter.setFullYear(cert.validity.notBefore.getFullYear() + CertOptions.expiresYears) :
+                                cert.validity.notAfter.setFullYear(cert.validity.notBefore.getFullYear() + 5);
+                            //@############################################
+                            cert.setSubject(CertOptions.subject);
+                            //@############################################
+                            cert.setIssuer(CA.certificate.subject.attributes);
+                            //@############################################
+                            let extCert = (CertOptions.extensions !== undefined) ? CertOptions.extensions : [];
+                            cert.setExtensions(extCert);
+                            //@########################################################################################################
+                            await cert.sign(CA.privateKey, CertOptions.digest);
+                            //@########################################################################################################
+                            return resolve({
+                                certificate : pki.certificateToPem(cert),
+                                validity : {
+                                    notBefore : cert.validity.notBefore.toISOString(),
+                                    notAfter :  cert.validity.notAfter.toISOString()
+                                }
+                            });
+                        }else{
+                            return rejected({ status : false, code : 400, msg : `private keys is "ENCRYPTED PRIVATE KEY". require CARoot.passphrase `});
+                        }
+                    default :
+                        return rejected({ status : false, code : 503, msg : `unknown pem type. illegal pem type`});
+                }
+
+            }catch (error) {
+                return rejected({ status : false, code : 503, msg : `private key pem not valid format`, error : errorToJson(error as Error)});
+            }
+            /*//##################################
             cert.publicKey = pki.publicKeyFromPem(CertOptions.keys.publicKey);
             cert.serialNumber = this.randomSerialNumber();
-
             (CertOptions?.expiresYears !== undefined) ?
                 cert.validity.notAfter.setFullYear(cert.validity.notBefore.getFullYear() + CertOptions.expiresYears) :
                 cert.validity.notAfter.setFullYear(cert.validity.notBefore.getFullYear() + 5);
@@ -127,57 +177,62 @@ export class OpenSSL {
             //@############################################
             cert.setIssuer(CA.subject.attributes);
             //@############################################
-            let extCert = (CertOptions.extensions !== undefined) ?
-                CertOptions.extensions : [];
+            let extCert = (CertOptions.extensions !== undefined) ? CertOptions.extensions : [];
             cert.setExtensions(extCert);
             CertOptions.digest = (CertOptions.digest !== undefined) ? CertOptions.digest : md.sha512.create();
 
             await cert.sign(privateKeyCA, CertOptions.digest);
 
-            let callback : CertificateData = {
-                certificate : {
-                    pem : pki.certificateToPem(cert),
-                    rsa : cert
-                },
-                publicKey : {
-                    pem : CertOptions.keys.publicKey,
-                    rsa : pki.publicKeyFromPem(CertOptions.keys.publicKey),
-                },
-                validity : {
-                    notBefore: cert.validity.notBefore.toISOString(),
-                    notAfter: cert.validity.notAfter.toISOString()
-                }
-            };
-
-            if (CertOptions.keys.encrypted !== undefined && CertOptions.keys.encrypted){
+            // @ts-ignore
+            if (CertOptions.keys?.encrypted){
                 try {
-                    let certPrivateKey = CertOptions.keys.privateKey;
-                    callback = {
-                        privateKey : {
-                            pem : certPrivateKey,
-                            rsa : pki.decryptRsaPrivateKey(certPrivateKey, CertOptions.passphrase)
+                    let getPrivateKeysFormat = pki.decryptRsaPrivateKey(CertOptions.keys.privateKey, CertOptions.passphrase);
+                    await resolve({
+                        certificate : {
+                            pem : pki.certificateToPem(cert),
+                            rsa : cert
                         },
-                        ... callback
-                    }
+                        publicKey : {
+                            pem : CertOptions.keys.publicKey,
+                            rsa : pki.publicKeyFromPem(CertOptions.keys.publicKey)
+                        },
+                        privateKey : {
+                            rsa : getPrivateKeysFormat,
+                            pem : CertOptions.keys.privateKey
+                        },
+                        validity : {
+                            notBefore : cert.validity.notBefore.toISOString(),
+                            notAfter :  cert.validity.notAfter.toISOString()
+                        }
+                    });
                 }catch (e) {
                     await rejected({ status : false, code : 500, msg : `error decrypted key for cert. passphrase may not match`})
                 }
             }else{
-                let certPrivateKey = CertOptions.keys.privateKey;
-                try {
-                    callback = {
-                        privateKey : {
-                            pem : certPrivateKey,
-                            rsa : pki.privateKeyFromPem(certPrivateKey)
+                if (CertOptions.keys?.privateKey !== undefined){
+                    let getPrivateKeysFormat = pki.privateKeyFromPem(CertOptions.keys?.privateKey);
+                    await resolve({
+                        certificate : {
+                            pem : pki.certificateToPem(cert),
+                            rsa : cert
                         },
-                        ... callback
-                    }
-                }catch (e) {
-                    await rejected({ status : false, code : 500, msg : `require passphrase key for decode key`})
+                        privateKey : {
+                            pem : CertOptions.keys.privateKey,
+                            rsa : getPrivateKeysFormat
+                        },
+                        publicKey : {
+                            pem : CertOptions.keys.publicKey,
+                            rsa : pki.publicKeyFromPem(CertOptions.keys.publicKey)
+                        },
+                        validity : {
+                            notBefore : cert.validity.notBefore.toISOString(),
+                            notAfter :  cert.validity.notAfter.toISOString()
+                        }
+                    });
+                }else{
+                    await rejected({ status : false, code : 500, msg : `options "CertOptions.keys.privateKey" not Exists`});
                 }
-            }
-            // Convert to PEM format
-            await resolve(callback);
+            }*/
         })
     }
 

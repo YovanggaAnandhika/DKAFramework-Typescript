@@ -61,8 +61,6 @@ export interface generateCertFieldsDataAsLong {
 
 export type generateCertSettingsFields = Array<generateCertFieldsDataAsLong | generateCertFieldsDataAsShort>
 
-
-
 export type generateCertSettingsExtensions = Array<
     CertExtensionsBasicConstraints |
     CertExtensionsKeyUsageCert |
@@ -85,24 +83,8 @@ export interface generateCertSettings {
 
 
 export interface KeyPairsData {
-    privateKey : string,
-    publicKey : string,
-    encrypted ?: boolean
-}
-
-export interface CertificateAuthorityDataPrivate {
-    pem : string,
-    rsa : pki.rsa.PrivateKey
-}
-
-export interface CertificateAuthorityDataPublic {
-    pem : string,
-    rsa : pki.rsa.PublicKey
-}
-
-export interface CertificateAuthorityDataCert {
-    pem : string,
-    rsa : pki.Certificate
+    privateKey: string,
+    publicKey: string
 }
 
 export interface CertificateAuthorityDataValidity {
@@ -110,36 +92,18 @@ export interface CertificateAuthorityDataValidity {
     notAfter : string
 }
 export interface CertificateAuthorityDataDetails {
-    certificate : CertificateAuthorityDataCert,
-    privateKey : CertificateAuthorityDataPrivate,
-    publicKey : CertificateAuthorityDataPublic;
-    validity : CertificateAuthorityDataValidity
+    certificate : string,
+    validity ?: CertificateAuthorityDataValidity | undefined
 }
 
 export type CertificateAuthorityData = CertificateAuthorityDataDetails
 
 export interface CertificateAuthorityRaw {
     certificate : string,
-    privateKey : string
+    privateKey : string,
+    passphrase ?: string
 }
-export type CertificateAuthority = CertificateAuthorityRaw | CertificateAuthorityDataDetails;
-
-
-
-export interface CertificateDataCert {
-    pem : string,
-    rsa : pki.Certificate
-}
-
-export interface CertificateDataPrivate {
-    pem : string,
-    rsa : pki.rsa.PrivateKey
-}
-
-export interface CertificateDataPublic {
-    pem : string,
-    rsa : pki.rsa.PublicKey
-}
+export type CertificateAuthority = CertificateAuthorityRaw
 
 export interface CertificateDataValidity {
     notBefore : string,
@@ -147,9 +111,7 @@ export interface CertificateDataValidity {
 }
 
 export interface CertificateData {
-    certificate ?: CertificateDataCert,
-    privateKey ?: CertificateDataPrivate,
-    publicKey ?: CertificateDataPublic;
+    certificate ?: string,
     validity ?: CertificateDataValidity;
 }
 export interface CertificateComparisonString {
