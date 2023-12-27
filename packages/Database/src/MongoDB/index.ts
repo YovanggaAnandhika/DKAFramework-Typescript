@@ -1,41 +1,71 @@
-import {MongoClient} from "mongodb";
-import {MongoDBConfigConstructor,} from "./Interfaces/Config";
+import mongodb, {Db, MongoClient} from "mongodb";
+import {MongoDBConfigConstructor, MongoDBConfigDB, MongoDBInstance} from "./Interfaces/Config";
 import {MongoDBCallbackDb, MongoDBCallbackMongoClient} from "./Interfaces/Callback";
+import Config from "../MariaDB/Config";
 
 export type MongoDBCallbackChecker<DB> = DB extends { db : string }
     ? MongoDBCallbackDb : MongoDBCallbackMongoClient;
 
-export function MongoDB<DB extends MongoDBConfigConstructor>(config : DB ) : Promise<MongoDBCallbackChecker<DB>> {
-    let mURLMongoDB = `mongodb://${config.host}:${config?.port}`;
-    const Mongo = new MongoClient(mURLMongoDB, config.options);
-    return new Promise(async (resolve, rejected) => {
-        if (config.db !== undefined){
-            let mDB = Mongo.db(config.db)
-            if (config.autoConnect){
-                Mongo.connect()
-                    .then(async () => {
-                        resolve(<MongoDBCallbackDb>{ status : true, code : 200, msg : `successfully connect MongoDB`, db : mDB})
-                    })
-                    .catch(async (error) => {
-                        rejected({ status : false, code : 500, msg : `Error to connect MongoDB`, error : error})
-                    })
+
+export class MongoDB {
+    private mongoClient : MongoDBInstance = {};
+    isConnected : boolean = false;
+    constructor(config : MongoDBConfigConstructor) {
+        if (Array.isArray(config)){
+            if (config.length > 1){
+                config.forEach((configSingle) => {
+                    let URLConnector = `mongodb://${configSingle.host}:${configSingle.port}`;
+                    this.mongoClient[configSingle.name] = (configSingle.options !== undefined) ? new MongoClient(URLConnector, configSingle.options) : new MongoClient(URLConnector);
+                })
             }else{
-                resolve(<MongoDBCallbackDb>{ status : true, code : 200, msg : `successfully get DB`, db : mDB})
+                let URLConnector = `mongodb://${config[0].host}:${config[0].port}`;
+                this.mongoClient["default"] = (config[0].options !== undefined) ? new MongoClient(URLConnector, config[0].options) : new MongoClient(URLConnector);
             }
         }else{
-            if (config.autoConnect){
-                Mongo.connect()
-                    .then(async () => {
-                        resolve(<MongoDBCallbackMongoClient>{ status : true, code : 200, msg : `successfully connect MongoDB`, mongoClient : Mongo})
-                    })
-                    .catch(async (error) => {
-                        rejected({ status : false, code : 500, msg : `Error to connect MongoDB`, error : error})
-                    })
-            }else{
-                resolve(<MongoDBCallbackMongoClient>{ status : true, code : 200, msg : `successfully to Connect MongoDB`, mongoClient : Mongo})
-            }
-
+            let URLConnector = `mongodb://${config.host}:${config.port}`;
+            this.mongoClient["default"] = (config.options !== undefined) ? new MongoClient(URLConnector, config.options) : new MongoClient(URLConnector);
         }
-    })
+    }
+
+    async db(config : MongoDBConfigDB) : Promise<mongodb.Db> {
+        let mongoClientInstance = (config.mongoClientName !== undefined) ? this.mongoClient[config.mongoClientName] : this.mongoClient["default"];
+        return new Promise(async (resolve, reject) => {
+            mongoClientInstance.on("serverHeartbeatSucceeded", (a) => {
+                if (!this.isConnected){
+                    this.isConnected = true;
+                }
+            });
+            mongoClientInstance.on("serverHeartbeatFailed", (a) => {
+                if (this.isConnected){
+                    this.isConnected = false;
+                }
+            });
+
+            mongoClientInstance.on("timeout", () => {
+                console.log("disconnected")
+            })
+
+            await mongoClientInstance.connect()
+                .then((mongoclient) => {
+                    if (this.isConnected){
+                        let db = (config.options !== undefined) ? mongoClientInstance.db(config.dbName, config.options) : mongoclient.db(config.dbName);
+                        resolve(db);
+                    }else{
+                        reject({ status : false, code : 503, msg : `database not connected`});
+                    }
+                })
+                .catch((error) => {
+                    reject({ status : false, code : 503, msg : `error connected database`, error : error});
+                })
+
+        })
+    }
+
+
+
+
+
+
+
 }
 export default MongoDB;

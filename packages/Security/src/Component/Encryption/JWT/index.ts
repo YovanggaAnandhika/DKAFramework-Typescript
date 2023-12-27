@@ -1,5 +1,6 @@
-import {JWE, JWK, parse, JWS} from "node-jose"
+import {JWE, JWK, parse, JWS, JWA} from "node-jose"
 import * as crypto from "crypto";
+import * as jose from "jose";
 import {merge} from "lodash";
 import {
     SecurityDefaultConfigJWEDecryptOptions,
@@ -11,6 +12,7 @@ import OpenSSL from "../../SSL";
 import {KeyPairsData} from "../../SSL/Types/GeneralCertOptionsMethod";
 import {pki} from "node-forge";
 import RawKey = JWK.RawKey;
+import {error} from "winston";
 
 export class JWT {
 
@@ -42,7 +44,6 @@ export class JWT {
     async encrypt(payloads: object | string, opts ?: SecurityConfigJWTEngineOptions) : Promise<string> {
         return new Promise(async (resolve, rejected) => {
             opts = merge(SecurityDefaultConfigJWEEncryptOptions, opts);
-
             // extract payload data
             let payloadsData = (typeof payloads === "object") ? JSON.stringify(payloads) : payloads;
             let buffer = Buffer.from(payloadsData);
@@ -61,7 +62,7 @@ export class JWT {
                                 await this.JWEEncryptor.final()
                                     .then(async (encryptText) => {
                                         let base64 = Buffer.from(encryptText,"utf-8").toString("base64url");
-                                        await resolve(`${base64}`);
+                                        await resolve(encryptText);
                                     })
                                     .catch(async (error) => {
                                         await rejected({status: false, code: 503, msg: `error final get Encryption text`, error : error})

@@ -78,6 +78,7 @@ export interface generateCertSettings {
     subject : generateCertSettingsFields;
     digest ?: md.MessageDigest | undefined;
     expiresYears ?: number | undefined;
+    passphrase ?: string | undefined;
     extensions ?: generateCertSettingsExtensions
 }
 
@@ -146,10 +147,10 @@ export interface CertificateDataValidity {
 }
 
 export interface CertificateData {
-    certificate : CertificateDataCert,
-    privateKey : CertificateDataPrivate,
-    publicKey : CertificateDataPublic;
-    validity : CertificateDataValidity
+    certificate ?: CertificateDataCert,
+    privateKey ?: CertificateDataPrivate,
+    publicKey ?: CertificateDataPublic;
+    validity ?: CertificateDataValidity;
 }
 export interface CertificateComparisonString {
     parent : string,

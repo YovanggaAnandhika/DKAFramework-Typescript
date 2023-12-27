@@ -4,6 +4,7 @@ import FastifyCors from "@fastify/cors"
 import FastifySocket from "fastify-socket.io";
 import FastifyCookie from "@fastify/cookie";
 import FastifyView from "@fastify/view";
+import FastifyMongoDB from "@fastify/mongodb";
 import {mFastify} from "../index";
 import _ from "lodash";
 import {DefaultConfigFastifyPluginView} from "../Config/DefaultConfigFastifyServer";
@@ -16,6 +17,9 @@ export function FastifyPlugins(fastify : typeof mFastify, config : ConfigFastify
     config.plugin?.view?.forEach((viewPlugins) => {
         viewPlugins = _.merge(DefaultConfigFastifyPluginView, viewPlugins)
         fastify.register(FastifyView, viewPlugins);
+    });
+    config.plugin?.mongoDB?.forEach((mongoOptions) => {
+        fastify.register(FastifyMongoDB, mongoOptions);
     });
     //(config.plugin?.view?.enabled) ? fastify.register(FastifyView, config.plugin?.view?.options) : null;
 }

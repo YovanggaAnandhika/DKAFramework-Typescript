@@ -2,7 +2,7 @@ import {JWEOptions, JWKOptions, JWTConfig, SecurityConfigJWTEngineOptions} from 
 import path from "path";
 
 export const SecurityDefaultConfigJWEEncryptOptionsJWK : JWKOptions = {
-    form : "pem",
+    form : "pem"
 }
 
 export const SecurityDefaultConfigJWEOptionsJWE : JWEOptions = {
@@ -10,7 +10,7 @@ export const SecurityDefaultConfigJWEOptionsJWE : JWEOptions = {
     contentAlg : "A256GCM",
     fields : {
         "alg": "RSA-OAEP"
-    }
+    },
 }
 
 export const SecurityDefaultConfigJWEEncryptOptions : SecurityConfigJWTEngineOptions = {

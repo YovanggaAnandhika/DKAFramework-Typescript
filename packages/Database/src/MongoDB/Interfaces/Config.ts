@@ -1,10 +1,24 @@
-import {MongoClientOptions} from "mongodb";
+import {DbOptions, MongoClient, MongoClientOptions} from "mongodb";
 
 
-export interface MongoDBConfigConstructor {
+export interface MongoDBConfigConstructorObject {
     host ?: string | undefined,
     port ?: string | number | undefined,
-    autoConnect ?: boolean | undefined,
-    db ?: string | undefined,
-    options ?: MongoClientOptions
+    options ?: MongoClientOptions | undefined
+}
+
+export interface MongoDBConfigConstructorObjectInArray extends MongoDBConfigConstructorObject {
+    name : string
+}
+
+export type MongoDBConfigConstructor = Array<MongoDBConfigConstructorObjectInArray> | MongoDBConfigConstructorObject;
+
+export interface MongoDBInstance {
+    [ name : string ] : MongoClient
+}
+
+export interface MongoDBConfigDB {
+    mongoClientName ?: string | undefined;
+    dbName : string,
+    options ?: DbOptions | undefined
 }

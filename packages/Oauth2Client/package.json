@@ -1,8 +1,8 @@
 {
-  "name": "@dkaframework/utils",
+  "name": "@dkaframework/oauth2client",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
-  "version": "1.0.149",
+  "version": "1.0.147",
   "scripts": {
     "clean": "rimraf dist",
     "start": "nodemon --watch test --watch src --exec ts-node test/index.ts",

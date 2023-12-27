@@ -1,5 +1,5 @@
 export interface estimationCostFromTimeInterfaceTemp {
-    data ?: string | undefined,
+    data ?: number,
     type ?: string | undefined,
     summationCost ?: number | undefined,
     unitCost ?: number | undefined,
@@ -9,14 +9,31 @@ export interface estimationCostFromTimeInterfaceTemp {
 }
 export interface estimationCostFromTimeInterfaceSettingsParameter {
     cost : number,
-    costMax : number
+    costMax ?: number | undefined | typeof Infinity
 }
 
-export type  estimationCostFromTimeInterfaceSettings = {
-    [key : string]: estimationCostFromTimeInterfaceSettingsParameter;
+
+export type estimationCostFromTimeInterfaceSettings = {
+    [key : "hour" | "second" | "millisecond" | "week" | "day" | string ]: estimationCostFromTimeInterfaceSettingsParameter;
 };
 
+export type estimationCostFromTimeInterfaceDatas = {
+    [key : "hour" | "second" | "millisecond" | "week" | "day" | string ]: number;
+};
+
+
+export interface estimationCostFromTimeInterfaceCallbackFinalCost {
+    finalCost : {
+        allCostRemaining : number
+    }
+}
+export interface estimationCostFromTimeInterfaceCallbackObject {
+    [ key : string ] : estimationCostFromTimeInterfaceTemp
+}
+
+export type estimationCostFromTimeInterfaceCallback  = estimationCostFromTimeInterfaceCallbackObject & estimationCostFromTimeInterfaceCallbackFinalCost
+
 export interface estimationCostFromTimeInterface {
-    data ?: any
+    data ?: estimationCostFromTimeInterfaceDatas
     settings ?: estimationCostFromTimeInterfaceSettings
 }

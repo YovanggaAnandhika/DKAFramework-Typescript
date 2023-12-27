@@ -2,6 +2,7 @@ import {
     FastifyPluginOptions, FastifyRequest,
 } from "fastify";
 import { mFastify } from "../index";
+import {RouteGenericInterface} from "fastify/types/route";
 export type FASTIFY_ENGINE = "FASTIFY"
 export const FASTIFY_ENGINE : FASTIFY_ENGINE = "FASTIFY"
 
@@ -10,3 +11,4 @@ export type ConfigFastifyServerRegisterConstructorNext = (error ?: Error) => voi
 export type ConfigFastifyServerMain = (app : typeof mFastify, opts : FastifyPluginOptions, next: ConfigFastifyServerRegisterConstructorNext) => Promise<void> | void;
 export type ConfigFastifyServerRegister = (app : typeof mFastify, opts : FastifyPluginOptions, next: ConfigFastifyServerRegisterConstructorNext) => Promise<void> | void;
 export type DKAFastifyRequestWithRouteGeneric<Routes> = FastifyRequest<Routes>;
+export type DKAFastifyRequest<R extends RouteGenericInterface = RouteGenericInterface> = FastifyRequest<R>;

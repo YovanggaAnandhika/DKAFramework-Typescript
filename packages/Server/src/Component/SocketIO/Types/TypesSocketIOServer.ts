@@ -1,6 +1,7 @@
 import {ExtendedError} from "../../../Interfaces/ConfigServerInterfaces";
-import {Server, Socket} from "socket.io";
+import {Namespace, Server, Socket} from "socket.io";
 import {DefaultEventsMap} from "socket.io/dist/typed-events";
+import {io} from "socket.io-client";
 
 
 export type SOCKET_ENGINE = "SOCKET.IO";
@@ -21,4 +22,6 @@ export type SocketIOError = (error ?: ExtendedError) => void | undefined;
 export type SocketIOSocketServer = Server<DefaultEventsMap, DefaultEventsMap, DefaultEventsMap, any>;
 export type SocketIOSocketMiddlewareSocket = Socket<DefaultEventsMap, DefaultEventsMap, DefaultEventsMap, any>;
 export type SocketIOMiddlewareUse = (socket : SocketIOSocketMiddlewareSocket, next : SocketIOError) => void | undefined | Promise<void>;
-export type SocketIOSocketIO = (io : SocketIOSocketServer) => Promise<void> | void
+export type SocketIOSocketIO = (io : SocketIOSocketServer) => Promise<void> | void;
+export type SocketIONamespace = Namespace<DefaultEventsMap,DefaultEventsMap, DefaultEventsMap, any>;
+export type SocketIOFunctionNamespace = (namespace : SocketIONamespace) => void | Promise<void> | undefined;

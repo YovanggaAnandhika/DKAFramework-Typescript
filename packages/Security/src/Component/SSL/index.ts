@@ -133,8 +133,8 @@ export class OpenSSL {
             CertOptions.digest = (CertOptions.digest !== undefined) ? CertOptions.digest : md.sha512.create();
 
             await cert.sign(privateKeyCA, CertOptions.digest);
-            // Convert to PEM format
-            await resolve({
+
+            let callback : CertificateData = {
                 certificate : {
                     pem : pki.certificateToPem(cert),
                     rsa : cert
@@ -143,15 +143,41 @@ export class OpenSSL {
                     pem : CertOptions.keys.publicKey,
                     rsa : pki.publicKeyFromPem(CertOptions.keys.publicKey),
                 },
-                privateKey : {
-                    pem : CertOptions.keys.privateKey,
-                    rsa : pki.privateKeyFromPem(CertOptions.keys.privateKey)
-                },
                 validity : {
                     notBefore: cert.validity.notBefore.toISOString(),
                     notAfter: cert.validity.notAfter.toISOString()
                 }
-            })
+            };
+
+            if (CertOptions.keys.encrypted !== undefined && CertOptions.keys.encrypted){
+                try {
+                    let certPrivateKey = CertOptions.keys.privateKey;
+                    callback = {
+                        privateKey : {
+                            pem : certPrivateKey,
+                            rsa : pki.decryptRsaPrivateKey(certPrivateKey, CertOptions.passphrase)
+                        },
+                        ... callback
+                    }
+                }catch (e) {
+                    await rejected({ status : false, code : 500, msg : `error decrypted key for cert. passphrase may not match`})
+                }
+            }else{
+                let certPrivateKey = CertOptions.keys.privateKey;
+                try {
+                    callback = {
+                        privateKey : {
+                            pem : certPrivateKey,
+                            rsa : pki.privateKeyFromPem(certPrivateKey)
+                        },
+                        ... callback
+                    }
+                }catch (e) {
+                    await rejected({ status : false, code : 500, msg : `require passphrase key for decode key`})
+                }
+            }
+            // Convert to PEM format
+            await resolve(callback);
         })
     }
 

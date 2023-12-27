@@ -14,6 +14,7 @@ import {FastifyCorsOptions} from "@fastify/cors";
 import {FastifyFormbodyOptions} from "@fastify/formbody";
 import {FastifyCookieOptions} from "@fastify/cookie";
 import {FastifyViewOptions} from "@fastify/view";
+import {FastifyMongodbOptions, ObjectId as MongoDBObjectId} from "@fastify/mongodb";
 
 
 export interface ConfigFastifyServerSettingsEngineHttp {
@@ -70,12 +71,18 @@ export interface ConfigFastifyServerInstancesPluginOptionsCookie {
     options ?: FastifyPluginOptions & FastifyCookieOptions | undefined
 }
 
+export type ObjectId = typeof MongoDBObjectId;
+export const ObjectId : ObjectId = MongoDBObjectId;
+
+export type ConfigFastifyServerInstancesPluginOptionsMongoDB  = Array<FastifyPluginOptions & FastifyMongodbOptions>
+
 export interface ConfigFastifyServerInstancesPlugin {
     formBody ?: ConfigFastifyServerInstancesPluginOptionsFormBody | undefined,
     cors ?: ConfigFastifyServerInstancesPluginOptionsCors | undefined,
     socketIO ?: ConfigFastifyServerInstancesPluginOptionsSocketIO | undefined,
     cookie ?: ConfigFastifyServerInstancesPluginOptionsCookie | undefined,
-    view ?: ConfigFastifyServerInstancesPluginOptionsView | undefined
+    view ?: ConfigFastifyServerInstancesPluginOptionsView | undefined;
+    mongoDB ?: ConfigFastifyServerInstancesPluginOptionsMongoDB | undefined;
 }
 
 
