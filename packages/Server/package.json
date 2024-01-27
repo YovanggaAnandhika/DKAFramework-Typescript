@@ -37,6 +37,7 @@
     "action:copy": "tscp",
     "build": "yarn run action:clean && yarn run action:compile && yarn run action:copy",
     "login": "npm login",
+    "prepublish": "yarn run build",
     "test:fastify": "nodemon --watch src --watch test --exec ts-node test/fastify.test.ts"
   },
   "dependencies": {

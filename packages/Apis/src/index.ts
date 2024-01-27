@@ -1,12 +1,10 @@
 import Payment from "./Payment";
-import Chat from "./Chat";
 
 
 const Apis = {
-    Payment : Payment,
-    Chat : Chat
+    Payment : Payment
 };
 
 
-export { Payment, Chat }
+export { Payment }
 export default Apis;
