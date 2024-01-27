@@ -4,22 +4,20 @@ import webpackDev, {} from "webpack-dev-server";
 import {merge} from "lodash";
 import {DefaultConfigWebpackServer} from "./Config/DefaultConfigurationWebpackServer";
 import {CallbackWebpackServer} from "./Interfaces/CallbackWebpackServer";
-import {DEVELOPMENT, PRODUCTION} from "../../Types/ConfigServerTypes";
 import {MODE_COMPILE, MODE_SERVER} from "./Types/WebpackTypesServer";
 
 export async function WebpackServerInstances<Config extends ConfigWebpackServer = ConfigWebpackServer>(config : Config) : Promise<CallbackWebpackServer> {
     let mWebpack : Compiler;
     let mWebpackDev : webpackDev;
-    config = await merge(DefaultConfigWebpackServer, config);
+    config = { ... DefaultConfigWebpackServer, ... config};
+    mWebpack = webpack(config.webpack);
     return new Promise(async (resolve, rejected) => {
         if (config.webpack !== undefined){
-            config.webpack.mode = (config.state === "DEVELOPMENT") ? "development" : (config.state === "PRODUCTION") ? "production" : "none";
-            mWebpack = webpack(config.webpack);
+            config.webpack.mode = (config.state === "DEVELOPMENT") ? "development" : (config.state === "PRODUCTION") ? "production" : "development";
             if(config.port !== undefined && config.host !== undefined){
                 config.webpackDev.host = config.host;
                 config.webpackDev.port = config.port;
                 mWebpackDev = new webpackDev(config.webpackDev, mWebpack);
-
                 switch (config.mode){
                     case MODE_COMPILE :
                         mWebpack.run(async (error, result) => {

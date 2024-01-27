@@ -1,4 +1,4 @@
-import {Configuration, ModuleOptions} from "webpack";
+import {DefinePlugin, Configuration, ModuleOptions} from "webpack";
 import {Configuration as ConfigurationWebpackDev} from "webpack-dev-server"
 import {MODE_SERVER, WEBPACK_ENGINE, WebpackRulesTypes} from "../Types/WebpackTypesServer";
 import path, {join} from "path";
@@ -51,24 +51,28 @@ export const DefaultConfigWebpack : Configuration = {
         extensions: ['.ts', '.tsx', '.js', '.json'],
     },
     output : {
-        path : join(process.cwd(),"./dist/"),
+        path : join(process.cwd(),"dist"),
         filename: 'dkaframework.js'
     },
     plugins: [
         new HtmlWebpackPlugin({
             template: path.join(__dirname, "./../public/index.html"),
             inject : "body"
+        }),
+        new DefinePlugin({
+            'process.env' : JSON.stringify(process.env)
         })
     ],
 }
 
 export const DefaultConfigWebpackDev : ConfigurationWebpackDev = {
     static : {
-        directory : join(__dirname, "../public"),
+        directory : join(__dirname, "./../public"),
         publicPath : "/"
     }
 }
 export const DefaultConfigWebpackServer : ConfigWebpackServer = {
+    state : Options.STATE.PRODUCTION,
     engine : WEBPACK_ENGINE,
     mode : MODE_SERVER,
     host : Options.HOST.LOCALHOST,

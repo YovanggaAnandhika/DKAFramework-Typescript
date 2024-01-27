@@ -22,6 +22,7 @@
     "outDir": "dist",
     // go to js file when using IDE functions like
     // "Go to Definition" in VSCode
+    "skipLibCheck": true,
     "declarationMap": true,
     "allowSyntheticDefaultImports": true,
     "esModuleInterop": true,

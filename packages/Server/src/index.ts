@@ -11,11 +11,11 @@ import {merge} from "lodash";
 import {ESCPOS_ENGINE} from "./Component/Escpos/Types/EscposTypes";
 
 async function Server<Config extends ConfigServerInterfaces> (serverConfig ?: ServerConfigSelector<Config>) : Promise<ServerSelector<Config>> {
-    serverConfig = merge({ engine : FASTIFY_ENGINE }, serverConfig)
+    serverConfig = { ... { engine : FASTIFY_ENGINE }, ... serverConfig}
     return new Promise(async (resolve, rejected) => {
         switch (serverConfig?.engine) {
             case FASTIFY_ENGINE :
-                serverConfig = merge(DefaultServerConfiguration, serverConfig)
+                serverConfig = { ... DefaultServerConfiguration, ... serverConfig}
                 await require("./Component/Fastify").default(serverConfig)
                     .then(async (mFastifyCallback) => {
                         await resolve(mFastifyCallback as ServerSelector<Config>)
@@ -25,7 +25,7 @@ async function Server<Config extends ConfigServerInterfaces> (serverConfig ?: Se
                     });
                 break;
             case SOCKET_ENGINE :
-                serverConfig = merge(DefaultServerConfiguration, serverConfig)
+                serverConfig = { ... DefaultServerConfiguration, ... serverConfig}
                 await require("./Component/SocketIO").default(serverConfig)
                     .then(async (mServerCallbackInstance) => {
                         //################################################################
@@ -46,7 +46,7 @@ async function Server<Config extends ConfigServerInterfaces> (serverConfig ?: Se
                     });
                 break;
             case UDP_ENGINE :
-                serverConfig = merge(DefaultServerConfiguration, serverConfig)
+                serverConfig = { ... DefaultServerConfiguration, ... serverConfig}
                 await require("./Component/UDP").default(serverConfig)
                     .then(async (udpSocket) => {
                         await resolve({ status : true, code : 200, msg : `Server Berhasil Dijalankan` } as ServerSelector<Config>);
@@ -56,7 +56,7 @@ async function Server<Config extends ConfigServerInterfaces> (serverConfig ?: Se
                     });
                 break;
             case WEBPACK_ENGINE :
-                serverConfig = merge(DefaultServerConfiguration, serverConfig)
+                serverConfig = { ... DefaultServerConfiguration, ... serverConfig}
                 await require("./Component/Webpack").default(serverConfig)
                     .then(async (webpackServer) => {
                         await resolve(webpackServer as ServerSelector<Config>);

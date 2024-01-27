@@ -9,7 +9,6 @@ import {DEVELOPMENT, PRODUCTION} from "../Types/ConfigServerTypes";
 import {UDP_ENGINE} from "../Component/UDP/Types/TypesUDPServer";
 import {MODE_COMPILE, MODE_SERVER, WEBPACK_ENGINE} from "../Component/Webpack/Types/WebpackTypesServer";
 import {ESCPOS_ENGINE, ESCPOS_NETWORK, ESCPOS_SERIAL, ESCPOS_USB} from "../Component/Escpos/Types/EscposTypes";
-import {MODE_USB} from "@dkaframework/iot/dist/Component/Arduino/NodeMCU/Interfaces/NodeMCUConfig";
 
 
 export const ConfigServerEngineFastify : FASTIFY_ENGINE = "FASTIFY"
