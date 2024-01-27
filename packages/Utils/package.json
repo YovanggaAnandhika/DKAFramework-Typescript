@@ -2,7 +2,7 @@
   "name": "@dkaframework/utils",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
-  "version": "1.0.149",
+  "version": "1.2.1",
   "scripts": {
     "clean": "rimraf dist",
     "start": "nodemon --watch test --watch src --exec ts-node test/index.ts",
