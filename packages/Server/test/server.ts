@@ -1,4 +1,4 @@
-import {Options, Server} from "./../src";
+import {Server, Options} from "./../src";
 import * as fs from "fs";
 import * as path from "path";
 
@@ -6,35 +6,37 @@ import * as path from "path";
 
     await Server({
         engine : Options.ENGINE.FASTIFY,
-        host : Options.HOST.WILDCARD,
-        port : 53319,
+        port : 5321,
         app : (app, opts, next) => {
+            let cashier = app.io.of("/cashier");
+            next()
+        },
+        server : (server) => {
 
-            app.io.of("/class")
-                .on("connection", (io) => {
-                    console.log(`connected class ${io.id}`);
-                    io.on("disconnect", (reason) => {
-                        console.error(`disconnected class ${io.id}`)
-                    });
-                })
-            app.io.on("connection", (io) => {
-                console.log(`connected ${io.id}`);
-                io.on("disconnect", (reason) => {
-                    console.error(`disconnected ${io.id}`)
-                });
-
-
-            })
-            next();
         },
         plugin : {
-          cors : {
-              enabled : true
-          }
+            socketIO : {
+                options: {
+                    cors : {
+                        origin : "*"
+                    }
+                }
+            }
         },
         settings : {
             engine : {
-                type : Options.SETTINGS.ENGINE.PROTOCOL.HTTP
+                type : Options.SETTINGS.ENGINE.PROTOCOL.HTTP2,
+                options : {
+                    http2 : true,
+                    https : {
+                        cert : fs.readFileSync(path.join(__dirname,"SSL","Cert","./server.crt"),"utf-8"),
+                        key : fs.readFileSync(path.join(__dirname,"SSL","Keys","./private.key"),"utf-8"),
+                        ca : [
+                            fs.readFileSync(path.join(__dirname,"SSL","Cert","./ca.crt"),"utf-8"),
+                        ],
+                        passphrase : "Cyberhack2010"
+                    }
+                }
             }
         }
     }).then(async (resultServ) => {

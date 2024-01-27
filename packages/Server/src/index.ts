@@ -10,7 +10,7 @@ import {DefaultServerConfiguration} from "./Config/DefaultServerConfiguration";
 import {merge} from "lodash";
 import {ESCPOS_ENGINE} from "./Component/Escpos/Types/EscposTypes";
 
-export async function Server<Config extends ConfigServerInterfaces> (serverConfig ?: ServerConfigSelector<Config>) : Promise<ServerSelector<Config>> {
+async function Server<Config extends ConfigServerInterfaces> (serverConfig ?: ServerConfigSelector<Config>) : Promise<ServerSelector<Config>> {
     serverConfig = merge({ engine : FASTIFY_ENGINE }, serverConfig)
     return new Promise(async (resolve, rejected) => {
         switch (serverConfig?.engine) {
@@ -58,8 +58,8 @@ export async function Server<Config extends ConfigServerInterfaces> (serverConfi
             case WEBPACK_ENGINE :
                 serverConfig = merge(DefaultServerConfiguration, serverConfig)
                 await require("./Component/Webpack").default(serverConfig)
-                    .then(async () => {
-                        await resolve({ status : true, code : 200, msg : `Server Berhasil Dijalankan` } as ServerSelector<Config>);
+                    .then(async (webpackServer) => {
+                        await resolve(webpackServer as ServerSelector<Config>);
                     })
                     .catch(async (error) => {
                         await rejected(error)
@@ -80,4 +80,5 @@ export async function Server<Config extends ConfigServerInterfaces> (serverConfi
     });
 }
 
-export { Options };
+export { Options, Server };
+export default Server;

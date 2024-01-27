@@ -41,11 +41,15 @@ export interface CertExtensionsExtKeyUsage {
     clientAuth: boolean,
 }
 
-export interface CertExtensionsSubjectAltNameTypes {
-    type : 2 | 7,
+export interface CertExtensionsSubjectAltNameTypesDNS {
+    type : 2,
     value : string
+}
+export interface CertExtensionsSubjectAltNameTypesIP {
+    type : 7,
+    ip : string
 }
 export interface CertExtensionsSubjectAltName {
     name : "subjectAltName",
-    altNames : Array<CertExtensionsSubjectAltNameTypes>
+    altNames : Array<CertExtensionsSubjectAltNameTypesDNS | CertExtensionsSubjectAltNameTypesIP>
 }

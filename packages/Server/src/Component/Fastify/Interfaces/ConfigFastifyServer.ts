@@ -1,4 +1,4 @@
-import {ConfigFastifyServerMain, FASTIFY_ENGINE} from "../Types/TypesFastifyServer";
+import {ConfigFastifyServerMain, DKAFastifyRawServer, FASTIFY_ENGINE} from "../Types/TypesFastifyServer";
 import {GlobalServerConfigInterfacesSettingsLogger} from "../../../Interfaces/ConfigServerInterfaces";
 import {
     FastifyHttp2Options,
@@ -15,6 +15,8 @@ import {FastifyFormbodyOptions} from "@fastify/formbody";
 import {FastifyCookieOptions} from "@fastify/cookie";
 import {FastifyViewOptions} from "@fastify/view";
 import {FastifyMongodbOptions, ObjectId as MongoDBObjectId} from "@fastify/mongodb";
+import {ConfigSocketIOServerInstanceEventsLatency} from "../../SocketIO/Interfaces/ConfigSocketIOServer";
+import {mFastify} from "../index";
 
 
 export interface ConfigFastifyServerSettingsEngineHttp {
@@ -60,10 +62,16 @@ export interface ConfigFastifyServerInstancesPluginOptionsCors {
     enabled ?: boolean | undefined,
     options ?: FastifyPluginOptions & FastifyCorsOptions | undefined
 }
+
+export type DefaultSocketIOPluginsOptions = FastifyPluginOptions & Partial<SocketServerOptions>;
+export interface ConfigFastifyServerInstancesPluginOptionsSocketIOOptions extends DefaultSocketIOPluginsOptions {
+    onLatency ?: (responseLatency : ConfigSocketIOServerInstanceEventsLatency) => Promise<void> | void | undefined;
+}
+
 //Partial<SocketServerOptions>
 export interface ConfigFastifyServerInstancesPluginOptionsSocketIO {
     enabled ?: boolean | undefined,
-    options ?: FastifyPluginOptions & Partial<SocketServerOptions> | undefined
+    options ?: ConfigFastifyServerInstancesPluginOptionsSocketIOOptions | undefined
 }
 
 export interface ConfigFastifyServerInstancesPluginOptionsCookie {
@@ -85,12 +93,14 @@ export interface ConfigFastifyServerInstancesPlugin {
     mongoDB ?: ConfigFastifyServerInstancesPluginOptionsMongoDB | undefined;
 }
 
+export type FastifyServerFunction = (server : DKAFastifyRawServer<typeof mFastify.server>) => void | Promise<void> | undefined;
 
 export type ConfigFastifyServerInstances = {
     engine ?: FASTIFY_ENGINE | undefined
     state ?: DEVELOPMENT | PRODUCTION
     host ?: string | undefined,
     port ?: number | undefined,
+    server ?: FastifyServerFunction | undefined,
     /**
      * @type ConfigFastifyServerMain
      */

@@ -1,13 +1,11 @@
-export {default as MariaDB} from "./MariaDB"
-export { default as MongoDB } from "./MongoDB";
-export { default as Firestore } from "./Firestore";
-
 import MariaDB from "./MariaDB";
 import FireStore from "./Firestore";
 import MongoDB from "./MongoDB";
+import Sqlite from "./Sqlite";
 
 const Database = {
     MariaDB : MariaDB,
+    Sqlite : Sqlite,
     Firestore : FireStore,
     MongoDB : MongoDB
 };

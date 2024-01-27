@@ -12,7 +12,6 @@ import {merge} from "lodash";
 import {DefaultConfigSerial, DefaultConfigUSB} from "./Config/DefaultConfigEscpos";
 import {DEVELOPMENT, ESCPOS_SERIAL, ESCPOS_USB} from "./Types/EscposTypes";
 
-
 function checkModuleExist(moduleName : string){
     try {
         require.resolve(moduleName);

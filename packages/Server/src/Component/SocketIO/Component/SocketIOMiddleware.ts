@@ -1,8 +1,8 @@
 import {SocketIOMiddlewareUse} from "../Types/TypesSocketIOServer";
 
 
-export const SocketIOMiddleware : SocketIOMiddlewareUse = async (io, next) => {
+export const SocketIOMiddleware : SocketIOMiddlewareUse = (io, next) => {
 
 
-    await next();
+    next();
 }

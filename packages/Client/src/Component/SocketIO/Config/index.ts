@@ -6,13 +6,15 @@ export const ConfigDefaultSocketIOClient : ConfigSocketIOClient = {
     port : 53310,
     ns : "/",
     settings : {
-        socket : {
+        manager : {
             secure : false,
             timeout : 8000,
             autoConnect : false,
-            pingMode : "INTERVAL",
-            pingDelay : 4000,
             transports : ["websocket", "polling"]
+        },
+        socket : {
+            pingMode : "INTERVAL",
+            pingDelay : 8000,
         }
     }
 }
@@ -22,14 +24,16 @@ export const ConfigDefaultSocketIOClientHTTPS : ConfigSocketIOClient = {
     port : 53310,
     ns : "/",
     settings : {
-        socket : {
+        manager : {
             secure : true,
             timeout : 8000,
-            pingMode : "INTERVAL",
             autoConnect : false,
-            pingDelay : 4000,
             transports : ["websocket", "polling"],
             rejectUnauthorized : false,
+        },
+        socket : {
+            pingMode : "INTERVAL",
+            pingDelay : 8000,
         },
     }
 }

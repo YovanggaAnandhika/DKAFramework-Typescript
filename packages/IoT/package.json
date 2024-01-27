@@ -3,7 +3,7 @@
   "version": "1.0.13",
   "private": false,
   "author": {
-    "email": "dhikaprivate@gmail.com",
+    "email": "dka.tech.dev@gmail.com",
     "name": "Yovangga Anandhika",
     "url": "https://www.yovanggaanandhika.com"
   },
@@ -18,7 +18,7 @@
     "prepublish": "yarn run clean && yarn run compile"
   },
   "dependencies": {
-    "@node-escpos/core": "^0.4.0",
+    "@node-escpos/core": "^0.5.0",
     "@node-escpos/network-adapter": "^0.0.1",
     "@node-escpos/serialport-adapter": "^1.0.0",
     "@node-escpos/server": "^0.0.1",

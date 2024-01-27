@@ -8,11 +8,12 @@ import FastifyMongoDB from "@fastify/mongodb";
 import {mFastify} from "../index";
 import _ from "lodash";
 import {DefaultConfigFastifyPluginView} from "../Config/DefaultConfigFastifyServer";
+import SocketIOInstance from "./SocketIO/SocketIOInstance";
 
-export function FastifyPlugins(fastify : typeof mFastify, config : ConfigFastifyServer) {
+export async function FastifyPlugins(fastify : typeof mFastify, config : ConfigFastifyServer) {
     (config.plugin?.formBody?.enabled) ? fastify.register(FastifyFormBody,config.plugin?.formBody?.options) : null;
     (config.plugin?.cors?.enabled) ? fastify.register(FastifyCors, config.plugin?.cors?.options) : null;
-    (config.plugin?.socketIO?.enabled) ? fastify.register(FastifySocket, config.plugin?.socketIO?.options) : null;
+    (config.plugin?.socketIO?.enabled) ? await SocketIOInstance(fastify,config) : null;
     (config.plugin?.cookie?.enabled) ? fastify.register(FastifyCookie, config.plugin?.cookie?.options) : null;
     config.plugin?.view?.forEach((viewPlugins) => {
         viewPlugins = _.merge(DefaultConfigFastifyPluginView, viewPlugins)

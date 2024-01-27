@@ -5,8 +5,6 @@ import {
     ConfigFastifyServerSettingsEngineHttp2,
     ConfigFastifyServerSettingsEngineHttps
 } from "../Interfaces/ConfigFastifyServer";
-import {readFileSync} from "fs";
-import path from "path";
 import ejs from "ejs";
 import {FastifyPluginOptions} from "fastify";
 import {FastifyViewOptions} from "@fastify/view";
@@ -80,12 +78,6 @@ export const fastifyEngineSettingsDefaultHTTPS : ConfigFastifyServerSettingsEngi
     type : "HTTPS",
     options : {
         https : {
-            key : readFileSync(path.join(__dirname, "./Cert/Server/localhost.key")),
-            cert : readFileSync(path.join(__dirname, "./Cert/Server/localhost.crt")),
-            ca : [
-                readFileSync(path.join(__dirname, "./Cert/CA/localhost.crt"))
-            ],
-
             rejectUnauthorized : true,
             requestCert : false
         }
@@ -98,11 +90,6 @@ export const fastifyEngineSettingsDefaultHTTP2 : ConfigFastifyServerSettingsEngi
         http2: true,
         https: {
             allowHTTP1: true,
-            key: readFileSync(path.join(__dirname, "./Cert/Server/localhost.key")),
-            cert: readFileSync(path.join(__dirname, "./Cert/Server/localhost.crt")),
-            ca: [
-                readFileSync(path.join(__dirname, "./Cert/CA/localhost.crt"))
-            ],
             rejectUnauthorized: true,
             requestCert: false
         }

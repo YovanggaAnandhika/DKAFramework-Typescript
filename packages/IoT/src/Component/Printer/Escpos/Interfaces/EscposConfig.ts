@@ -1,5 +1,6 @@
 import {TYPE_ALL_STATES, TYPE_ESCPOS_NETWORK, TYPE_ESCPOS_SERIAL, TYPE_ESCPOS_USB} from "../Types/EscposTypes";
-
+import {BarcodeOptions, BarcodeType, Image, Printer} from "@node-escpos/core";
+import EventEmitter from "eventemitter3";
 
 export interface EscposPrinterSettingsNetwork {
     encoding ?: string | undefined,
@@ -67,6 +68,7 @@ export interface EscposUSB {
     autoDetectUSB ?: boolean | undefined,
     settings ?: EscposPrinterSettingsUSB | undefined
 }
+
 
 
 export type EscposConfig = EscposUSB | EscposNetwork | EscposSerial;

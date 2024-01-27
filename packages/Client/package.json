@@ -1,6 +1,6 @@
 {
   "name": "@dkaframework/client",
-  "version": "1.0.193",
+  "version": "1.0.207",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "module": "dist/DKAClientFramework.js",
@@ -22,7 +22,7 @@
     "moment-timezone": "^0.5.43",
     "node-cron": "^3.0.2",
     "node-schedule": "^2.1.1",
-    "socket.io-client": "^4.7.2",
+    "socket.io-client": "^4.7.4",
     "ts-node": "^10.9.1",
     "web-pingjs": "^1.0.1"
   },

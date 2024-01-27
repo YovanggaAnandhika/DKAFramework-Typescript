@@ -78,7 +78,6 @@ export async function SocketIOServerInstances<Config extends ConfigSocketIOServe
                                     }
 
                                     mNamespace.on("connection",async (io) => {
-
                                         io.on("_ping", (startTime : Moment, cb) => {
                                             if (typeof cb === "function") {
                                                 cb(startTime);

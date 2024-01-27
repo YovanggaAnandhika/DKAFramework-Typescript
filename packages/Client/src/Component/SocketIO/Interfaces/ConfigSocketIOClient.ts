@@ -1,9 +1,10 @@
 import {Packet} from "socket.io-parser";
 import {SOCKET_ENGINE, SOCKET_TYPE_HTTP, SOCKET_TYPE_HTTPS} from "../Types/TypesSocketIOClient";
 import {GlobalClientConfigInterfaces} from "../../../Interfaces/ConfigClientInterfaces";
-import {ManagerOptions, Socket, SocketOptions} from "socket.io-client";
+import {Manager, ManagerOptions, Socket, SocketOptions} from "socket.io-client";
 import {DisconnectDescription} from "socket.io-client/build/esm-debug/socket";
 import moment from "moment-timezone";
+import {TransportError} from "engine.io-client/build/esm/transport";
 
 export interface ConfigSocketIOClientInstanceSettingsEngineHTTP {
     protocol : SOCKET_TYPE_HTTP
@@ -15,13 +16,18 @@ export interface ConfigSocketIOClientInstanceSettingsEngineHTTPS {
 
 export type ConfigSocketIOClientInstanceSettingsPingMode = "INTERVAL";
 export type ConfigSocketIOClientInstanceSettingsPingProtocol = "UDP" | "TCP";
-export interface ConfigSocketIOClientInstanceSettingsSocket extends Partial<ManagerOptions & SocketOptions>{
+export interface ConfigSocketIOClientInstanceSettingsSocket extends Partial<SocketOptions>{
     pingMode ?: ConfigSocketIOClientInstanceSettingsPingMode;
     pingDelay ?: number | undefined;
 }
 
+export interface ConfigSocketIOClientInstanceSettingsManager extends Partial<ManagerOptions>{
+
+}
+
 export interface ConfigSocketIOClientInstanceSettings {
-    socket ?: ConfigSocketIOClientInstanceSettingsSocket
+    socket ?: ConfigSocketIOClientInstanceSettingsSocket,
+    manager ?: ConfigSocketIOClientInstanceSettingsManager
 }
 
 export interface ConfigSocketIOClientInstanceEventsManager {
@@ -31,8 +37,17 @@ export interface ConfigSocketIOClientInstanceEventsManager {
     onReconnect ?: (attempt ?: number | undefined) => void | undefined | Promise<void>,
     onReconnectAttempt ?: (attempt ?: number | undefined) => void | undefined | Promise<void>,
     onReconnectError ?: (error ?: Error | undefined) => void | undefined | Promise<void>,
-    onReconnectFailed ?: () => void | undefined | Promise<void>
+    onReconnectFailed ?: () => void | undefined | Promise<void>,
+    onError ?: (error ?: Error | undefined) => void | undefined | Promise<void>,
+    onClose ?: (reason ?: string | undefined, description ?: DisconnectDescription | undefined) => void | undefined | Promise<void>,
 
+}
+export interface ConfigSocketIOClientInstanceEventsEngineTransport {
+    onError : (err : TransportError) => void
+}
+export interface ConfigSocketIOClientInstanceEventsEngine {
+    onError ?: (error ?: Error | string | undefined) => void | undefined | Promise<void>,
+    Transport ?: ConfigSocketIOClientInstanceEventsEngineTransport | undefined
 }
 
 export type ConfigSocketIOClientInstanceEventsLatencyType = "GREAT" | "GOOD" | "ACCEPTABLE" | "BAD" | "TIMEOUT";
@@ -60,7 +75,8 @@ export interface ConfigSocketIOClientInstanceEvents {
     onDisconnect ?: (reason ?: Socket.DisconnectReason | undefined, description ?: DisconnectDescription | undefined) => void | undefined | Promise<void>,
     onConnectError ?: (error ?: Error | undefined) => void | undefined | Promise<void>,
     onLatency ?: (responseLatency : ConfigSocketIOClientInstanceEventsLatency) => Promise<void> | void | undefined;
-    Manager ?: ConfigSocketIOClientInstanceEventsManager | undefined
+    Manager ?: ConfigSocketIOClientInstanceEventsManager | undefined,
+    Engine ?: ConfigSocketIOClientInstanceEventsEngine | undefined
 }
 export interface ConfigSocketIOClientInstance {
     engine ?: SOCKET_ENGINE | undefined,

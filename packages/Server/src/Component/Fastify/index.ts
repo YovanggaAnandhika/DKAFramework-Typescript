@@ -15,6 +15,8 @@ import fastify, {FastifyInstance} from "fastify";
 
 import "./Types/ExtendedFastifyTypes";
 import tcpPortUsed from "tcp-port-used";
+import moment, {Moment} from "moment-timezone";
+import {ConfigSocketIOInstanceEventsLatencyType} from "../SocketIO/Types/TypesSocketIOServer";
 
 export let mFastify : FastifyInstance;
 
@@ -57,9 +59,13 @@ export async function FASTIFY<Config extends ConfigFastifyServer>(configServer :
                 break;
         }
 
-        await FastifyHooks(mFastify, configServer);
-        await FastifyPlugins(mFastify, configServer);
+        if (configServer.server !== undefined) await configServer.server(mFastify.server);
 
+        await FastifyHooks(mFastify, configServer);
+        await FastifyPlugins(mFastify, configServer)
+            .catch(async (error) => {
+                await rejected({ status : true, code : 500, msg : `Server is Not Successfully Running`, error : error});
+            });
         //###################################################
         //(configServer.app !== undefined) ? await configServer.app(mFastify) : null;
         mFastify = (configServer.app !== undefined) ? await mFastify.register(configServer.app as typeof mFastify.register.arguments) : mFastify;

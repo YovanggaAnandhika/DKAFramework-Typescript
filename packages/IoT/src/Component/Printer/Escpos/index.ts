@@ -13,7 +13,6 @@ import printServer from "@node-escpos/server";
 import {
     EscposConfig,
     EscposNetwork,
-    EscposPrinterSettingsServer,
     EscposSerial,
     EscposUSB
 } from "./Interfaces/EscposConfig";
@@ -25,7 +24,6 @@ import { EscposOptions } from "./Const";
 import * as os from "os";
 import * as macaddress from "macaddress";
 import * as ip from "ip";
-import {error} from "winston";
 
 const CPUUsage = require("cpu-percentage");
 
@@ -42,6 +40,7 @@ export class Escpos<Config extends EscposConfig> {
     static CheckProductVendor = () => {
         let mDeviceList : Array<{ vendorId ?: number, productId ?:number }> = [];
         let mFindDevice = USB.findPrinter();
+
         mFindDevice.map(async (device) => {
             mDeviceList.push({
                 vendorId : device.deviceDescriptor.idVendor,
@@ -121,7 +120,7 @@ export class Escpos<Config extends EscposConfig> {
         })
     }
 
-    async Job(printer : (printer : Printer<any>) => void) : Promise<any>{
+    async Job(printer ?: (printer : Printer<any>) => void | undefined) : Promise<any>{
         //@######################################################################
         let logger = (this.config.state === DEVELOPMENT) ?
             (Escpos.checkModuleExist("winston")) ? require("winston").createLogger({
@@ -134,15 +133,17 @@ export class Escpos<Config extends EscposConfig> {
                     await Escpos.getDevicesUSB(this.config)
                         .then(async (device) => {
                             this.adapter = new USB(device);
-                            //### device Open Connection
+                            //# device Open Connection
                             this.adapter?.open(async (error) => {
                                 if (!error){
                                     this.printer = new Printer(this.adapter, this.config?.settings);
                                     await this.printer
                                         .align("CT")
                                         .style("");
-                                    //** get Functionable user command
-                                    await printer(this.printer);
+                                    /** get Functionable user command **/
+                                    if (printer !== undefined){
+                                        await printer(this.printer);
+                                    }
                                     //** Show Separator **/
                                     if (this.config?.settings?.showLibrary || this.config?.settings?.showNetwork || this.config?.settings?.showSystem){
                                         this.printer
@@ -158,10 +159,10 @@ export class Escpos<Config extends EscposConfig> {
                                         }
 
                                         this.printer.text(`System Information`);
-                                        this.printer.text(`OS : ${this.SystemInfo.os}`)
-                                        this.printer.text(`CPU Usage : ${this.SystemInfo.CPUUsage}`)
-                                        this.printer.text(`memory : ${this.SystemInfo.memoryUsed} / ${this.SystemInfo.totalMemory}`)
-                                        this.printer.text(`-------------------------------------------`)
+                                        this.printer.text(`OS : ${this.SystemInfo.os}`);
+                                        this.printer.text(`CPU Usage : ${this.SystemInfo.CPUUsage}`);
+                                        this.printer.text(`memory : ${this.SystemInfo.memoryUsed} / ${this.SystemInfo.totalMemory}`);
+                                        this.printer.text(`-------------------------------------------`);
 
                                     }
                                     /** show Network **/
@@ -173,7 +174,6 @@ export class Escpos<Config extends EscposConfig> {
                                                 macAddress = mMacAddress;
                                                 macAddress = macAddress.replace("-",":");
                                                 macAddress = macAddress.toUpperCase();
-
                                             })
                                             .catch(async (error) => {
                                                 macAddress = "00:00:00:00:00:02";
@@ -185,22 +185,21 @@ export class Escpos<Config extends EscposConfig> {
                                     if (this.config?.settings?.showLibrary){
                                         let PackagePath = path.join(__dirname,"./../../../../package.json");
                                         if (fs.existsSync(PackagePath)){
-                                            let mPackage = require(PackagePath)
+                                            let mPackage = require(PackagePath);
                                             this.printer
                                                 .align("CT")
                                                 .style("B")
                                                 .size(0,0)
                                                 .text(`${mPackage.name} - V.${mPackage.version}`)
                                                 .style("I")
-                                                .text(`${mPackage.author.name} - ${mPackage.author.email}`)
-                                                .text(`${mPackage.author.url}`)
+                                                .text(`${mPackage.author.name} - ${mPackage.author.email}`);
                                         }
                                     }
                                     if (this.config?.settings?.showLibrary || this.config?.settings?.showNetwork || this.config?.settings?.showSystem){
                                         this.printer
                                             .style(``)
                                             .text(`============================================`)
-                                            .feed(2)
+                                            .feed(2);
                                     }
                                     if (this.config?.settings?.autoCut){
                                         this.printer.cut();
@@ -211,18 +210,18 @@ export class Escpos<Config extends EscposConfig> {
                                                 await resolve({ status : true, code : 200, msg : "successfully to print job"});
                                             })
                                             .catch(async (error) => {
-                                                await rejected({ status : false, code : 505, msg : `error close print detected`, error : error})
+                                                await rejected({ status : false, code : 505, msg : `error close print detected`, error : error});
                                             })
                                     } else{
                                         await resolve({ status : true, code : 200, msg : "successfully to print job"});
                                     }
                                 }else{
-                                    await rejected({ status : false, code : 500, msg : `failed to open connection printer device`, error : error})
+                                    await rejected({ status : false, code : 500, msg : `failed to open connection printer device`, error : error});
                                 }
                             })
                         })
                         .catch(async (error) => {
-                            rejected(error)
+                            await rejected(error)
                         });
                     break;
                 case ESCPOS_NETWORK:
@@ -250,16 +249,16 @@ export class Escpos<Config extends EscposConfig> {
                                 }
 
                                 this.printer.text(`System Information`);
-                                this.printer.text(`OS : ${this.SystemInfo.os}`)
-                                this.printer.text(`CPU Usage : ${this.SystemInfo.CPUUsage}`)
-                                this.printer.text(`memory : ${this.SystemInfo.memoryUsed} / ${this.SystemInfo.totalMemory}`)
-                                this.printer.text(`-------------------------------------------`)
+                                this.printer.text(`OS : ${this.SystemInfo.os}`);
+                                this.printer.text(`CPU Usage : ${this.SystemInfo.CPUUsage}`);
+                                this.printer.text(`memory : ${this.SystemInfo.memoryUsed} / ${this.SystemInfo.totalMemory}`);
+                                this.printer.text(`-------------------------------------------`);
 
                             }
                             /** show Network **/
                             if (this.config?.settings?.showNetwork){
                                 this.printer.text(`Network Information`);
-                                let macAddress : string = "00:00:00:00:00:01"
+                                let macAddress : string = "00:00:00:00:00:01";
                                 await macaddress.one()
                                     .then( (mMacAddress) => {
                                         macAddress = mMacAddress;
@@ -270,8 +269,8 @@ export class Escpos<Config extends EscposConfig> {
                                     .catch(async (error) => {
                                         macAddress = "00:00:00:00:00:02";
                                     });
-                                this.printer.text(`${macAddress} - ${ip.address()}`)
-                                this.printer.text(`-------------------------------------------`)
+                                this.printer.text(`${macAddress} - ${ip.address()}`);
+                                this.printer.text(`-------------------------------------------`);
                             }
                             /** show Banner Options **/
                             if (this.config?.settings?.showLibrary){
@@ -292,7 +291,7 @@ export class Escpos<Config extends EscposConfig> {
                                 this.printer
                                     .style(``)
                                     .text(`============================================`)
-                                    .feed(2)
+                                    .feed(2);
                             }
                             if (this.config?.settings?.autoCut){
                                 this.printer.cut();
@@ -303,7 +302,7 @@ export class Escpos<Config extends EscposConfig> {
                                         await resolve({ status : true, code : 200, msg : "successfully to print job"});
                                     })
                                     .catch(async (error) => {
-                                        await rejected({ status : false, code : 505, msg : `error close print detected`, error : error})
+                                        await rejected({ status : false, code : 505, msg : `error close print detected`, error : error});
                                     })
                             } else{
                                 await resolve({ status : true, code : 200, msg : "successfully to print job"});

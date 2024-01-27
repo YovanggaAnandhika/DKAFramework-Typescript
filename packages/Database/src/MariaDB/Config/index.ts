@@ -19,7 +19,7 @@ export const DatabaseMariaDB : mConfigDatabase = {
         filename : "DKAMariaDBBackup",
         extension : ".sql",
         forceReplace : false,
-        dumpFileLocation : path.join(require.main?.filename!, "./../Backup/MariaDB"),
+        dumpFileLocation : path.join((require.main?.filename !== undefined) ? require.main?.filename : process.cwd(), "./Backup/MariaDB"),
         compressFile : false
     }
 }

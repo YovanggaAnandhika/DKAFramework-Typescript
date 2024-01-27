@@ -7,7 +7,7 @@ import {
 } from "../Component/SocketIO/Types/TypesSocketIOServer";
 import {DEVELOPMENT, PRODUCTION} from "../Types/ConfigServerTypes";
 import {UDP_ENGINE} from "../Component/UDP/Types/TypesUDPServer";
-import {WEBPACK_ENGINE} from "../Component/Webpack/Types/WebpackTypesServer";
+import {MODE_COMPILE, MODE_SERVER, WEBPACK_ENGINE} from "../Component/Webpack/Types/WebpackTypesServer";
 import {ESCPOS_ENGINE, ESCPOS_NETWORK, ESCPOS_SERIAL, ESCPOS_USB} from "../Component/Escpos/Types/EscposTypes";
 import {MODE_USB} from "@dkaframework/iot/dist/Component/Arduino/NodeMCU/Interfaces/NodeMCUConfig";
 
@@ -60,10 +60,16 @@ export const ConfigServerConnection = {
     NETWORK : ESCPOS_NETWORK,
     SERIAL : ESCPOS_SERIAL
 }
+
+export const ConfigServerMode = {
+    MODE_COMPILE : MODE_COMPILE,
+    MODE_SERVER : MODE_SERVER
+}
 export const ConfigServer = {
     STATE : ConfigServerState,
     HOST : ConfigServerHost,
     PORT : ConfigServerPort,
+    MODE : ConfigServerMode,
     CONNECTION : ConfigServerConnection,
     ENGINE : ConfigServerEngine,
     SETTINGS : ConfigServerSettings

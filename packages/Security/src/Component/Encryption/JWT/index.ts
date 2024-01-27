@@ -62,7 +62,7 @@ export class JWT {
                                 await this.JWEEncryptor.final()
                                     .then(async (encryptText) => {
                                         let base64 = Buffer.from(encryptText,"utf-8").toString("base64url");
-                                        await resolve(encryptText);
+                                        await resolve(base64);
                                     })
                                     .catch(async (error) => {
                                         await rejected({status: false, code: 503, msg: `error final get Encryption text`, error : error})

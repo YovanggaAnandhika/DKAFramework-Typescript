@@ -1,6 +1,6 @@
 import {Configuration, ModuleOptions} from "webpack";
 import {Configuration as ConfigurationWebpackDev} from "webpack-dev-server"
-import {WEBPACK_ENGINE, WebpackRulesTypes} from "../Types/WebpackTypesServer";
+import {MODE_SERVER, WEBPACK_ENGINE, WebpackRulesTypes} from "../Types/WebpackTypesServer";
 import path, {join} from "path";
 import {ConfigWebpackServer} from "../Interfaces/WebpackConfigServer";
 import {Options} from "../../../index";
@@ -70,6 +70,7 @@ export const DefaultConfigWebpackDev : ConfigurationWebpackDev = {
 }
 export const DefaultConfigWebpackServer : ConfigWebpackServer = {
     engine : WEBPACK_ENGINE,
+    mode : MODE_SERVER,
     host : Options.HOST.LOCALHOST,
     port : Options.PORT.DEFAULT,
     webpack : DefaultConfigWebpack,
