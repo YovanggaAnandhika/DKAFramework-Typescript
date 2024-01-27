@@ -4,6 +4,7 @@ lerna-debug.log
 /**/*/dist
 /**/*/.idea
 /.idea
+/**/*/*.db
 /**/*/.yarn.lock
 /**/*/node_modules/*
 /**/*/yarn.lock
