@@ -1,6 +1,11 @@
 import path from "path";
 import {MariaDBConstructorConfig as mConfigDatabase} from "../Interfaces/Config"
-import {RulesCreateDatabase, RulesCreateTable, RulesInsert, RulesSelect} from "../Interfaces/Class";
+import {
+    RulesCreateDatabase,
+    RulesCreateTable,
+    RulesInsert,
+    RulesSelect
+} from "../Interfaces/Class";
 
 export const DatabaseMariaDB : mConfigDatabase = {
     engine : "PoolConnection",
@@ -35,6 +40,7 @@ export const CreateTableConfig : RulesCreateTable = {
 };
 
 export const InsertDataConfig : RulesInsert = {
+    data : [],
     settings : {
         database : true,
         coloumn : true,

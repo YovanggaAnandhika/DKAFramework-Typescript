@@ -181,8 +181,16 @@ export interface RulesInsertSettings {
     coloumn ?: boolean | undefined,
     table ?: boolean | undefined
 }
+
+export interface RulesInsertObjectData {
+    [ name : string] : string | number | bigint
+}
+
+
+
 export interface RulesInsert extends Rules {
-    data? : Object | Array<Object | String> | false | any,
+    column ?: Array<string>;
+    data : RulesInsertObjectData | Array<RulesInsertObjectData>,
     database ?: string | undefined
     settings ?: RulesInsertSettings | undefined
 }

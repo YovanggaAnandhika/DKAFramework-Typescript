@@ -4,14 +4,6 @@ import * as fs from "fs";
 import SqliteCRUD from "./Class/SqliteCRUD";
 
 let sqlite = Sqlite3.verbose();
-function checkModuleExist(moduleName : string){
-    try {
-        require.resolve(moduleName);
-        return true;
-    } catch (e) {
-        return false;
-    }
-}
 
 function Sqlite (config : SqliteConfigConstructor) : SqliteCRUD {
     let db = new sqlite.Database(config.filename);

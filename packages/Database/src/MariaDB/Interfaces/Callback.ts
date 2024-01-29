@@ -1,3 +1,4 @@
+import {RulesInsertObjectData} from "./Class";
 
 
 export interface metadata {
@@ -48,7 +49,7 @@ export interface CallbackCreateDatabase extends Callback {
 }
 
 export interface CallbackInsert extends Callback {
-    data : Array<Object>
+    data  : Array<RulesInsertObjectData> | RulesInsertObjectData
 }
 
 export interface CallbackError extends Callback {

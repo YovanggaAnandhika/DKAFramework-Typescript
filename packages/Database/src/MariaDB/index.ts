@@ -28,6 +28,7 @@ import {
 import {Instance, Method} from "./Type/types";
 
 import {DumpReturn} from "mysqldump/dist/mysqldump";
+import assert from "assert";
 
 
 /**
@@ -247,56 +248,53 @@ export class MariaDB implements MariaDBClassInterfaces {
      * The Table Name Database Selected For Use Action for <b>READ DATA<b/>
      * <br/>
      * ---------
-     * @param Rules
+     * @param Rule
      * The Rules is Parameter Options For Insert <b>Database Function</b><br/>
      * ---------
      * @return Promise<CallbackCreate | CallbackError> - <b>Promise<CallbackCreate | CallbackError></b><br/>
      * The Return Variable Format
      */
-    async Insert(TableName : string, Rules : RulesInsert = InsertDataConfig) : Promise<CallbackInsert> {
+    async Insert(TableName : string, Rule ?: RulesInsert) : Promise<CallbackInsert> {
         this.timeStart = new Date().getTime();
-        await merge(Rules, InsertDataConfig);
-        return new Promise(async (resolve, rejected) => {
-            if (Rules?.data !== undefined && isObject(Rules?.data)){
-                this.mKey = [];
-                this.mVal = [];
-                /** Check Module Encryption Declaration **/
-                Object.keys(Rules?.data).map(async (key) => {
-                    if (Rules?.data[key] !== undefined){
-                        this.mKey.push(` \`${key}\` `);
-                        this.mVal.push(`"${ Rules?.data[key]}"`);
-                    }
-                });
-                let db = (Rules.database !== undefined) ? `\`${Rules.database}\`.` : ``;
-                this.SqlScript = `INSERT INTO ${db}\`${TableName}\` (${this.mKey})VALUES (${this.mVal}) `;
-            }else if (isArray(Rules?.data)){
-                //@@@@@@@@@@@@@@@@@@@
-                this.mVal = [];
-                this.mKey = [];
-                this.mSetData = [];
-                //@@@@@@@@@@@@@@@@@@@
-                //**********************************************************
-                Rules?.data.map(async (item : object, index : number) => {
-                    this.mKey = [];
-                    this.mSetData = [];
-                    //######################################################
-                    Object.keys(item).map(async (key) => {
-                        if (Rules?.data[index][key] !== undefined){
-                            this.mKey.push(`${key}`);
-                            this.mSetData.push(`"${Rules?.data[index][key]}"`);
-                        }
+        let Rules = (Rule !== undefined) ? { ... InsertDataConfig, ... Rule} : { ... InsertDataConfig };
+        let SQLScript : string | undefined = undefined;
+        return new Promise((resolve, rejected) => {
+            /** If Rules Data If Undefined **/
+            if (Rules === undefined) return rejected();
+            let db = (Rules.database !== undefined) ? `\`${Rules.database}\`.` : ``;
+            if (!Array.isArray(Rules.data)){
+                //################################################################
+                let mKey: string[] = [];
+                let mVal : any[] = [];
+                //################################################################
+                Object.keys(Rules.data).forEach((data) => { mKey.push(`\`${data}\``); });
+                Object.values(Rules.data).forEach((data) => { mVal.push((typeof data === "string") ? `\`${data}\`` : data); });
+                //################################################################
+                this.SqlScript = `INSERT INTO ${db}\`${TableName}\` (${mKey.toString()}) VALUE (${mVal.toString()});`;
+                //################################################################
+            }else if (Array.isArray(Rules.data)) {
+                if (Rules.column === undefined) return rejected();
+                //################################################################
+                let DataColumn : Array<string> = []
+                let DataInsert : Array<string> = [];
+                //################################################################
+                Rules.column.forEach((data) => { DataColumn.push(`\`${data}\``); });
+                //################################################################
+                Rules.data.forEach((data) => {
+                    let mValues : any[]  = [];
+                    Object.values(data).forEach((data) => {
+                        mValues.push((typeof data === "string") ? `\`${data}\`` : data);
                     });
-                    //#######################################################
-                    this.mVal.push(`(${this.mSetData})`)
+                    DataInsert.push(`(${mValues.toString()})`);
                 });
-                //************************************************************
-                let db = (Rules.database !== undefined) ? `\`${Rules.database}\`.` : ``;
-                this.SqlScript = `INSERT INTO ${db}${TableName} (${this.mKey})VALUES ${this.mVal} `;
+                //################################################################
+                this.SqlScript = `INSERT INTO ${db}\`${TableName}\` (${DataColumn.toString()}) VALUES ${DataInsert.toString()};`;
             }
             //$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
             this.mMethod = "INSERT";
             //$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
-            await this.rawQuerySync<CallbackInsert>(this.SqlScript,[])
+
+            this.rawQuerySync<CallbackInsert>(this.SqlScript,[])
                 .then(async (result) => {
                     await resolve(result);
                 })
@@ -304,7 +302,7 @@ export class MariaDB implements MariaDBClassInterfaces {
                     await rejected(<CallbackError>error);
                 });
 
-        })
+        });
     };
 
     /**
@@ -332,7 +330,6 @@ export class MariaDB implements MariaDBClassInterfaces {
         this.timeStart = new Date().getTime();
         this.mSearchAdd = ``;
         let SelectColumn = ``;
-        //console.log(this.mSearchAdd)
         let checkJoin : Promise<string> = new Promise(async (resolve, rejected) => {
             let innerType = ``;
             let On = ``;
@@ -661,7 +658,6 @@ export class MariaDB implements MariaDBClassInterfaces {
                                                             msg: `successful, your table has been created`,
                                                             metadata: metadata
                                                         });
-
                                                     }else{
                                                         await rejected({
                                                             status: false,

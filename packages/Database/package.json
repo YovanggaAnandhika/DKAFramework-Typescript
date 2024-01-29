@@ -52,6 +52,7 @@
     "escpos-adapter": "^3.0.0-alpha.4",
     "nodemon": "^2.0.19",
     "rm": "^0.1.8",
+    "ts-interface-checker": "^1.0.2",
     "ts-node": "*",
     "typescript-cp": "*",
     "uuid": "^9.0.0"

@@ -2,22 +2,28 @@ import Database from "../src";
 import * as path from "path";
 
 (async () => {
-    let db = Database.Sqlite({
-        filename : path.join(__dirname,"test.db"),
-        phrasepass : "Cyberhack2010"
-    });
+    let db = new Database.MariaDB();
 
-    db.Insert(`tes`,{
-        data : {
-            id : 1,
-            name : "aku"
-        }
-    }).then((data) => {
-        console.log(data);
-        db.close();
+
+    db.Insert(`test`, {
+        column : [
+            "id_user",
+            "nama"
+        ],
+        data : [
+            {
+                hai : 1,
+                nama : "dhika"
+            },
+            {
+                hai : 2,
+                nama : "tina"
+            }
+        ]
+    }).then((res) => {
+        console.log(res)
     }).catch((error) => {
-        console.error(error);
-        db.close();
+        console.error(error)
     })
 
 })();
