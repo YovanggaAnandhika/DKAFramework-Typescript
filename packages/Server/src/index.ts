@@ -7,7 +7,6 @@ import {UDP_ENGINE} from "./Component/UDP/Types/TypesUDPServer";
 import {ServerConfigSelector} from "./Types/ServerTypesConfigSelector";
 import {WEBPACK_ENGINE} from "./Component/Webpack/Types/WebpackTypesServer";
 import {DefaultServerConfiguration} from "./Config/DefaultServerConfiguration";
-import {merge} from "lodash";
 import {ESCPOS_ENGINE} from "./Component/Escpos/Types/EscposTypes";
 
 async function Server<Config extends ConfigServerInterfaces> (serverConfig ?: ServerConfigSelector<Config>) : Promise<ServerSelector<Config>> {
@@ -52,7 +51,7 @@ async function Server<Config extends ConfigServerInterfaces> (serverConfig ?: Se
                         await resolve({ status : true, code : 200, msg : `Server Berhasil Dijalankan` } as ServerSelector<Config>);
                     })
                     .catch(async (error) => {
-                        await rejected(error)
+                        await rejected(error);
                     });
                 break;
             case WEBPACK_ENGINE :
