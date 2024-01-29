@@ -1,7 +1,7 @@
 import {
     estimationCostFromTimeInterface, estimationCostFromTimeInterfaceCallback,
     estimationCostFromTimeInterfaceTemp
-} from "../../Types/EstimationCostFromTimeTypes";
+} from "../../../Types/EstimationCostFromTimeTypes";
 
 export function estimationCostFromTime (config : estimationCostFromTimeInterface) : estimationCostFromTimeInterfaceCallback {
     let mCostConfig = config;

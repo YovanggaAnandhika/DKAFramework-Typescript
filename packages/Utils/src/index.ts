@@ -1,11 +1,6 @@
-import Component from "./Component";
+export * from "./Component";
+
 import * as PDFSettings from "./Component/PDF/Interfaces/PDFConfigFunction";
-
-const Functions = {
-    Component : Component,
-    Options : {
-        PDF : PDFSettings
-    }
+export const Options = {
+    PDF : PDFSettings
 }
-
-export default { Functions };

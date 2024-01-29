@@ -1,8 +1,2 @@
-import {estimationCostFromTime} from "./estimationCostFromTime";
-
-
-export const TimeManagement = {
-    estimationCostFromTime : estimationCostFromTime
-}
-
-export default TimeManagement;
+export * from "./Functions/estimationCostFromTime";
+export * from "./Functions/timeIsBetween";

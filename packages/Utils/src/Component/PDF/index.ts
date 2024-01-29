@@ -143,5 +143,3 @@ export async function PDF<Config extends PDFConfig>(pdfConfig : Config) : Promis
         }
     })
 }
-
-export default PDF;
