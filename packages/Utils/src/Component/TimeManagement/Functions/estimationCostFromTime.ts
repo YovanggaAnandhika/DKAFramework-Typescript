@@ -32,3 +32,5 @@ export function estimationCostFromTime (config : estimationCostFromTimeInterface
 
     return { unit : costBase, finalCost : finalCost } as estimationCostFromTimeInterfaceCallback;
 }
+
+export default estimationCostFromTime;
