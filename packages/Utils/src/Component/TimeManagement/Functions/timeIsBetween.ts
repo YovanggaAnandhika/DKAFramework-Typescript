@@ -1,9 +1,9 @@
 import {ReturnTimeFunction, TimeIsBetweenConfig, TimeIsBetweenData} from "../../../Interfaces/TimeIsBetweenConfig";
 import moment, {Moment} from "moment-timezone";
 
-export function timeIsBetween(options : TimeIsBetweenConfig, timeData ?: Moment | undefined) : TimeIsBetweenData {
+export function timeIsBetween<Extras extends any>(options : TimeIsBetweenConfig<Extras>, timeData ?: Moment | undefined) : TimeIsBetweenData<Extras> {
 
-    let callback : TimeIsBetweenData;
+    let callback : TimeIsBetweenData<Extras>;
 
     function Time(timeString : string) : ReturnTimeFunction {
         let t = timeString.split(":");
@@ -30,3 +30,5 @@ export function timeIsBetween(options : TimeIsBetweenConfig, timeData ?: Moment 
     });
     return callback;
 }
+
+export default timeIsBetween;
