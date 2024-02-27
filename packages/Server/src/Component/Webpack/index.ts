@@ -9,7 +9,7 @@ import {MODE_COMPILE, MODE_SERVER} from "./Types/WebpackTypesServer";
 export async function WebpackServerInstances<Config extends ConfigWebpackServer = ConfigWebpackServer>(config : Config) : Promise<CallbackWebpackServer> {
     let mWebpack : Compiler;
     let mWebpackDev : webpackDev;
-    config = { ... DefaultConfigWebpackServer, ... config};
+    config = merge({}, DefaultConfigWebpackServer, config)
     mWebpack = webpack(config.webpack);
     return new Promise(async (resolve, rejected) => {
         if (config.webpack !== undefined){

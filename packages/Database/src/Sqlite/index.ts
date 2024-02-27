@@ -1,6 +1,5 @@
-import Sqlite3 from "@journeyapps/sqlcipher";
+import Sqlite3 from "sqlite3";
 import {SqliteConfigConstructor} from "./Interfaces/SqliteConfigTypes";
-import * as fs from "fs";
 import SqliteCRUD from "./Class/SqliteCRUD";
 
 let sqlite = Sqlite3.verbose();

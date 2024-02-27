@@ -1,8 +1,8 @@
 {
-  "name": "@dkaframework/utils",
+  "name": "@dkaframework/document",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
-  "version": "1.2.4",
+  "version": "1.2.2",
   "scripts": {
     "clean": "rimraf dist",
     "start": "nodemon --watch test --watch src --exec ts-node test/index.ts",
@@ -14,14 +14,27 @@
   "devDependencies": {
     "@types/lodash": "^4.14.190",
     "@types/node": "^18.11.9",
+    "@types/qrcode-terminal": "^0.12.0",
+    "@types/socket.io": "^3.0.2",
     "nodemon": "^3.0.1",
     "rimraf": "^3.0.2",
     "ts-node": "^10.9.1",
-    "typescript": "^5.3.3"
+    "typescript": "^5.3.3",
+    "whatsapp-web.js": "1.22.1"
   },
   "dependencies": {
+    "@types/base64-stream": "^1.0.3",
+    "@types/blob-stream": "^0.1.31",
+    "@types/pdfkit": "^0.12.11",
+    "base64-stream": "^1.0.0",
+    "blob-stream": "^0.1.3",
+    "filereader": "^0.10.3",
     "lodash": "^4.17.21",
     "moment-timezone": "^0.5.43",
+    "pdfkit": "^0.13.0",
+    "pdfkit-table": "^0.1.99",
+    "qrcode-terminal": "^0.12.0",
+    "telnet": "^0.0.1",
     "ts-node": "^10.9.1"
   },
   "gitHead": "56b58b2fb5d929308fdb58761ca4c5b78568a9d1"

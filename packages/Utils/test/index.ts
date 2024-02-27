@@ -1,4 +1,4 @@
-import { Time, Options } from "../src";
+import { Time } from "../src";
 
 (async () => {
 

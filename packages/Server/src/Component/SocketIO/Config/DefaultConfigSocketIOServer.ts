@@ -13,7 +13,6 @@ export const DefaultConfigSocketIOHTTPServer : ConfigSocketIOServer = {
             autoListen : true,
         },
         socket : {
-            allowEIO3 : true,
             transports : ['websocket','polling'],
             maxHttpBufferSize : 1e8,
             cors : {
@@ -45,7 +44,6 @@ export const DefaultConfigSocketIOHTTPSServer : ConfigSocketIOServer = {
             autoListen : true,
         },
         socket : {
-            allowEIO3 : true,
             transports : ['websocket','polling'],
             cors : {
                 origin : "*"

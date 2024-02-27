@@ -78,7 +78,7 @@ export interface ConfigSocketIOServerInstanceEventsLatency {
 
 
 export interface ConfigSocketIOServerEventsSocket {
-    onConnection ?: (io : Socket<DefaultEventsMap, DefaultEventsMap, any>, server : Server<DefaultEventsMap, DefaultEventsMap, any>) => Promise<void>,
+    onConnection ?: (io : Socket<DefaultEventsMap, DefaultEventsMap, any>, server : Server<DefaultEventsMap, DefaultEventsMap, any>) => Promise<void> | void,
     onLatency ?: (responseLatency : ConfigSocketIOServerInstanceEventsLatency) => Promise<void> | void | undefined;
     onDisconnection ?: (reason : any, io : SocketIOSocketMiddlewareSocket, server : Server<DefaultEventsMap, DefaultEventsMap, any>) => Promise<void> | void,
 }

@@ -1,6 +1,5 @@
-import {Database} from "@journeyapps/sqlcipher";
+import {Database} from "sqlite3";
 import {SqliteCreateTablesOptions, SqliteInsertOptions, SqliteSelectOptions} from "../Interfaces/SqliteConfigTypes";
-import {error} from "winston";
 
 
 class SqliteCRUD {
@@ -21,7 +20,7 @@ class SqliteCRUD {
 
     async CreateTable(tableName : string, options : SqliteCreateTablesOptions) : Promise<any> {
         return new Promise(async (resolve, rejected) => {
-            if (this.isClose){
+            if (!this.isClose){
                 //##########################
                 let pushParams : any[] = [];
                 let ifNotExits = (options.ifNotExist) ? "IF NOT EXISTS" : "";

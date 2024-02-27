@@ -50,8 +50,8 @@ async function Server<Config extends ConfigServerInterfaces> (serverConfig ?: Se
                     .then(async (udpSocket) => {
                         await resolve({ status : true, code : 200, msg : `Server Berhasil Dijalankan` } as ServerSelector<Config>);
                     })
-                    .catch(async (error) => {
-                        await rejected(error);
+                    .catch((error) => {
+                        rejected(error);
                     });
                 break;
             case WEBPACK_ENGINE :

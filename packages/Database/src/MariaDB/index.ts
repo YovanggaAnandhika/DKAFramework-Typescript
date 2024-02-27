@@ -28,7 +28,6 @@ import {
 import {Instance, Method} from "./Type/types";
 
 import {DumpReturn} from "mysqldump/dist/mysqldump";
-import assert from "assert";
 
 
 /**

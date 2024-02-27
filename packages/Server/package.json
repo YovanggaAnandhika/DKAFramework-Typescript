@@ -1,6 +1,6 @@
 {
   "name": "@dkaframework/server",
-  "version": "1.2.1",
+  "version": "1.2.2",
   "homepage": "https://github.com/YovanggaAnandhika/DKAFramework-Typescript-Server.git",
   "description": "The Multi Framework Server Function. Part Module Of DKAFramework",
   "keywords": [
@@ -38,7 +38,8 @@
     "build": "yarn run action:clean && yarn run action:compile && yarn run action:copy",
     "login": "npm login",
     "prepublish": "yarn run build",
-    "test:fastify": "nodemon --watch src --watch test --exec ts-node test/fastify.test.ts"
+    "test:fastify": "nodemon --watch src --watch test --exec ts-node test/fastify.test.ts",
+    "test:socket:client": "nodemon --watch src --watch test --exec ts-node test/socket.io.test.ts"
   },
   "dependencies": {
     "@babel/core": "^7.19.3",
