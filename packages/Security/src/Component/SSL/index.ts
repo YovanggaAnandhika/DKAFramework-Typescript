@@ -2,9 +2,9 @@ import * as Crypto from "crypto";
 import {md, pki, random, util, pem} from "node-forge";
 import {
     CertificateAuthority, CertificateAuthorityData,
-    CertificateData, CertificateParentData,
+    CertificateData, CertificateParentData, CertificateRequestData,
     generateCASettings,
-    generateCertSettings,
+    generateCertSettings, GenerateCSRSettings,
     GenerateKeys,
     KeyPairsData
 } from "./Types/GeneralCertOptionsMethod";
@@ -21,6 +21,48 @@ export class OpenSSL {
             privateKey: privateKey,
             publicKey: publicKey
         }
+    }
+
+    generateCSR(CSROptions : GenerateCSRSettings) : Promise<CertificateRequestData> {
+        let CSR = pki.createCertificationRequest();
+        return new Promise((resolve, rejected) => {
+            CSR.publicKey = pki.publicKeyFromPem(CSROptions.keys.publicKey);
+            if (CSROptions.subject !== undefined) CSR.setSubject(CSROptions.subject);
+            if (CSROptions.attrs !== undefined) CSR.setAttributes(CSROptions.attrs);
+            //#####################################################################
+            let digest = (CSROptions.options?.digest !== undefined) ? CSROptions.options.digest : md.sha512.create();
+            //######################################################################
+            try {
+                let ObjectPEM = pem.decode(CSROptions.keys.privateKey)[0];
+                switch (ObjectPEM.type) {
+                    case "PRIVATE KEY" :
+                        let privateKey = pki.privateKeyFromPem(CSROptions.keys.privateKey);
+                        CSR.sign(privateKey, digest);
+                        return resolve({
+                            certificateRequest : pki.certificationRequestToPem(CSR)
+                        });
+                    case "ENCRYPTED PRIVATE KEY" :
+                        if (CSROptions.options?.passphrase !== undefined && CSROptions.options?.passphrase !== ""){
+                            try {
+                                let privateKey = pki.decryptRsaPrivateKey(CSROptions.keys.privateKey, CSROptions.options?.passphrase);
+                                CSR.sign(privateKey, digest);
+                                return resolve({
+                                    certificateRequest : pki.certificationRequestToPem(CSR)
+                                });
+                            }catch (error) {
+                                rejected({ status : false, code : 400, msg : `error decode private key with passphrase. passphrase not match`, error : errorToJson(error as Error)});
+                            }
+                        }else{
+                            return rejected({ status : false, code : 400, msg : `private keys is "ENCRYPTED PRIVATE KEY". require options.passphrase `});
+                        }
+                        break;
+                    default :
+                        return rejected({ status : false, code : 503, msg : `unknown pem type. illegal pem type`});
+                }
+            }catch (error) {
+                return rejected({ status : false, code : 503, msg : `private key pem not valid format`, error : errorToJson(error as Error)});
+            }
+        })
     }
 
     generateCA(CAOptions : generateCASettings) : Promise<CertificateAuthorityData> {
@@ -86,6 +128,7 @@ export class OpenSSL {
             }
         });
     }
+
 
     generateCert(CARoot : CertificateAuthority, CertOptions : generateCertSettings) : Promise<CertificateData>{
         //########################################

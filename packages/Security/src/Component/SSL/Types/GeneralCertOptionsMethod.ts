@@ -43,6 +43,26 @@ export interface generateCASettings {
 }
 
 
+export type generateCSRSettingsSubjectFields = Array<generateCACertificateFieldsDataAsLong | generateCACertificateFieldsDataAsShort>
+export type generateCSRSettingsAttrsFields = Array<generateCACertificateFieldsDataAsLong | generateCACertificateFieldsDataAsShort>
+
+export interface generateCSRSettingsKeys extends KeyPairsData {
+
+}
+
+export interface generateCSRSettingsOptions {
+    passphrase ?: string,
+    digest ?: md.MessageDigest | undefined;
+}
+
+export interface GenerateCSRSettings {
+    keys : generateCSRSettingsKeys;
+    options ?: generateCSRSettingsOptions;
+    subject ?: generateCSRSettingsSubjectFields;
+    attrs ?: generateCSRSettingsAttrsFields;
+}
+
+
 export interface generateCertSettingsKeys extends KeyPairsData {
 
 }
@@ -97,6 +117,12 @@ export interface CertificateAuthorityDataDetails {
 }
 
 export type CertificateAuthorityData = CertificateAuthorityDataDetails
+
+export interface CertificateRequestDataDetail {
+    certificateRequest : string
+}
+
+export type CertificateRequestData = CertificateRequestDataDetail;
 
 export interface CertificateAuthorityRaw {
     certificate : string,
