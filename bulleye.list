@@ -1,5 +1,0 @@
-# deb http://apt.armbian.com bullseye main bullseye-utils bullseye-desktop
-
-#deb http://ppa.launchpad.net/ondrej/php/ubuntu noble main
-#deb-src http://ppa.launchpad.net/ondrej/php/ubuntu noble main
-#deb https://packages.sury.org/php/ bullseye main
