@@ -11,7 +11,7 @@
   "types": "dist/index.d.ts",
   "scripts": {
     "clean": "rimraf dist",
-    "dev": "ts-node test/client.ts",
+    "dev": "ts-node test/example.faraday.nota.ts",
     "start": "nodemon --watch src --watch test --exec ts-node test/index.ts",
     "compile": "tsc --build",
     "building": "yarn run clean && yarn run compile",
