@@ -9,6 +9,7 @@
   "scripts": {
     "test": "nodemon --watch src --watch test --exec ts-node test/index.ts",
     "test2" : "nodemon --watch src --watch test --exec ts-node test/api.dkaserver.my.id.ts",
+    "localhost" : "nodemon --watch src --watch test --exec ts-node test/localhost.ts",
     "clean": "rimraf dist",
     "compile": "tsc --build",
     "build": "yarn run clean && yarn run compile",
