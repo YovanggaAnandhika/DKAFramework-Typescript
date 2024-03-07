@@ -14,3 +14,4 @@ lerna-debug.log
 /**/*/session/*
 /**/*/.wwebjs_cache/*
 yarn.lock
+/packages/IoT/test/
