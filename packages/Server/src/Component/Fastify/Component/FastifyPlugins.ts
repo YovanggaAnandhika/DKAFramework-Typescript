@@ -1,7 +1,6 @@
 import {ConfigFastifyServer} from "../Interfaces/ConfigFastifyServer";
 import FastifyFormBody from "@fastify/formbody"
 import FastifyCors from "@fastify/cors"
-import FastifySocket from "fastify-socket.io";
 import FastifyCookie from "@fastify/cookie";
 import FastifyView from "@fastify/view";
 import FastifyMongoDB from "@fastify/mongodb";
