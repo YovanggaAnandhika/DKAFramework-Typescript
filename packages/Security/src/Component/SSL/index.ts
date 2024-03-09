@@ -24,10 +24,15 @@ export class OpenSSL {
     }
 
     generateCSR(CSROptions : GenerateCSRSettings) : Promise<CertificateRequestData> {
+        /** create Certificate Request **/
         let CSR = pki.createCertificationRequest();
+        /** Created Promise **/
         return new Promise((resolve, rejected) => {
+            /** set Public Key **/
             CSR.publicKey = pki.publicKeyFromPem(CSROptions.keys.publicKey);
+            /** Set Subject If Exist Config **/
             if (CSROptions.subject !== undefined) CSR.setSubject(CSROptions.subject);
+            /** get Attribut If Exist **/
             if (CSROptions.attrs !== undefined) CSR.setAttributes(CSROptions.attrs);
             //#####################################################################
             let digest = (CSROptions.options?.digest !== undefined) ? CSROptions.options.digest : md.sha512.create();
