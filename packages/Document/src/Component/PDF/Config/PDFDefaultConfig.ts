@@ -8,8 +8,8 @@ export const PDFDefaultConfig : PDFConfig = {
     outputType : OUTPUT_BASE64,
     settings : {
         pdfVersion : "1.7",
-        autoDelete : true,
-        autoFirstPage : false,
+        autoDelete : false,
+        autoFirstPage : true,
         layout : "portrait",
         size : "A4",
     }

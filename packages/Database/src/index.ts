@@ -10,4 +10,5 @@ const Database = {
     MongoDB : MongoDB
 };
 
+export { MariaDB, Sqlite, FireStore, MongoDB};
 export default Database;

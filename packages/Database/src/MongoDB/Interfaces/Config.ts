@@ -11,14 +11,13 @@ export interface MongoDBConfigConstructorObjectInArray extends MongoDBConfigCons
     name : string
 }
 
-export type MongoDBConfigConstructor = Array<MongoDBConfigConstructorObjectInArray> | MongoDBConfigConstructorObject;
+export type MongoDBConfigConstructor = Array<MongoDBConfigConstructorObjectInArray>
 
 export interface MongoDBInstance {
-    [ name : string ] : MongoClient
+    [ name : string  ] : MongoClient
 }
 
-export interface MongoDBConfigDB {
-    mongoClientName ?: string | undefined;
-    dbName : string,
-    options ?: DbOptions | undefined
+//export type MongoDBInstance<T> = T extends Array<infer U > ? U : T
+export type MongoDBCallbackChecker<T extends Array<MongoDBConfigConstructorObjectInArray>> = {
+    [p in T[number]["name"]] : p extends undefined ? never : MongoClient
 }

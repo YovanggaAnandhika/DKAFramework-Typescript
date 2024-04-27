@@ -7,8 +7,8 @@
     "target": "ES2022",
     "module": "CommonJS",
     "typeRoots": [
-      "node_modules/@types",
-      "node_modules/types-fastify-socket.io"
+      "@types",
+      "types-fastify-socket.io",
     ],
     // Tells TypeScript to read JS files, as
     // Generate d.ts files

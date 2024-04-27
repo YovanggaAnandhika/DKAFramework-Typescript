@@ -4,3 +4,5 @@ import * as PDFSettings from "./Component/PDF/Interfaces/PDFConfigFunction";
 export const Options = {
     PDF : PDFSettings
 }
+
+export default Options;

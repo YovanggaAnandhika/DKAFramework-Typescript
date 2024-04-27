@@ -1,18 +1,53 @@
-var dhcp = require('dhcp');
-const s = dhcp.createClient();
+const os = require("os");
+const { s905x } = require("@dkaframework/iot");
 
-s.on('bound', function (state) {
+let IoT = new s905x.HG680P();
+let loop = undefined;
 
-    console.log("State: ", state);
-
-    // Configure your host system, based on the current state:
-    // `ip address add IP/MASK dev eth0`
-    // `echo HOSTNAME > /etc/hostname && hostname HOSTNAME`
-    // `ip route add default via 192.168.1.254`
-    // `sysctl -w net.inet.ip.forwarding=1`
-
+process.on("SIGINT", () => {
+    clearTimeout(loop);
+    IoT.lan("dis");
 });
 
-s.listen();
+process.on("exit", () => {
+    clearTimeout(loop);
+    IoT.lan("dis");
+})
 
-s.sendDiscover();
+function functionLoop() {
+    let ni = os.networkInterfaces();
+    let niFilter = Object.keys(ni).find((interfaceName) => interfaceName === "eth0" || interfaceName === "wlan0");
+    if (niFilter !== undefined){
+
+        switch (niFilter) {
+            case "eth0" :
+                loop = setTimeout(() => {
+                    IoT.lan("on");
+                    loop = setTimeout(() => {
+                        IoT.lan("dis");
+                        functionLoop();
+                    },100);
+                },100);
+                break;
+            case "wlan0" :
+                loop = setTimeout(() => {
+                    IoT.lan("warn");
+                    loop = setTimeout(() => {
+                        IoT.lan("dis");
+                        functionLoop();
+                    },100);
+                },100);
+                break;
+        }
+    }else{
+        loop = setTimeout(() => {
+            IoT.lan("off");
+            loop = setTimeout(() => {
+                IoT.lan("dis");
+                functionLoop();
+            },100);
+        },100);
+    }
+}
+functionLoop();
+

@@ -9,7 +9,6 @@
     // Generate d.ts files
     "removeComments": false,
     "declaration": true,
-    "stripInternal": true,
     // Types should go into this directory.
     // Removing this would place the .d.ts files
     // next to the .js files
@@ -19,6 +18,7 @@
     "declarationMap": true,
     "strict": true,
     "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true,
     "resolveJsonModule": true
   },
   "exclude": [

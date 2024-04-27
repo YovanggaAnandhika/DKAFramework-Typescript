@@ -1,8 +1,10 @@
 import Payment from "./Payment";
+import Health from "./Health";
 
 
 const Apis = {
-    Payment : Payment
+    Payment : Payment,
+    Health : Health
 };
 
 

@@ -11,6 +11,7 @@ import path from "path";
 import moment from "moment-timezone";
 import {merge} from "lodash";
 import {PDFDefaultConfig} from "./Config/PDFDefaultConfig";
+import * as os from "os";
 
 
 function formatBytes(bytes, decimals = 2) {
@@ -32,7 +33,9 @@ export async function PDF<Config extends PDFConfig>(pdfConfig : Config) : Promis
     //#########################################
     if (!fs.existsSync(pathFolder))
         //#########################################
-        fs.mkdirSync(pathFolder,{ mode : "0777", recursive : true});
+        if (os.platform() === "linux") {
+            fs.mkdirSync(pathFolder,{ mode : "0777", recursive : true});
+        }
     //############################################################
     let filename = moment.now().toString();
     let filePath = path.join(pathFolder,`${filename}.pdf`);
@@ -143,3 +146,6 @@ export async function PDF<Config extends PDFConfig>(pdfConfig : Config) : Promis
         }
     })
 }
+
+
+export default PDF;

@@ -1,6 +1,6 @@
 {
   "name": "@dkaframework/database",
-  "version": "1.2.2",
+  "version": "1.2.5",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "author": {
@@ -15,7 +15,8 @@
     "clean": "rimraf dist",
     "compile": "tsc --build",
     "build": "yarn run clean && yarn run compile",
-    "gyp": "node-gyp"
+    "gyp": "node-gyp",
+    "test:migrate:db" : "nodemon --watch test --exec ts-node test/migratedDatabase.ts"
   },
   "dependencies": {
     "@dkaframework/security": "latest",
@@ -42,7 +43,6 @@
     "@journeyapps/sqlcipher": "^5.3.1"
   },
   "devDependencies": {
-    "@journeyapps/sqlcipher": "^5.3.1",
     "@types/escpos": "^2.5.2",
     "@types/express": "^4.17.13",
     "@types/node": "^20.2.4",

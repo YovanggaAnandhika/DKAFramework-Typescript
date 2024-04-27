@@ -18,7 +18,7 @@ export const DefaultConfigFastifyPluginView : FastifyPluginOptions & FastifyView
 export const DefaultConfigFastifyServer : ConfigFastifyServer = {
     engine : Options.ENGINE.FASTIFY,
     host : Options.HOST.LOCALHOST,
-    port : 3000,
+    port : Options.PORT.DEFAULT,
     app : undefined,
     plugin : {
         cors : {

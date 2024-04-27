@@ -43,7 +43,7 @@ function isElectron() {
 
 export async function FASTIFY<Config extends ConfigFastifyServer>(configServer : Config) : Promise<CallbackFastifyServer> {
     return new Promise(async (resolve, rejected) => {
-        await mergeWith(configServer, DefaultConfigFastifyServer);
+        configServer = await merge(DefaultConfigFastifyServer, configServer );
         switch (configServer.settings.engine.type) {
             case Options.SETTINGS.ENGINE.PROTOCOL.HTTP :
                 await merge(configServer.settings.engine, fastifyEngineSettingsDefaultHTTP);
