@@ -10,8 +10,8 @@ export interface SatuSehatMasterPatientCallbackRequest {
 }
 
 export interface SatuSehatMasterPatientCallbackEntry {
-    fullUrl?: string;
-    resource?: SatuSehatMasterPatientCallbackResource;
+    fullUrl: string;
+    resource : SatuSehatMasterPatientCallbackResource;
 }
 
 export interface SatuSehatMasterPatientCallbackResource {

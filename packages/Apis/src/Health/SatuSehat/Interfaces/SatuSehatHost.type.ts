@@ -1,8 +1,21 @@
+import {SatuSehatConfigConstructorState} from "../Types/SatuSehatConfigConstructor";
 
+export interface SatuSehatHostTypeResource {
+    patient : {
+        [ name : number ] : string
+    };
+    masterData : {
+        [ name : number ] : string
+    };
+}
+
+export interface SatuSehatHostTypeAuth {
+    [ name : number ] : string
+}
 
 export interface SatuSehatHostType {
-    auth : string;
-    resources : string;
+    auth : SatuSehatHostTypeAuth;
+    resources : SatuSehatHostTypeResource;
 }
 
 export default SatuSehatHostType;

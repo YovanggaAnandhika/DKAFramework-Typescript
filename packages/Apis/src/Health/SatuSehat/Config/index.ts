@@ -5,15 +5,11 @@ import SatuSehatHostType from "../Interfaces/SatuSehatHost.type";
 
 export const DefaultContructorConfig : SatuSehatConstructorConfig = {
     state : SatuSehatConfigConstructorState.STAGING,
+    versionApi : 1,
     credentials : {
         auth : {
             clientId : "",
             clientSecret : ""
         }
     }
-}
-
-export const DefaultHostSatuSehat : SatuSehatHostType = {
-    auth : "https://api-satusehat-stg.dto.kemkes.go.id/oauth2/v1",
-    resources : "https://api-satusehat-stg.dto.kemkes.go.id/fhir-r4/v1"
 }

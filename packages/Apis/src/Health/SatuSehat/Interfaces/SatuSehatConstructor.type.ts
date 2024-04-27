@@ -11,5 +11,6 @@ export interface SatuSehatConstructorConfigCredential {
 }
 export interface SatuSehatConstructorConfig {
     state : SatuSehatConfigConstructorState;
+    versionApi ?: number;
     credentials ?: SatuSehatConstructorConfigCredential
 }
