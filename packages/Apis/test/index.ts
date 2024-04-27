@@ -4,6 +4,10 @@ import {SatuSehatConfigConstructorState} from "../src/Health/SatuSehat/Types/Sat
 
 (async () => {
 
+    /***
+     * API Bridge SatuSehat Mastery Patient Data
+     * Created by : Yovangga Anandhika
+     */
     const SastuSehat = new Apis.Health.satusehat({
         state: SatuSehatConfigConstructorState.STAGING,
         credentials: {
@@ -13,14 +17,23 @@ import {SatuSehatConfigConstructorState} from "../src/Health/SatuSehat/Types/Sat
             }
         }
     });
-    /** Dapatkan Kode Token Dari Module **/
+    /**
+     * Dapatkan Kode Token Dari Module **/
     const token = await SastuSehat.getAccessToken();
-
-    const MasterPasien = SastuSehat.getResources(token.access_token).MasterPatientIndex()
-
+    /**
+     * Get Module Resources Patient Data Index
+     */
+    const MasterPasien = SastuSehat
+        .getResources(token.access_token)
+        .MasterPatientIndex()
+    /**
+     * Read & Get Data patient By Nik
+     */
     const DataPasien = await MasterPasien.Read("personal",{ identifier : 898392823983892 });
-    const DataPasienDetail = await MasterPasien.getDetail(DataPasien.data.entry[0].fullUrl);
-    console.log(DataPasien.data)
-
-
+    /**
+     * Edit Data Patient
+     */
+    const DataPasienUpdate = await MasterPasien.Update(DataPasien.data.entry[0].fullUrl, [
+        { op : "replace", path : "/active", value : false }
+    ]);
 })();

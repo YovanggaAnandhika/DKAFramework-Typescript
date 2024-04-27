@@ -181,7 +181,7 @@ export class MasterPatientIndex {
                 resolve({
                     status: true,
                     code: 200,
-                    msg: `Data Pasien Berhasil Ditembahkan`,
+                    msg: `Data Pasien Berhasil Dirubah`,
                     data: response.data.data
                 })
 
