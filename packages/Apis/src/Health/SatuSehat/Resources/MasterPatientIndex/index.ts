@@ -12,7 +12,6 @@ import {SatuSehatConstructorConfig} from "../../Interfaces/SatuSehatConstructor.
 import {SatuSehatPatientModelInsertRequest} from "./interfaces/MasterPatientInsertModel";
 import {MasterPatientUpdateModelRequest} from "./interfaces/MasterPatientUpdateModel";
 
-
 export class MasterPatientIndex {
     /**
      * @internal

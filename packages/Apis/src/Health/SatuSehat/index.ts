@@ -82,7 +82,7 @@ class SatuSehat<Config extends SatuSehatConstructorConfig> {
         MasterPatientIndex.token = accessToken;
         MasterPatientIndex.finalConfig = this.finalConfig;
         return {
-            MasterPatientIndex : () => {
+            MPI : () => {
                 return new MasterPatientIndex()
             }
         }

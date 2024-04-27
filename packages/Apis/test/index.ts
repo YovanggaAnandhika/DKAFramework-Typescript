@@ -25,7 +25,7 @@ import {SatuSehatConfigConstructorState} from "../src/Health/SatuSehat/Types/Sat
      */
     const MasterPasien = SastuSehat
         .getResources(token.access_token)
-        .MasterPatientIndex()
+        .MPI()
     /**
      * Read & Get Data patient By Nik
      */
