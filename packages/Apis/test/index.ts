@@ -8,8 +8,8 @@ import {SatuSehatConfigConstructorState} from "../src/Health/SatuSehat/Types/Sat
         state : SatuSehatConfigConstructorState.PRODUCTION,
         credentials : {
             auth : {
-                clientId : "ngh5TnGNa25g3ADgSesZ2MNKlhGE02hGlAcwOV7LqwrsXIQt",
-                clientSecret : "6JAlC9rN49mOjWw93eQMUDKmfbAHlsW8OJgaQET0GxNXPYumvPr7cE36qohRcsFG"
+                clientId : "<credential-here>",
+                clientSecret : "<credential-here>"
             }
         }
     });
