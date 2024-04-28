@@ -6,6 +6,7 @@ import SatuSehatHostType from "./Interfaces/SatuSehatHost.type";
 import {SatuSehatConfigConstructorState} from "./Types/SatuSehatConfigConstructor";
 import {SatuSehatCallbackChecker, SatuSehatCallbackProduction} from "./Interfaces/SatuSehatCallback.type";
 import {MasterPatientIndex} from "./Resources/MasterPatientIndex";
+import {FHIR} from "./FHIR";
 
 
 class SatuSehat<Config extends SatuSehatConstructorConfig> {
@@ -72,7 +73,8 @@ class SatuSehat<Config extends SatuSehatConstructorConfig> {
             }).then((response) => {
                 resolve(response.data);
             }).catch((error) => {
-                rejected(error);
+                console.log(error)
+                rejected({ status : false, code : error.response.status, msg : error.response.statusText, error : error.response.data.issue});
             });
         });
     }
@@ -84,6 +86,14 @@ class SatuSehat<Config extends SatuSehatConstructorConfig> {
         return {
             MPI : () => {
                 return new MasterPatientIndex()
+            },
+            /**
+             * @constructor
+             * @desc
+             * Fast Healthcare Interoperability Resources FHIR adalah sebuah standar global (internasional) yang menetapkan format data beserta elemen-elemennya (yang disebut "resources") dan sebuah standar antarmuka pemrograman aplikasi (API/Application Programming Interface) untuk pertukaran informasi (interoperabilitas SATUSEHAT) yang pada penerapannya akan dibagi-bagi lagi menjadi beberapa alur proses sesuai penggunaannya (use case) baik use case dasar maupun use case tematik. FHIR dibaca “fire” dalam bahasa Inggris (/faier/).
+             */
+            FHIR : () => {
+                return new FHIR({ config : this.finalConfig, accessToken : accessToken, hostConfig : this.HostConfig });
             }
         }
     }

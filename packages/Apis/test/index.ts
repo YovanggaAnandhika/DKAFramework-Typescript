@@ -20,20 +20,13 @@ import {SatuSehatConfigConstructorState} from "../src/Health/SatuSehat/Types/Sat
     /**
      * Dapatkan Kode Token Dari Module **/
     const token = await SastuSehat.getAccessToken();
-    /**
-     * Get Module Resources Patient Data Index
-     */
-    const MasterPasien = SastuSehat
+
+    const MasterPasien = SastuSehat.getResources(token.access_token).MPI();
+
+    const FHIR = SastuSehat
         .getResources(token.access_token)
-        .MPI()
-    /**
-     * Read & Get Data patient By Nik
-     */
-    const DataPasien = await MasterPasien.Read("personal",{ identifier : 898392823983892 });
-    /**
-     * Edit Data Patient
-     */
-    const DataPasienUpdate = await MasterPasien.Update(DataPasien.data.entry[0].fullUrl, [
-        { op : "replace", path : "/active", value : false }
-    ]);
+        .FHIR()
+        .Onboarding()
+        .Location()
+
 })();

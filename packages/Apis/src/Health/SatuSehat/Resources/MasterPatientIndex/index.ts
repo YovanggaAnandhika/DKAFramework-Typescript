@@ -59,14 +59,16 @@ export class MasterPatientIndex {
 
                         resolve({
                             status: true,
-                            code: 200,
+                            code: response.status,
                             msg: `Data Pasien Ditemukan`,
                             data: response.data
                         })
 
                     }).catch((error) => {
-                        rejected(error);
+                        console.log(error.response)
+                        rejected({ status : false, code : error.status, msg : error.code});
                     });
+
                     break;
                 case "newBorn":
                     if (query !== undefined) finalQuery.identifier = `https://fhir.kemkes.go.id/id/nik-ibu|${query.identifier}`;
@@ -86,7 +88,7 @@ export class MasterPatientIndex {
                         });
                         resolve({
                             status: true,
-                            code: 200,
+                            code: response.status,
                             msg: `Data Pasien Ditemukan`,
                             data: response.data
                         });
@@ -119,13 +121,12 @@ export class MasterPatientIndex {
 
                 resolve({
                     status: true,
-                    code: 200,
+                    code: response.status,
                     msg: `Data Pasien Ditemukan`,
                     data: response.data
                 })
 
             }).catch((error) => {
-                console.log(error)
                 rejected(error);
             });
         });
