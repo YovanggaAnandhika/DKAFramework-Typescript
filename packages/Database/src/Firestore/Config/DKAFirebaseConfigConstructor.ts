@@ -1,7 +1,7 @@
-import {FirebaseOptions} from "@firebase/app";
+import {FirebaseConfigConstructorConfiguration} from "./FirebaseConfigConstructor";
 
 
 export interface DKAFirebaseConfigConstructor {
-    options : FirebaseOptions,
-    config ?: string | undefined
+    credentials : FirebaseConfigConstructorConfiguration,
+    name ?: string | undefined
 }

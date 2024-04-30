@@ -25,6 +25,11 @@ export interface CallbackBackup extends Callback {
 /**
  * @param { Array<Object>} data
  */
+
+export interface CallbackShowDatabases extends Callback {
+    data : any
+}
+
 export interface CallbackSelect extends Callback{
     data : Array<Object>
 }

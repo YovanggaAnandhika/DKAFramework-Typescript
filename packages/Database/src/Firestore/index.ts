@@ -1,6 +1,3 @@
-/*import firebase, {FirebaseApp, initializeApp, FirebaseOptions,  } from "firebase/app";
-import { getFirestore, Firestore, collection, doc, getDocs, getDoc, CollectionReference, QueryDocumentSnapshot, DocumentReference, DocumentData }
-    from "firebase/firestore"*/
 import firebase from 'firebase/compat/app';
 import 'firebase/compat/auth';
 import 'firebase/compat/firestore';
@@ -31,22 +28,18 @@ export class FireStore {
 
         let mConfig : DKAFirebaseConfigConstructor | undefined = config;
 
-        switch (typeof mConfig?.config) {
-            case "string":
-                this.app = firebase.initializeApp(mConfig.options, mConfig?.config)
-                this.Firestore = firebase.firestore(this.app)
-                break;
-            default :
-                this.app = firebase.initializeApp({});
-                this.Firestore = firebase.firestore(this.app)
-                break;
+        if (mConfig.name === undefined) {
+            this.app = firebase.initializeApp(mConfig.credentials);
+            this.Firestore = firebase.firestore(this.app)
+        }else{
+            this.app = firebase.initializeApp(mConfig.credentials, mConfig?.name)
+            this.Firestore = firebase.firestore(this.app)
         }
     }
 
     collection(collectionPath : string) : firebase.firestore.CollectionReference<firebase.firestore.DocumentData>  {
+        if (collectionPath === undefined || collectionPath === "" ) throw Error("collection path cannot Empty")
         return this.Firestore?.collection(collectionPath)!;
     }
 
 }
-
-export default FireStore;

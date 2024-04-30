@@ -16,7 +16,7 @@
     "compile": "tsc --build",
     "build": "yarn run clean && yarn run compile",
     "gyp": "node-gyp",
-    "test:migrate:db" : "nodemon --watch test --exec ts-node test/migratedDatabase.ts"
+    "test:migrate:db": "nodemon --watch test --exec ts-node test/migratedDatabase.ts"
   },
   "dependencies": {
     "@dkaframework/security": "latest",
@@ -31,6 +31,7 @@
     "moment-timezone": "^0.5.37",
     "mongodb": "^4.11.0",
     "mysqldump": "^3.2.0",
+    "redis": "^4.6.13",
     "rimraf": "^4.4.0",
     "tcp-port-used": "^1.0.2",
     "telnet": "^0.0.1",
@@ -38,9 +39,6 @@
     "types": "^0.1.1",
     "typescript": "^5.3.3",
     "winston": "^3.8.1"
-  },
-  "peerDependencies": {
-    "@journeyapps/sqlcipher": "^5.3.1"
   },
   "devDependencies": {
     "@types/escpos": "^2.5.2",

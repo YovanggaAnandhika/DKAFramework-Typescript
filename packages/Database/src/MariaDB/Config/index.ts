@@ -17,16 +17,7 @@ export const DatabaseMariaDB : mConfigDatabase = {
     connectTimeout : 1500,
     idleTimeout : 5000,
     acquireTimeout : 8000,
-    leakDetectionTimeout : 2000,
-    autoBackup : {
-        enabled : false,
-        backupPriodic : "DAILY",
-        filename : "DKAMariaDBBackup",
-        extension : ".sql",
-        forceReplace : false,
-        dumpFileLocation : "",
-        compressFile : false
-    }
+    leakDetectionTimeout : 2000
 }
 export const CreateTableConfig : RulesCreateTable = {
     data : [],

@@ -1,10 +1,9 @@
-import { MariaDB } from "../src";
+import { MariaDB, FireStore, Redis } from "../src";
 import * as path from "path";
 
 (async () => {
 
-    let mongo = new MariaDB();
-
+    let mariaDB = new Redis();
 
 })();
 

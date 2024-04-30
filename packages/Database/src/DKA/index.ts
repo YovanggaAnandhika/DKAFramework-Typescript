@@ -1,6 +1,6 @@
 
 
-class DKA {
+export class DKA {
 
     constructor() {
 

@@ -10,7 +10,7 @@ import {
     CallbackDelete,
     CallbackError,
     CallbackInsert,
-    CallbackSelect,
+    CallbackSelect, CallbackShowDatabases,
     CallbackUpdate,
     metadata
 } from "./Interfaces/Callback";
@@ -26,8 +26,6 @@ import {
     RulesUpdate
 } from "./Interfaces/Class";
 import {Instance, Method} from "./Type/types";
-
-import {DumpReturn} from "mysqldump/dist/mysqldump";
 
 
 /**
@@ -310,6 +308,19 @@ export class MariaDB implements MariaDBClassInterfaces {
     Create = this.Insert;
     Buat = this.Insert;
 
+
+    async showDatabases(): Promise<CallbackShowDatabases> {
+        return new Promise((resolve, rejected) => {
+            this.mMethod = "SHOW_DATABASES";
+            this.rawQuerySync<CallbackShowDatabases>(`SHOW DATABASES;`,[])
+                .then(async (result) => {
+                    await resolve(result);
+                })
+                .catch(async (error) => {
+                    await rejected(<CallbackError>error);
+                })
+        })
+    }
     /**
      * INFORMATION DOCUMENTATION CODE
      * -----
@@ -858,6 +869,37 @@ export class MariaDB implements MariaDBClassInterfaces {
                                                     });
                                                 })
                                             break;
+                                        case "SHOW_DATABASES":
+                                            await PoolConnection.release()
+                                                .then(async () => {
+                                                    if (rows.length > 0) {
+                                                        let ArrayDatabaseListName : Array<string> = [];
+                                                        await rows.forEach((row : any) => ArrayDatabaseListName.push(row.Database))
+                                                        await resolve(<T>{
+                                                            status: true,
+                                                            code: 200,
+                                                            msg: `successful, your data has been read`,
+                                                            data: ArrayDatabaseListName,
+                                                            metadata: metadata
+                                                        });
+                                                    } else {
+                                                        await rejected({
+                                                            status: false,
+                                                            code: 404,
+                                                            msg: `Succeeded, But No Data Found`,
+                                                            metadata: metadata
+                                                        });
+                                                    }
+                                                })
+                                                .catch(async () => {
+                                                    await rejected(<T>{
+                                                        status: false,
+                                                        code: 500,
+                                                        msg: `failed connection release`,
+                                                        metadata: metadata
+                                                    });
+                                                })
+                                            break;
                                         default:
                                             this.timeStart = new Date().getTime();
                                             await PoolConnection.release()
@@ -1006,148 +1048,4 @@ export class MariaDB implements MariaDBClassInterfaces {
      * @name rawQuerySync
      */
     Query = this.rawQuerySync;
-
-    async AutoBackup(enabled : Boolean = true) : Promise<CallbackBackup> {
-        return new Promise(async (resolve, rejected) => {
-            const path = require("path");
-            if (enabled){
-                if (require.resolve("mysqldump")){
-                    const mysqlDump = require("mysqldump").default;
-                    const fs = require("fs");
-                    let AddPathByTimes = ``;
-                    let renameFile = ``;
-                    let renameFileChecksum = ``;
-                    let nameCompressed = ``;
-                    let reformatNameTimes = ``;
-
-                    let fileBuffer : Buffer;
-                    let hashSum : crypto.Hash;
-                    let checksumHex : string | undefined = undefined;
-                    switch (this.mConfig.autoBackup?.backupPriodic) {
-                        case "HOURS" :
-                            AddPathByTimes = path.join(<string>this.mConfig.autoBackup?.dumpFileLocation,'./Hours');
-                            if (!fs.existsSync(AddPathByTimes)){
-                                await fs.mkdirSync(AddPathByTimes, { recursive : true, mode : 0o77 });
-                            }
-                            reformatNameTimes = moment().format("dddd_HH_DD-MM-YYYY");
-                            nameCompressed = (this.mConfig.autoBackup?.compressFile) ? ".gz" : "";
-                            renameFile = `${AddPathByTimes}/${this.mConfig.autoBackup?.filename}-${reformatNameTimes}${this.mConfig.autoBackup?.extension}${nameCompressed}`;
-                            renameFileChecksum = `${AddPathByTimes}/${this.mConfig.autoBackup?.filename}-${reformatNameTimes}${this.mConfig.autoBackup?.extension}${nameCompressed}.txt`;
-                            break;
-                        case "DAILY" :
-                            AddPathByTimes = path.join(<string>this.mConfig.autoBackup?.dumpFileLocation,'./Daily');
-                            if (!fs.existsSync(AddPathByTimes)){
-                                await fs.mkdirSync(AddPathByTimes, { recursive : true, mode : 0o77 });
-                            }
-
-                            reformatNameTimes = moment().format("dddd_DD-MM-YYYY");
-                            nameCompressed = (this.mConfig.autoBackup?.compressFile) ? ".gz" : "";
-                            renameFile = `${AddPathByTimes}/${this.mConfig.autoBackup?.filename}-${reformatNameTimes}${this.mConfig.autoBackup?.extension}${nameCompressed}`;
-                            renameFileChecksum = `${AddPathByTimes}/${this.mConfig.autoBackup?.filename}-${reformatNameTimes}${this.mConfig.autoBackup?.extension}${nameCompressed}.txt`;
-                            break;
-                        case "MONTH" :
-                            AddPathByTimes = path.join(<string>this.mConfig.autoBackup?.dumpFileLocation,'./Month');
-                            if (!fs.existsSync(AddPathByTimes)){
-                                await fs.mkdirSync(AddPathByTimes, { recursive : true, mode : 0o77 });
-                            }
-
-                            reformatNameTimes = moment().format("MM-YYYY");
-                            nameCompressed = (this.mConfig.autoBackup?.compressFile) ? ".gz" : "";
-                            renameFile = `${AddPathByTimes}/${this.mConfig.autoBackup?.filename}-${reformatNameTimes}${this.mConfig.autoBackup?.extension}${nameCompressed}`;
-                            renameFileChecksum = `${AddPathByTimes}/${this.mConfig.autoBackup?.filename}-${reformatNameTimes}${this.mConfig.autoBackup?.extension}${nameCompressed}.txt`;
-                            break;
-                        case "YEARS" :
-                            AddPathByTimes = path.join(<string>this.mConfig.autoBackup?.dumpFileLocation,'./Years');
-                            if (!fs.existsSync(AddPathByTimes)){
-                                await fs.mkdirSync(AddPathByTimes, { recursive : true, mode : 0o77 });
-                            }
-
-                            reformatNameTimes = moment().format("YYYY");
-                            nameCompressed = (this.mConfig.autoBackup?.compressFile) ? ".gz" : "";
-                            renameFile = `${AddPathByTimes}/${this.mConfig.autoBackup?.filename}-${reformatNameTimes}${this.mConfig.autoBackup?.extension}${nameCompressed}`;
-                            renameFileChecksum = `${AddPathByTimes}/${this.mConfig.autoBackup?.filename}-${reformatNameTimes}${this.mConfig.autoBackup?.extension}${nameCompressed}.txt`;
-
-                            break;
-                        default :
-                            await rejected({
-                                status : false,
-                                code : 500,
-                                msg : `Method Unknown or Not Available`
-                            });
-                            break;
-                    }
-
-                    if (!fs.existsSync(renameFile) || this.mConfig.autoBackup?.forceReplace){
-                        await mysqlDump({
-                            connection : {
-                                host : this.mConfig.host,
-                                user : this.mConfig.user,
-                                password : this.mConfig.password,
-                                port : this.mConfig.port,
-                                database : this.mConfig.database
-                            },
-                            dumpToFile : renameFile,
-                            compressFile : this.mConfig.autoBackup?.compressFile
-                        }).then(async (dumpReturn: DumpReturn) => {
-                            /** Generate Hex Checksum Of File Backup **/
-                            fileBuffer = fs.readFileSync(renameFile);
-                            hashSum = crypto.createHash('sha256');
-                            await hashSum.update(fileBuffer);
-                            checksumHex = hashSum.digest('hex');
-                            await fs.writeFileSync(renameFileChecksum, `checksum=${checksumHex}`);
-                            /** End Generate Hex Checksum Of File Backup **/
-                            let timeEnd = new Date().getTime();
-
-                            resolve({
-                                status : true,
-                                code : 200,
-                                msg : `successfully to Backup Database`,
-                                filename : renameFile,
-                                checksum : checksumHex
-                            })
-                        }).catch(async (error : CallbackError) => {
-                            await rejected({
-                                status : false,
-                                code : 500,
-                                msg : `Failed to Backup Database Schedule.`,
-                                error : {
-                                    errorMsg : ``
-                                },
-                                errorEx : error
-                            })
-                        })
-                    }else{
-                        /** Generate Hex Checksum Of File Backup **/
-                        fileBuffer = fs.readFileSync(renameFile);
-                        hashSum = crypto.createHash('sha256');
-                        await hashSum.update(fileBuffer);
-                        checksumHex = hashSum.digest('hex');
-                        await fs.writeFileSync(renameFileChecksum, `checksum=${checksumHex}`);
-                        /** End Generate Hex Checksum Of File Backup **/
-
-                        await resolve({
-                            status : true,
-                            code : 301,
-                            msg : `Sucessfully. But backup is Exist. Backup Action Skipped`,
-                            filename : renameFile,
-                            checksum : checksumHex
-                        })
-                    }
-                }else{
-                    await rejected({
-                        status : false,
-                        code : 500,
-                        msg : `MODULE "mysqldump" not Installed. please install First`
-                    });
-                }
-            }else{
-                await rejected({
-                    status : false,
-                    code : 500,
-                    msg : `Auto Backup Disable. to use it please enabled first`
-                });
-            }
-        })
-    }
 }
-export default MariaDB;

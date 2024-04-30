@@ -226,8 +226,6 @@ export interface MariaDBClassInterfaces {
 
     Delete(TableName : string, Rules : RulesDelete) : Promise<CallbackDelete>;
 
-    AutoBackup(enabled : boolean) : Promise<CallbackBackup>;
-
 
     /**
      *
