@@ -302,7 +302,7 @@ const GeoAdministrative : FC<GeoAdministrativeSelectionProps> = ({ onChange, def
     return(
         <>
             <Grid container spacing={2} sx={{ p : 1}}>
-                <Grid item xs={12} lg={3}>
+                <Grid item xs={12} md={3} lg={3}>
                     <Autocomplete
                         options={DataListProvince}
                         getOptionLabel={(option) => (option.name !== undefined) ? option.name : ""}
@@ -319,7 +319,7 @@ const GeoAdministrative : FC<GeoAdministrativeSelectionProps> = ({ onChange, def
                         )}
                     />
                 </Grid>
-                <Grid item xs={12} lg={3}>
+                <Grid item xs={12} md={3} lg={3}>
                     <Autocomplete
                         options={DataListRegencies}
                         getOptionLabel={(option) => (option.name !== undefined) ? option.name : ""}
@@ -336,7 +336,7 @@ const GeoAdministrative : FC<GeoAdministrativeSelectionProps> = ({ onChange, def
                         )}
                     />
                 </Grid>
-                <Grid item xs={12} lg={3}>
+                <Grid item xs={12} md={3} lg={3}>
                     <Autocomplete
                         options={DataListDistricts}
                         getOptionLabel={(option) => (option.name !== undefined) ? option.name : ""}
@@ -353,7 +353,7 @@ const GeoAdministrative : FC<GeoAdministrativeSelectionProps> = ({ onChange, def
                         )}
                     />
                 </Grid>
-                <Grid item xs={12} lg={3}>
+                <Grid item xs={12} md={3} lg={3}>
                     <Autocomplete
                         options={DataListVillages}
                         getOptionLabel={(option) => (option.name !== undefined) ? option.name : ""}

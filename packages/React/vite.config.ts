@@ -26,6 +26,9 @@ export default defineConfig({
     sourcemap: true,
     emptyOutDir: true,
   },
+  server: {
+    port: 3000,
+  },
   plugins: [react(), dts({ rollupTypes: true }), viteCompression()],
   css: {
     postcss: {
