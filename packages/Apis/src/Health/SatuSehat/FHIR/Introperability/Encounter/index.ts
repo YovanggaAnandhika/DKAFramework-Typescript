@@ -2,7 +2,7 @@ import {SatuSehatConstructorConfig} from "../../../Interfaces/SatuSehatConstruct
 import {SatuSehatFunctionClassParsing} from "../../../Interfaces/SatuSehatFunctionClassParsing";
 import {DefaultContructorConfig} from "../../../Config";
 import SatuSehatHostType from "../../../Interfaces/SatuSehatHost.type";
-import axios from "axios/index";
+import axios from "axios";
 import {SatuSehatFHIREncounterCreateRequest} from "./Interfaces/SatuSehatFHIREncounterCreateResponse";
 import {SatuSehatFHIREncounterCreateModel} from "./Model/SatuSehatFHIREncounterCreateModel";
 

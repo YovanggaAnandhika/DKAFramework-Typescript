@@ -23,10 +23,12 @@ import {SatuSehatConfigConstructorState} from "../src/Health/SatuSehat/Types/Sat
 
     const MasterPasien = SastuSehat.getResources(token.access_token).MPI();
 
-    const FHIR = SastuSehat
-        .getResources(token.access_token)
-        .FHIR()
-        .Onboarding()
-        .Location()
+    MasterPasien.Read("personal", {
+        identifier : 7371078338828822
+    }).then((response) => {
+        console.log(response)
+    }).catch((error) => {
+        console.log(error)
+    })
 
 })();

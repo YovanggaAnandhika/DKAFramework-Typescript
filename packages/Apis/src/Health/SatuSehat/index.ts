@@ -79,10 +79,18 @@ class SatuSehat<Config extends SatuSehatConstructorConfig> {
         });
     }
 
+    /**
+     * @constructor
+     * @param {string} accessToken
+     * Kode Akses Token yang Didapatkan Dari Function data get Access Token
+     */
+
     getResources(accessToken : string){
+        //################################################################
         MasterPatientIndex.hostConfig = this.HostConfig;
         MasterPatientIndex.token = accessToken;
         MasterPatientIndex.finalConfig = this.finalConfig;
+        //################################################################
         return {
             MPI : () => {
                 return new MasterPatientIndex()

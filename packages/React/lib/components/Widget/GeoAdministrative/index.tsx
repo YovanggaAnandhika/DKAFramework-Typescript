@@ -10,22 +10,31 @@ import {GeoAdministrativeSelectionProps, onChangeEventAutoCompleteTypes} from ".
 import {GeoAdministrativeDefaultConfig} from "./index.config.ts";
 import {GeoAdministrativeType} from "./index.enum.ts";
 
+
 const GeoAdministrative : FC<GeoAdministrativeSelectionProps> = ({ onChange, defaultValue, config = GeoAdministrativeDefaultConfig }) => {
 
     const [ IsMounted, setIsMounted ] = useState(false);
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment,@typescript-eslint/no-explicit-any
     const [ DataListProvince, setDataListProvince ] = useState<Array<any>>([]);
-    const [ DataListRegencies, setDataListRegencies ] = useState<Array<any>>([])
-    const [ DataListDistricts, setDataListDistricts ] = useState<Array<any>>([])
-    const [ DataListVillages, setDataListVillages ] = useState<Array<any>>([])
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment,@typescript-eslint/no-explicit-any
+    const [ DataListRegencies, setDataListRegencies ] = useState<Array<any>>([]);
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment,@typescript-eslint/no-explicit-any
+    const [ DataListDistricts, setDataListDistricts ] = useState<Array<any>>([]);
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment,@typescript-eslint/no-explicit-any
+    const [ DataListVillages, setDataListVillages ] = useState<Array<any>>([]);
 
     const [ StateProvince] = useState<boolean>(true);
     const [ StateRegencies, setStateRegencies ] = useState<boolean>(false);
     const [ StateDistricts, setStateDistricts ] = useState<boolean>(false);
     const [ StateVillages, setStateVillages ] = useState<boolean>(false);
 
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment,@typescript-eslint/no-explicit-any
     const [ ValueProvince, setValueProvince ] = React.useState<any>('');
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment,@typescript-eslint/no-explicit-any
     const [ ValueRegencies, setValueRegencies ] = React.useState<any>('');
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment,@typescript-eslint/no-explicit-any
     const [ ValueDistricts, setValueDistricts ] = React.useState<any>('');
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment,@typescript-eslint/no-explicit-any
     const [ ValueVillages, setValueVillages ] = React.useState<any>('');
 
     useEffect(() => {
@@ -41,7 +50,9 @@ const GeoAdministrative : FC<GeoAdministrativeSelectionProps> = ({ onChange, def
             //#########################
             switch (config.type) {
                 case GeoAdministrativeType.LOCAL:
-                    setDataListProvince(config.province);
+                    if (config.province !== undefined && Array.isArray(config.province)){
+                        setDataListProvince(config.province);
+                    }
                     break;
                 case GeoAdministrativeType.URL:
                     axios({
@@ -87,7 +98,7 @@ const GeoAdministrative : FC<GeoAdministrativeSelectionProps> = ({ onChange, def
     }, [IsMounted, DataListVillages]);
 
 
-    // @ts-ignore
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const onChangePronvice : onChangeEventAutoCompleteTypes = (event,value,reason, details) => {
         switch (reason) {
             case "selectOption":
@@ -104,8 +115,10 @@ const GeoAdministrative : FC<GeoAdministrativeSelectionProps> = ({ onChange, def
                 //#########################
                 switch (config.type) {
                     case GeoAdministrativeType.LOCAL:
-                        setStateRegencies(true);
-                        setDataListRegencies(config.regency.filter((data) => data.province_id === value.id));
+                        if (config.regency !== undefined && Array.isArray(config.regency)){
+                            setStateRegencies(true);
+                            setDataListRegencies(config.regency.filter((data) => data.province_id === value.id));
+                        }
                         break;
                     case GeoAdministrativeType.URL:
                         axios({
@@ -147,7 +160,7 @@ const GeoAdministrative : FC<GeoAdministrativeSelectionProps> = ({ onChange, def
         }
     }
 
-    // @ts-ignore
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment,@typescript-eslint/no-unused-vars
     const onChangeRegencies : onChangeEventAutoCompleteTypes = (event,value,reason, details) => {
         switch (reason) {
             case "selectOption":
@@ -161,8 +174,10 @@ const GeoAdministrative : FC<GeoAdministrativeSelectionProps> = ({ onChange, def
                 //#########################
                 switch (config.type) {
                     case GeoAdministrativeType.LOCAL:
-                        setStateDistricts(true)
-                        setDataListDistricts(config.district.filter((item) => item.regency_id === value.id ));
+                        if (config.district !== undefined && Array.isArray(config.district)){
+                            setStateDistricts(true)
+                            setDataListDistricts(config.district.filter((item) => item.regency_id === value.id ));
+                        }
                         break;
                     case GeoAdministrativeType.URL:
                         axios({
@@ -204,7 +219,7 @@ const GeoAdministrative : FC<GeoAdministrativeSelectionProps> = ({ onChange, def
         }
     }
 
-    // @ts-ignore
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const onChangeDistricts : onChangeEventAutoCompleteTypes = (event,value,reason, details) => {
         switch (reason) {
             case "selectOption":
@@ -216,8 +231,10 @@ const GeoAdministrative : FC<GeoAdministrativeSelectionProps> = ({ onChange, def
                 //#########################
                 switch (config.type) {
                     case GeoAdministrativeType.LOCAL:
-                        setDataListVillages(config.village.filter((item) => item.district_id === value.id ));
-                        setStateVillages(true)
+                        if (config.village !== undefined && Array.isArray(config.village)){
+                            setDataListVillages(config.village.filter((item) => item.district_id === value.id ));
+                            setStateVillages(true)
+                        }
                         break;
                     case GeoAdministrativeType.URL:
                         axios({
@@ -257,7 +274,7 @@ const GeoAdministrative : FC<GeoAdministrativeSelectionProps> = ({ onChange, def
         }
     }
 
-    // @ts-ignore
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const onChangeVillages : onChangeEventAutoCompleteTypes = (event,value,reason, details) => {
         switch (reason) {
             case "selectOption":
