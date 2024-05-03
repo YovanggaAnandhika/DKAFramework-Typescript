@@ -7,18 +7,27 @@ import {TemplateDefaultConfig} from "./index.config.tsx";
 
 const Template : FC<TemplateConfig> = (props) => {
 
-    const [ IsMounted, setIsMounted ] = useState<boolean>(false);
-    const [open, setOpen] = React.useState<boolean>(false);
-    const [ Themes, setThemes ] = React.useState<Theme>(createTheme());
+    const [ IsMounted, setIsMounted ] = React.useState(false);
     const [ Props, setProps] = React.useState<TemplateConfig>(TemplateDefaultConfig);
 
+
+    const Themes = createTheme(props.themeOptions);
+
     useEffect(() => {
-        setThemes(createTheme(props.themeOptions));
-        setProps({
-            ...TemplateDefaultConfig,
-            ...props
-        });
-    },[Props]);
+        setIsMounted(true);
+        return () => {
+            setIsMounted(false);
+        }
+    }, []);
+
+    useEffect(() => {
+       if (IsMounted){
+           setProps({
+               ...TemplateDefaultConfig,
+               ...props
+           });
+       }
+    },[IsMounted]);
 
     return (
         <React.Fragment>
@@ -27,7 +36,7 @@ const Template : FC<TemplateConfig> = (props) => {
                 <Box component="header">
                     <AppBar position="static">
                         <Toolbar { ... Props.toolbar?.options } sx={{ backgroundColor: "white" }}>
-                            <IconButton onClick={() => { setOpen(!open) }} { ...Props.toolbar?.iconButton}>
+                            <IconButton { ...Props.toolbar?.iconButton}>
                                 { (Props.toolbar?.icon !== undefined) ? Props.toolbar.icon : <Menu/> }
                             </IconButton>
                             { (Props.layout?.Header !== undefined) ? Props.layout.Header : <Typography variant="h6" component="div">Header</Typography> }
@@ -36,7 +45,7 @@ const Template : FC<TemplateConfig> = (props) => {
                     </AppBar>
                 </Box>
                 <Box component="nav">
-                    <Drawer open={open} anchor={"left"} onClose={() => { setOpen(!open) }} { ... Props.drawer?.options}>
+                    <Drawer anchor={"left"} { ... Props.drawer?.options}>
                         <>
                             <Box sx={{ width: 250 }}>
                                 { (Props.layout?.Menu !== undefined) ? Props.layout.Menu : <></> }

@@ -12,7 +12,7 @@ export interface TemplateConfigLayout {
 export interface TemplateConfigToolbar {
     options ?: ToolbarProps,
     iconButton ?: IconButtonProps,
-    icon : React.JSX.Element
+    icon ?: React.JSX.Element
 }
 
 export interface TemplateConfigDrawer {
