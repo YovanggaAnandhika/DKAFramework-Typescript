@@ -11,6 +11,7 @@
     "allowUnusedLabels": true,
     "noImplicitAny": true,
     "allowImportingTsExtensions": true,
+    "allowSyntheticDefaultImports": true,
     "resolveJsonModule": true,
     "isolatedModules": true,
     "noEmit": true,

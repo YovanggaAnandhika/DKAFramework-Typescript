@@ -1,3 +1,4 @@
-import GeoAdministrative from "./GeoAdministrative"
+import GeoAdministrative from "./GeoAdministrative";
+import Template from "./Template";
 
-export { GeoAdministrative };
+export { GeoAdministrative, Template };
