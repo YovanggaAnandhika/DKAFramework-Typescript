@@ -1,6 +1,6 @@
 import * as React from "react";
 import { useEffect, useState, FC } from "react";
-import {GeoAdministrative} from "../../lib/components/Widget";
+import {GeoAdministrative, Template } from "../../lib/components/Widget";
 
 const Pages : FC = () =>{
 
@@ -17,7 +17,7 @@ const Pages : FC = () =>{
 
     return (
         <>
-            <GeoAdministrative/>
+            <Template />
         </>
     )
 }
