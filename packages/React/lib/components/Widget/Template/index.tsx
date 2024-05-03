@@ -8,9 +8,8 @@ import {TemplateDefaultConfig} from "./index.config.tsx";
 const Template : FC<TemplateConfig> = (props) => {
 
     const [ IsMounted, setIsMounted ] = React.useState(false);
-    const [ Props, setProps] = React.useState<TemplateConfig>(TemplateDefaultConfig);
 
-
+    let Props = { ...TemplateDefaultConfig, ...props }
     const Themes = createTheme(props.themeOptions);
 
     useEffect(() => {
@@ -19,15 +18,6 @@ const Template : FC<TemplateConfig> = (props) => {
             setIsMounted(false);
         }
     }, []);
-
-    useEffect(() => {
-       if (IsMounted){
-           setProps({
-               ...TemplateDefaultConfig,
-               ...props
-           });
-       }
-    },[IsMounted]);
 
     return (
         <React.Fragment>
