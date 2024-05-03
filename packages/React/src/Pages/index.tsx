@@ -1,6 +1,7 @@
 import * as React from "react";
 import { useEffect, useState, FC } from "react";
 import {GeoAdministrative, Template } from "../../lib/components/Widget";
+import {Typography} from "@mui/material";
 
 const Pages : FC = () =>{
 
@@ -17,7 +18,9 @@ const Pages : FC = () =>{
 
     return (
         <>
-            <Template />
+            <Template>
+                <Typography variant="h6" component="div">Header</Typography>
+            </Template>
         </>
     )
 }
