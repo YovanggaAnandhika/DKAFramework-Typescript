@@ -9,7 +9,7 @@ import {FirebaseAppSettings, FirebaseOptions} from "firebase/app";
     messagingSenderId ?: string | undefined,
     appId ?: string | undefined
 }*/
-export interface FirebaseConfigConstructorConfiguration extends FirebaseOptions, FirebaseAppSettings {
+export interface FirebaseConfigDatabaseConstructorConfiguration extends FirebaseOptions, FirebaseAppSettings {
     apiKey ?: string | undefined,
     authDomain ?: string | undefined,
     databaseURL ?: string | undefined,

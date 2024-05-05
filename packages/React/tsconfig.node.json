@@ -6,6 +6,7 @@
     "moduleResolution": "bundler",
     "allowUnusedLabels": true,
     "noImplicitAny": true,
+    "declaration": true,
     "allowSyntheticDefaultImports": true,
     "allowImportingTsExtensions": true,
     "strict": true,

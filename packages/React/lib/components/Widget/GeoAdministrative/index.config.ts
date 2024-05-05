@@ -1,10 +1,5 @@
-import {GeoAdministrativeConfig} from "./index.types.ts";
+import {GeoAdministrativeConfig, GeoAdministrativeConfigURL} from "./index.types.ts";
 import {GeoAdministrativeType} from "./index.enum.ts";
-import Province from "./data/provinces.json";
-import Regencies from "./data/regencies.json";
-import Districts from "./data/districts.json";
-import Villages from "./data/villages.json";
-
 
 
 /**
@@ -12,11 +7,16 @@ import Villages from "./data/villages.json";
  * @ts-expect-error
  */
 export const GeoAdministrativeDefaultConfig : GeoAdministrativeConfig = {
-    type : GeoAdministrativeType.LOCAL,
-    province : Province,
-    regency : Regencies,
-    district : Districts,
-    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-    // @ts-ignore
-    village : Villages
+    type : GeoAdministrativeType.FIREBASE_DATABASE
+}
+
+export const GeoAdministrativeDefaultConfigURL : GeoAdministrativeConfigURL = {
+    type : GeoAdministrativeType.URL,
+    host : "https://raw.githubusercontent.com/YovanggaAnandhika",
+    endpoint : {
+        province : "/GeoAdministrativeIndonesiaJson/main/provinces.json",
+        regency : "/GeoAdministrativeIndonesiaJson/main/regencies.json",
+        district : "/GeoAdministrativeIndonesiaJson/main/districts.json",
+        village : "/GeoAdministrativeIndonesiaJson/main/villages.json"
+    }
 }

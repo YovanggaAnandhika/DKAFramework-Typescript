@@ -2,5 +2,7 @@
 
 export enum GeoAdministrativeType {
     URL,
-    LOCAL
+    LOCAL,
+    FIREBASE_FIRESTORE,
+    FIREBASE_DATABASE
 }

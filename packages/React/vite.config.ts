@@ -3,6 +3,7 @@ import react from "@vitejs/plugin-react-swc";
 import { resolve } from "path";
 import dts from "vite-plugin-dts";
 import viteCompression from 'vite-plugin-compression';
+import { ViteMinifyPlugin } from 'vite-plugin-minify'
 import tailwindcss from "tailwindcss";
 
 // https://vitejs.dev/config/
@@ -23,13 +24,25 @@ export default defineConfig({
         },
       },
     },
-    sourcemap: true,
     emptyOutDir: true,
   },
   server: {
     port: 3000,
   },
-  plugins: [react(), dts({ rollupTypes: true }), viteCompression()],
+  plugins: [
+    dts({ rollupTypes: true }),
+    react(),
+    ViteMinifyPlugin({
+      removeTagWhitespace : true,
+      preventAttributesEscaping : true,
+      collapseInlineTagWhitespace : true,
+      removeOptionalTags : true,
+      preserveLineBreaks : true,
+      removeRedundantAttributes : true
+    }),
+    viteCompression({
+      algorithm : "brotliCompress"
+    })],
   css: {
     postcss: {
       plugins: [tailwindcss],

@@ -13,13 +13,20 @@ export interface GeoAdministrativeModels {
     village ?: unknown
 }
 
+export interface GeoAdministrativeConfigURLEndpoint {
+    province ?: `/${string}`;
+    regency ?: `/${string}`;
+    district ?: `/${string}`;
+    village ?:`/${string}`;
+}
+
+export type Protocol = "http://" | "https://";
 export interface GeoAdministrativeConfigURL {
     type : GeoAdministrativeType.URL,
-    province : string;
-    regency : string
-    district : string,
-    village : string
+    host ?: `${Protocol}${string}`;
+    endpoint ?: GeoAdministrativeConfigURLEndpoint
 }
+
 
 export interface GeoAdministrativeConfigLocal {
     type : GeoAdministrativeType.LOCAL,
@@ -27,10 +34,17 @@ export interface GeoAdministrativeConfigLocal {
     regency ?: Array< { id : string, province_id : string, name : string } >;
     district ?: Array< { id : string, regency_id : string, name : string } >;
     village ?: Array< { id : string, district_id: string, name : string } >;
-
 }
 
-export type GeoAdministrativeConfig = GeoAdministrativeConfigURL | GeoAdministrativeConfigLocal;
+export interface GeoAdministrativeConfigFirestore {
+    type : GeoAdministrativeType.FIREBASE_FIRESTORE
+}
+
+export interface GeoAdministrativeConfigDatabase {
+    type : GeoAdministrativeType.FIREBASE_DATABASE
+}
+
+export type GeoAdministrativeConfig = GeoAdministrativeConfigURL | GeoAdministrativeConfigLocal | GeoAdministrativeConfigFirestore | GeoAdministrativeConfigDatabase;
 
 export interface GeoAdministrativeSelectionProps {
     defaultValue ?: GeoAdministrativeModels;

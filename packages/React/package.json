@@ -1,7 +1,12 @@
 {
   "name": "@dkaframework/react",
   "private": false,
-  "version": "1.0.9",
+  "version": "1.0.20",
+  "author": {
+    "name": "Yovangga Anandhika Hadi Putra",
+    "email": "dka.tech.dev@gmail.com",
+    "url": "https://github.com/YovanggaAnandhika"
+  },
   "type": "module",
   "main": "./dist/index.umd.js",
   "module": "./dist/index.es.js",
@@ -33,6 +38,7 @@
     "@redux-devtools/extension": "^3.3.0",
     "@reduxjs/toolkit": "^2.2.3",
     "classnames": "^2.5.1",
+    "firebase": "^10.11.1",
     "lodash": "^4.17.21",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
@@ -56,6 +62,7 @@
     "typescript": "^5.2.2",
     "vite": "^5.0.8",
     "vite-plugin-compression": "^0.5.1",
-    "vite-plugin-dts": "^3.9.0"
+    "vite-plugin-dts": "^3.9.0",
+    "vite-plugin-minify": "^1.5.2"
   }
 }

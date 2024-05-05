@@ -1,10 +1,10 @@
 import React from "react";
-import {TemplateConfig} from "./index.types.ts";
+import {AppWithToolbarDrawerConfig} from "./index.types.ts";
 import {Menu} from "@material-ui/icons";
 import {Typography} from "@mui/material";
 
 
-export const TemplateDefaultConfig : TemplateConfig = {
+export const TemplateDefaultConfig : AppWithToolbarDrawerConfig = {
     toolbar : {
         options : {
             variant : "dense"
@@ -12,7 +12,10 @@ export const TemplateDefaultConfig : TemplateConfig = {
         iconButton : {
             sx : { fontSize : 16, color : "black"},
         },
-        icon : <Menu/>
+        icon : <Menu/>,
+        layout : {
+            Toolbar : <Typography sx={{ color : "black" }}>Portfolio</Typography>
+        }
     },
     themeOptions : {
       palette : {
@@ -21,9 +24,13 @@ export const TemplateDefaultConfig : TemplateConfig = {
         }
       }
     },
-    layout : {
-        Menu : <></>,
-        Header : <Typography sx={{ color : "black" }}>Portfolio</Typography>
+    drawer : {
+        container : {
+            width : 250
+        },
+        layout : {
+            Menu : <></>,
+        }
     },
     children : <></>
 }

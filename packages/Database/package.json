@@ -11,7 +11,8 @@
   "license": "MIT",
   "private": false,
   "scripts": {
-    "dev": "nodemon --watch src --watch test --exec ts-node test/index.ts",
+    "dev:watch": "nodemon --watch src --watch test --exec ts-node test/index.ts",
+    "dev": "ts-node test/index.ts",
     "clean": "rimraf dist",
     "compile": "tsc --build",
     "build": "yarn run clean && yarn run compile",
@@ -22,7 +23,7 @@
     "@dkaframework/security": "latest",
     "@types/jsbn": "^1.2.30",
     "@types/lodash": "^4.0.0",
-    "firebase": "^9.13.0",
+    "firebase": "^10.11.1",
     "firebase-admin": "^11.2.0",
     "is-admin": "^4.0.0",
     "lodash": "^4.0.0",
@@ -56,7 +57,7 @@
     "ts-interface-checker": "^1.0.2",
     "ts-node": "*",
     "typescript-cp": "*",
-    "uuid": "^9.0.0"
+    "uuid": "^9.0.1"
   },
   "gitHead": "56b58b2fb5d929308fdb58761ca4c5b78568a9d1"
 }
