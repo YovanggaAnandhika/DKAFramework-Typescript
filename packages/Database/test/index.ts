@@ -34,20 +34,18 @@ import moment from "moment-timezone";
     //const regencies = firestore.collection("BASE").doc("GEO_ADMINISTRATIVE").collection("REGENCIES");
     //const districts = firestore.collection("BASE").doc("GEO_ADMINISTRATIVE").collection("DISTRICTS");
     //const villages = firestore.collection("BASE").doc("GEO_ADMINISTRATIVE").collection("VILLAGES");
-
-    firestore.remove("/BASE/GEO_ADMINISTRATIVE/VILLAGES");
-    /*mariaDB.Select(`villages`)
+    mariaDB.Select(`villages`)
         .then(async (response) => {
             let DataVillages : any = {};
-            await response.data.forEach((data) => {
-                DataVillages[v4()] = data;
+            await response.data.forEach((data : any) => {
+                DataVillages[v4()] = { ... data, name : data.name.toUpperCase() };
             });
             await fs.writeFileSync(path.join(__dirname, "villages.json"), JSON.stringify(DataVillages, null, 2), "utf-8");
             console.log("selesai")
         })
         .catch((error) => {
             console.error(error)
-        })*/
+        })
 
 
 

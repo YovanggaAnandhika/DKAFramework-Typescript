@@ -1,6 +1,6 @@
 {
   "name": "@dkaframework/iot",
-  "version": "1.2.5",
+  "version": "1.2.6",
   "private": false,
   "author": {
     "email": "dka.tech.dev@gmail.com",
@@ -14,7 +14,7 @@
     "dev": "ts-node test/example.faraday.nota.ts",
     "start": "nodemon --watch src --watch test --exec ts-node test/index.ts",
     "compile": "tsc --build",
-    "building": "yarn run clean && yarn run compile",
+    "build": "yarn run clean && yarn run compile",
     "prepublish": "yarn run clean && yarn run compile"
   },
   "dependencies": {
@@ -29,6 +29,7 @@
     "firmata": "^2.3.0",
     "ip": "^1.1.8",
     "johnny-five": "^2.1.0",
+    "lodash": "^4.17.21",
     "macaddress": "^0.5.3",
     "os-name": "^5.1.0",
     "queue-typescript": "^1.0.1",

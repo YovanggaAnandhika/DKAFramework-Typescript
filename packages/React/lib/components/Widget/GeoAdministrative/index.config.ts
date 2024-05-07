@@ -7,7 +7,8 @@ import {GeoAdministrativeType} from "./index.enum.ts";
  * @ts-expect-error
  */
 export const GeoAdministrativeDefaultConfig : GeoAdministrativeConfig = {
-    type : GeoAdministrativeType.FIREBASE_DATABASE
+    type : GeoAdministrativeType.FIREBASE_DATABASE,
+    credential : undefined
 }
 
 export const GeoAdministrativeDefaultConfigURL : GeoAdministrativeConfigURL = {

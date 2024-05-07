@@ -6,11 +6,12 @@ import {
     useSelector,
     useDispatch,
     GeoAdministrativeConfig,
-    GeoAdministrativeType
+    GeoAdministrativeType, StepperLayout, StepperLayoutItem
 } from "../../lib";
 import {Typography, Button } from "@mui/material";
 import {actions} from "../Reducer/ExampleReducer";
 import {Model} from "../Model";
+import SettingsIcon from "@mui/icons-material/Settings";
 
 const Pages : FC = () =>{
 
@@ -36,16 +37,56 @@ const Pages : FC = () =>{
         }
     },[ Dispatch, IsMounted]);
 
+    const Items : StepperLayoutItem = [
+        {
+            title : "Step 1",
+            icon : <SettingsIcon />,
+            children : (
+                <>
+                    <GeoAdministrative/>
+                </>
+            ),
+            onNext : () => {
+                console.log("next 1")
+            },
+        },
+        {
+            title : "Step 1",
+            icon : <SettingsIcon />,
+            children : <></>,
+            onNext : () => {
+                console.log("next 2")
+            },
+            onBack : () => {
+                console.log("back")
+            }
+        },
+        {
+            title : "Step 1",
+            icon : <SettingsIcon />,
+            children : (
+                <>
+                    <GeoAdministrative/>
+                </>
+            )
+        },
+        {
+            title : "Step 1",
+            icon : <SettingsIcon />,
+            children : <></>
+        },
+        {
+            title : "Step 1",
+            icon : <SettingsIcon />,
+            children : <></>
+        }
+    ]
     return (
         <>
             <AppWithToolbarDrawer>
-                <GeoAdministrative onChange={(data) => {
-                    console.log(data)
+                <StepperLayout item={Items} onFinish={() => {
+
                 }}/>
-                <Button onClick={() => {
-                    Dispatch(actions.save("test"))
-                }}>Save</Button>
-                <Button onClick={() => Dispatch(actions.deleteAll())}>Delete</Button>
             </AppWithToolbarDrawer>
         </>
     )

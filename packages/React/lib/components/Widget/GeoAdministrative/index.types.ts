@@ -1,6 +1,7 @@
 import React from "react";
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 import {GeoAdministrativeType} from "./index.enum.ts";
+import Firebase from 'firebase/compat/app';
 
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment,@typescript-eslint/no-explicit-any
 // @ts-ignore
@@ -41,7 +42,8 @@ export interface GeoAdministrativeConfigFirestore {
 }
 
 export interface GeoAdministrativeConfigDatabase {
-    type : GeoAdministrativeType.FIREBASE_DATABASE
+    type : GeoAdministrativeType.FIREBASE_DATABASE,
+    credential : any
 }
 
 export type GeoAdministrativeConfig = GeoAdministrativeConfigURL | GeoAdministrativeConfigLocal | GeoAdministrativeConfigFirestore | GeoAdministrativeConfigDatabase;
