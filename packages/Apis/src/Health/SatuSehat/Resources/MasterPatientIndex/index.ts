@@ -53,7 +53,7 @@ export class MasterPatientIndex {
                     mergeQuery = {...query, ...finalQuery};
 
                     axios<SatuSehatMasterPatientCallbackRequest>({
-                        url: `${MasterPatientIndex.hostConfig.resources.patient[MasterPatientIndex.finalConfig.state]}/Patient`,
+                        url: `${MasterPatientIndex.hostConfig.resources.fhir[MasterPatientIndex.finalConfig.state]}/Patient`,
                         method: "GET",
                         headers: {
                             Authorization: `Bearer ${MasterPatientIndex.credential.access_token}`
@@ -82,7 +82,7 @@ export class MasterPatientIndex {
                     if (query !== undefined) finalQuery.identifier = `https://fhir.kemkes.go.id/id/nik-ibu|${query.identifier}`;
                     mergeQuery = {...query, ...finalQuery};
                     axios<SatuSehatMasterPatientCallbackRequest>({
-                        url: `${MasterPatientIndex.hostConfig.resources.patient[MasterPatientIndex.finalConfig.state]}/Patient`,
+                        url: `${MasterPatientIndex.hostConfig.resources.fhir[MasterPatientIndex.finalConfig.state]}/Patient`,
                         method: "GET",
                         headers: {
                             Authorization: `Bearer ${MasterPatientIndex.credential.access_token}`
@@ -146,7 +146,7 @@ export class MasterPatientIndex {
                 return rejected({status: false, code: 500, msg: `host config Fatal Error`});
             //###########################################################
             axios({
-                url: `${MasterPatientIndex.hostConfig.resources.patient[MasterPatientIndex.finalConfig.state]}/Patient`,
+                url: `${MasterPatientIndex.hostConfig.resources.fhir[MasterPatientIndex.finalConfig.state]}/Patient`,
                 method: "POST",
                 headers: {
                     Authorization: `Bearer ${MasterPatientIndex.credential.access_token}`,

@@ -37,7 +37,7 @@ export class EncounterClassses {
                 return rejected({status: false, code: 500, msg: `host config Fatal Error`});
             //###########################################################
             axios<SatuSehatFHIREncounterCreateRequest>({
-                url: `${EncounterClassses.hostConfig.resources.patient[EncounterClassses.finalConfig.state]}/Encounter`,
+                url: `${EncounterClassses.hostConfig.resources.fhir[EncounterClassses.finalConfig.state]}/Encounter`,
                 method: "POST",
                 headers: {
                     Authorization: `Bearer ${EncounterClassses.credential.access_token}`,

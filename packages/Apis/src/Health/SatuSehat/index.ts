@@ -34,7 +34,7 @@ class SatuSehat<Config extends SatuSehatConstructorConfig> {
                 [ SatuSehatConfigConstructorState.PRODUCTION ] : `https://api-satusehat.kemkes.go.id/oauth2/v${this.finalConfig.versionApi}`
             },
             resources : {
-                patient : {
+                fhir : {
                     [ SatuSehatConfigConstructorState.STAGING ] : `https://api-satusehat-stg.dto.kemkes.go.id/fhir-r4/v${this.finalConfig.versionApi}`,
                     [ SatuSehatConfigConstructorState.PRODUCTION ] : `https://api-satusehat.kemkes.go.id/fhir-r4/v${this.finalConfig.versionApi}`
                 },

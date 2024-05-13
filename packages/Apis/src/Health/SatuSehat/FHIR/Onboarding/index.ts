@@ -4,6 +4,7 @@ import {SatuSehatConstructorConfig} from "../../Interfaces/SatuSehatConstructor.
 import {DefaultContructorConfig} from "../../Config";
 import {LocationClasses} from "./Location";
 import {SatuSehatCallbackProduction} from "../../Interfaces/SatuSehatCallback.type";
+import {OrganizationClasses} from "./Organization";
 
 
 export class OnboardingClasses {
@@ -36,5 +37,9 @@ export class OnboardingClasses {
      */
     Location () : LocationClasses {
         return new LocationClasses({config: OnboardingClasses.finalConfig, credential: OnboardingClasses.credential, hostConfig: OnboardingClasses.hostConfig});
+    }
+
+    Organization () : OrganizationClasses {
+        return new OrganizationClasses({config: OnboardingClasses.finalConfig, credential: OnboardingClasses.credential, hostConfig: OnboardingClasses.hostConfig});
     }
 }
