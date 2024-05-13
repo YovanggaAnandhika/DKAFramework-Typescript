@@ -12,23 +12,22 @@ import {SatuSehatConfigConstructorState} from "../src/Health/SatuSehat/Types/Sat
         state: SatuSehatConfigConstructorState.STAGING,
         credentials: {
             auth: {
-                clientId: "<token-here>",
-                clientSecret: "<token-here>"
+                clientId: "ngh5TnGNa25g3ADgSesZ2MNKlhGE02hGlAcwOV7LqwrsXIQt",
+                clientSecret: "6JAlC9rN49mOjWw93eQMUDKmfbAHlsW8OJgaQET0GxNXPYumvPr7cE36qohRcsFG"
             }
         }
     });
-    /**
-     * Dapatkan Kode Token Dari Module **/
+    /** Dapatkan Kode Token Dari Module **/
     const token = await SastuSehat.getAccessToken();
-
-    const MasterPasien = SastuSehat.getResources(token.access_token).MPI();
-
-    MasterPasien.Read("personal", {
-        identifier : 7371078338828822
-    }).then((response) => {
-        console.log(response)
-    }).catch((error) => {
-        console.log(error)
-    })
+    SastuSehat
+        .getResources(token)
+        .MPI()
+        .Read("personal",{ identifier : 9271060312000001 })
+        .then((response) => {
+            console.log(JSON.stringify(response))
+            })
+            .catch((error) => {
+                console.error("DKA", JSON.stringify(error))
+            })
 
 })();

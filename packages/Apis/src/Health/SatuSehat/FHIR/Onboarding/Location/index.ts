@@ -2,6 +2,7 @@ import SatuSehatHostType from "../../../Interfaces/SatuSehatHost.type";
 import {SatuSehatConstructorConfig} from "../../../Interfaces/SatuSehatConstructor.type";
 import {DefaultContructorConfig} from "../../../Config";
 import {SatuSehatFunctionClassParsing} from "../../../Interfaces/SatuSehatFunctionClassParsing";
+import {SatuSehatCallbackProduction} from "../../../Interfaces/SatuSehatCallback.type";
 
 
 export class LocationClasses {
@@ -13,7 +14,7 @@ export class LocationClasses {
     /**
      * @internal
      */
-    static token: string = "";
+    static credential : SatuSehatCallbackProduction;
 
     /**
      *
@@ -24,7 +25,7 @@ export class LocationClasses {
     constructor(options: SatuSehatFunctionClassParsing) {
         LocationClasses.finalConfig = options.config;
         LocationClasses.hostConfig = options.hostConfig;
-        LocationClasses.token = options.accessToken;
+        LocationClasses.credential = options.credential;
     }
 
 

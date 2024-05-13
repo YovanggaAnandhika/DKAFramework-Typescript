@@ -11,6 +11,8 @@ import {SatuSehatMasterPatientCallbackRequest} from "./interfaces/MasterPatientG
 import {SatuSehatConstructorConfig} from "../../Interfaces/SatuSehatConstructor.type";
 import {SatuSehatPatientModelInsertRequest} from "./interfaces/MasterPatientInsertModel";
 import {MasterPatientUpdateModelRequest} from "./interfaces/MasterPatientUpdateModel";
+import {SatuSehatCallbackProduction} from "../../Interfaces/SatuSehatCallback.type";
+import {SatuSehatFunctionClassParsing} from "../../Interfaces/SatuSehatFunctionClassParsing";
 
 export class MasterPatientIndex {
     /**
@@ -20,13 +22,20 @@ export class MasterPatientIndex {
     /**
      * @internal
      */
-    static token: string = "";
+    static credential : SatuSehatCallbackProduction;
 
     /**
      *
      * @internal
      */
     static finalConfig: SatuSehatConstructorConfig = DefaultContructorConfig;
+
+
+    constructor(options : SatuSehatFunctionClassParsing) {
+        MasterPatientIndex.finalConfig = options.config;
+        MasterPatientIndex.hostConfig = options.hostConfig;
+        MasterPatientIndex.credential = options.credential;
+    }
 
     Read<action extends MasterPationGetterAction>(action: action, query: CheckedPatientActionGetter<action>): Promise<SatuSehatMasterPatientCallback> {
         return new Promise((resolve, rejected) => {
@@ -47,7 +56,7 @@ export class MasterPatientIndex {
                         url: `${MasterPatientIndex.hostConfig.resources.patient[MasterPatientIndex.finalConfig.state]}/Patient`,
                         method: "GET",
                         headers: {
-                            Authorization: `Bearer ${MasterPatientIndex.token}`
+                            Authorization: `Bearer ${MasterPatientIndex.credential.access_token}`
                         },
                         params: mergeQuery
                     }).then(async (response) => {
@@ -65,7 +74,6 @@ export class MasterPatientIndex {
                         })
 
                     }).catch((error) => {
-                        console.log(error.response)
                         rejected({ status : false, code : error.status, msg : error.code});
                     });
 
@@ -77,7 +85,7 @@ export class MasterPatientIndex {
                         url: `${MasterPatientIndex.hostConfig.resources.patient[MasterPatientIndex.finalConfig.state]}/Patient`,
                         method: "GET",
                         headers: {
-                            Authorization: `Bearer ${MasterPatientIndex.token}`
+                            Authorization: `Bearer ${MasterPatientIndex.credential.access_token}`
                         },
                         params: mergeQuery
                     }).then((response) => {
@@ -110,7 +118,7 @@ export class MasterPatientIndex {
                 url: fullUrl,
                 method: "GET",
                 headers: {
-                    Authorization: `Bearer ${MasterPatientIndex.token}`
+                    Authorization: `Bearer ${MasterPatientIndex.credential.access_token}`
                 }
             }).then(async (response) => {
                 if (response.data.total < 1) return rejected({
@@ -141,7 +149,7 @@ export class MasterPatientIndex {
                 url: `${MasterPatientIndex.hostConfig.resources.patient[MasterPatientIndex.finalConfig.state]}/Patient`,
                 method: "POST",
                 headers: {
-                    Authorization: `Bearer ${MasterPatientIndex.token}`,
+                    Authorization: `Bearer ${MasterPatientIndex.credential.access_token}`,
                     "Content-Type": "application/json",
                     "Cache-Control" : "no-cache",
                 },
@@ -172,7 +180,7 @@ export class MasterPatientIndex {
                 url: `${fullUrl}`,
                 method: "PATCH",
                 headers: {
-                    Authorization: `Bearer ${MasterPatientIndex.token}`,
+                    Authorization: `Bearer ${MasterPatientIndex.credential.access_token}`,
                     "Content-Type": "application/json",
                     "Cache-Control" : "no-cache",
                 },
