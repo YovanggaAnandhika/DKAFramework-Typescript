@@ -5,6 +5,7 @@ import SatuSehatHostType from "../../../Interfaces/SatuSehatHost.type";
 import axios from "axios";
 import {SatuSehatFHIREncounterCreateRequest} from "./Interfaces/SatuSehatFHIREncounterCreateResponse";
 import {SatuSehatFHIREncounterCreateModel} from "./Model/SatuSehatFHIREncounterCreateModel";
+import {SatuSehatCallbackProduction} from "../../../Interfaces/SatuSehatCallback.type";
 
 
 export class EncounterClassses {
@@ -16,7 +17,7 @@ export class EncounterClassses {
     /**
      * @internal
      */
-    static token: string = "";
+    static credential : SatuSehatCallbackProduction;
 
     /**
      *
@@ -26,7 +27,7 @@ export class EncounterClassses {
     constructor(options : SatuSehatFunctionClassParsing) {
         EncounterClassses.finalConfig = options.config;
         EncounterClassses.hostConfig = options.hostConfig;
-        EncounterClassses.token = options.accessToken;
+        EncounterClassses.credential = options.credential;
     }
 
     Add(query: SatuSehatFHIREncounterCreateModel) : Promise<any> {
@@ -36,10 +37,10 @@ export class EncounterClassses {
                 return rejected({status: false, code: 500, msg: `host config Fatal Error`});
             //###########################################################
             axios<SatuSehatFHIREncounterCreateRequest>({
-                url: `${EncounterClassses.hostConfig.resources.patient[EncounterClassses.finalConfig.state]}/Encounter`,
+                url: `${EncounterClassses.hostConfig.resources.fhir[EncounterClassses.finalConfig.state]}/Encounter`,
                 method: "POST",
                 headers: {
-                    Authorization: `Bearer ${EncounterClassses.token}`,
+                    Authorization: `Bearer ${EncounterClassses.credential.access_token}`,
                     "Content-Type": "application/json",
                     "Cache-Control" : "no-cache",
                 },

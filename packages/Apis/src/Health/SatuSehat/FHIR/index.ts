@@ -4,6 +4,7 @@ import {SatuSehatConstructorConfig} from "../Interfaces/SatuSehatConstructor.typ
 import {DefaultContructorConfig} from "../Config";
 import {IntroperabilityClasses} from "./Introperability";
 import {OnboardingClasses} from "./Onboarding";
+import {SatuSehatCallbackProduction} from "../Interfaces/SatuSehatCallback.type";
 
 
 export class FHIR {
@@ -15,7 +16,7 @@ export class FHIR {
     /**
      * @internal
      */
-    static token: string = "";
+    static credential : SatuSehatCallbackProduction
 
     /**
      *
@@ -25,7 +26,7 @@ export class FHIR {
     constructor(options : SatuSehatFunctionClassParsing) {
         FHIR.finalConfig = options.config;
         FHIR.hostConfig = options.hostConfig;
-        FHIR.token = options.accessToken;
+        FHIR.credential = options.credential;
     }
 
     /**
@@ -36,7 +37,7 @@ export class FHIR {
      */
 
     Onboarding () : OnboardingClasses {
-        return new OnboardingClasses({config: FHIR.finalConfig, accessToken: FHIR.token, hostConfig: FHIR.hostConfig});
+        return new OnboardingClasses({config: FHIR.finalConfig, credential: FHIR.credential, hostConfig: FHIR.hostConfig});
     }
     /**
      *
@@ -45,7 +46,7 @@ export class FHIR {
      * Data klasifikasi diet dari pasien yang bersangkutan akan dipetakan dengan menggunakan standar FHIR DomainResource dengan tipe Composition.
      */
     Introperability () : IntroperabilityClasses {
-        return new IntroperabilityClasses({config: FHIR.finalConfig, accessToken: FHIR.token, hostConfig: FHIR.hostConfig});
+        return new IntroperabilityClasses({config: FHIR.finalConfig, credential: FHIR.credential, hostConfig: FHIR.hostConfig});
     }
 
 }

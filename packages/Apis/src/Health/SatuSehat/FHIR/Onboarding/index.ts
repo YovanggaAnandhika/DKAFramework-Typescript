@@ -3,6 +3,8 @@ import SatuSehatHostType from "../../Interfaces/SatuSehatHost.type";
 import {SatuSehatConstructorConfig} from "../../Interfaces/SatuSehatConstructor.type";
 import {DefaultContructorConfig} from "../../Config";
 import {LocationClasses} from "./Location";
+import {SatuSehatCallbackProduction} from "../../Interfaces/SatuSehatCallback.type";
+import {OrganizationClasses} from "./Organization";
 
 
 export class OnboardingClasses {
@@ -14,7 +16,7 @@ export class OnboardingClasses {
     /**
      * @internal
      */
-    static token: string = "";
+    static credential : SatuSehatCallbackProduction;
 
     /**
      *
@@ -24,7 +26,7 @@ export class OnboardingClasses {
     constructor(options : SatuSehatFunctionClassParsing) {
         OnboardingClasses.finalConfig = options.config;
         OnboardingClasses.hostConfig = options.hostConfig;
-        OnboardingClasses.token = options.accessToken;
+        OnboardingClasses.credential = options.credential;
     }
 
     /**
@@ -34,6 +36,10 @@ export class OnboardingClasses {
      * Data klasifikasi diet dari pasien yang bersangkutan akan dipetakan dengan menggunakan standar OnboardingClasses DomainResource dengan tipe Composition.
      */
     Location () : LocationClasses {
-        return new LocationClasses({config: OnboardingClasses.finalConfig, accessToken: OnboardingClasses.token, hostConfig: OnboardingClasses.hostConfig});
+        return new LocationClasses({config: OnboardingClasses.finalConfig, credential: OnboardingClasses.credential, hostConfig: OnboardingClasses.hostConfig});
+    }
+
+    Organization () : OrganizationClasses {
+        return new OrganizationClasses({config: OnboardingClasses.finalConfig, credential: OnboardingClasses.credential, hostConfig: OnboardingClasses.hostConfig});
     }
 }

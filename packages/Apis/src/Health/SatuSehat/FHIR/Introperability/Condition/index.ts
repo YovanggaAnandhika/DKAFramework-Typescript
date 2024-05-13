@@ -2,6 +2,7 @@ import SatuSehatHostType from "../../../Interfaces/SatuSehatHost.type";
 import {SatuSehatConstructorConfig} from "../../../Interfaces/SatuSehatConstructor.type";
 import {DefaultContructorConfig} from "../../../Config";
 import {SatuSehatFunctionClassParsing} from "../../../Interfaces/SatuSehatFunctionClassParsing";
+import {SatuSehatCallbackProduction} from "../../../Interfaces/SatuSehatCallback.type";
 
 
 export class ConditionClasses {
@@ -13,7 +14,7 @@ export class ConditionClasses {
     /**
      * @internal
      */
-    static token: string = "";
+    static credential : SatuSehatCallbackProduction;
 
     /**
      *
@@ -24,6 +25,6 @@ export class ConditionClasses {
     constructor(options: SatuSehatFunctionClassParsing) {
         ConditionClasses.finalConfig = options.config;
         ConditionClasses.hostConfig = options.hostConfig;
-        ConditionClasses.token = options.accessToken;
+        ConditionClasses.credential = options.credential;
     }
 }

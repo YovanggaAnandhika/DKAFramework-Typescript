@@ -7,6 +7,7 @@ export interface SatuSehatConstructorConfigCredentialAuth {
 }
 
 export interface SatuSehatConstructorConfigCredential {
+    orgId ?: string,
     auth ?: SatuSehatConstructorConfigCredentialAuth
 }
 export interface SatuSehatConstructorConfig {

@@ -2,6 +2,7 @@ import SatuSehatHostType from "../../../Interfaces/SatuSehatHost.type";
 import {SatuSehatConstructorConfig} from "../../../Interfaces/SatuSehatConstructor.type";
 import {DefaultContructorConfig} from "../../../Config";
 import {SatuSehatFunctionClassParsing} from "../../../Interfaces/SatuSehatFunctionClassParsing";
+import {SatuSehatCallbackProduction} from "../../../Interfaces/SatuSehatCallback.type";
 
 
 export class ObservationClasses {
@@ -13,7 +14,7 @@ export class ObservationClasses {
     /**
      * @internal
      */
-    static token: string = "";
+    static credential : SatuSehatCallbackProduction;
 
     /**
      *
@@ -24,6 +25,6 @@ export class ObservationClasses {
     constructor(options: SatuSehatFunctionClassParsing) {
         ObservationClasses.finalConfig = options.config;
         ObservationClasses.hostConfig = options.hostConfig;
-        ObservationClasses.token = options.accessToken;
+        ObservationClasses.credential = options.credential;
     }
 }

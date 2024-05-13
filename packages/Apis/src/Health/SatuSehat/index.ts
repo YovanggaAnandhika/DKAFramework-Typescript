@@ -34,7 +34,7 @@ class SatuSehat<Config extends SatuSehatConstructorConfig> {
                 [ SatuSehatConfigConstructorState.PRODUCTION ] : `https://api-satusehat.kemkes.go.id/oauth2/v${this.finalConfig.versionApi}`
             },
             resources : {
-                patient : {
+                fhir : {
                     [ SatuSehatConfigConstructorState.STAGING ] : `https://api-satusehat-stg.dto.kemkes.go.id/fhir-r4/v${this.finalConfig.versionApi}`,
                     [ SatuSehatConfigConstructorState.PRODUCTION ] : `https://api-satusehat.kemkes.go.id/fhir-r4/v${this.finalConfig.versionApi}`
                 },
@@ -55,7 +55,7 @@ class SatuSehat<Config extends SatuSehatConstructorConfig> {
             if (this.HostConfig === undefined)
                 return rejected({ status : false, code : 400, msg : `host config undefined`});
             const hostServer = `${this.HostConfig.auth[this.finalConfig.state]}/accesstoken`;
-            axios({
+            axios<SatuSehatCallbackProduction>({
                 url : hostServer,
                 method : "POST",
                 headers : {
@@ -73,7 +73,6 @@ class SatuSehat<Config extends SatuSehatConstructorConfig> {
             }).then((response) => {
                 resolve(response.data);
             }).catch((error) => {
-                console.log(error)
                 rejected({ status : false, code : error.response.status, msg : error.response.statusText, error : error.response.data.issue});
             });
         });
@@ -81,19 +80,14 @@ class SatuSehat<Config extends SatuSehatConstructorConfig> {
 
     /**
      * @constructor
-     * @param {string} accessToken
+     * @param { SatuSehatCallbackProduction } credential
      * Kode Akses Token yang Didapatkan Dari Function data get Access Token
      */
 
-    getResources(accessToken : string){
-        //################################################################
-        MasterPatientIndex.hostConfig = this.HostConfig;
-        MasterPatientIndex.token = accessToken;
-        MasterPatientIndex.finalConfig = this.finalConfig;
-        //################################################################
+    getResources(credential : SatuSehatCallbackProduction){
         return {
             MPI : () => {
-                return new MasterPatientIndex()
+                return new MasterPatientIndex({ config : this.finalConfig, credential : credential, hostConfig : this.HostConfig })
             },
             /**
              * @constructor
@@ -101,7 +95,7 @@ class SatuSehat<Config extends SatuSehatConstructorConfig> {
              * Fast Healthcare Interoperability Resources FHIR adalah sebuah standar global (internasional) yang menetapkan format data beserta elemen-elemennya (yang disebut "resources") dan sebuah standar antarmuka pemrograman aplikasi (API/Application Programming Interface) untuk pertukaran informasi (interoperabilitas SATUSEHAT) yang pada penerapannya akan dibagi-bagi lagi menjadi beberapa alur proses sesuai penggunaannya (use case) baik use case dasar maupun use case tematik. FHIR dibaca “fire” dalam bahasa Inggris (/faier/).
              */
             FHIR : () => {
-                return new FHIR({ config : this.finalConfig, accessToken : accessToken, hostConfig : this.HostConfig });
+                return new FHIR({ config : this.finalConfig, credential : credential, hostConfig : this.HostConfig });
             }
         }
     }

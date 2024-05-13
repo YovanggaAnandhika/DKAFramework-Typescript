@@ -10,6 +10,7 @@ import {ObservationClasses} from "./Observation";
 import {CompositionClasses} from "./Composition";
 import {ConditionClasses} from "./Condition";
 import EncounterClassses from "./Encounter";
+import {SatuSehatCallbackProduction} from "../../Interfaces/SatuSehatCallback.type";
 
 
 export class IntroperabilityClasses {
@@ -21,7 +22,7 @@ export class IntroperabilityClasses {
     /**
      * @internal
      */
-    static token: string = "";
+    static credential : SatuSehatCallbackProduction;
 
     /**
      *
@@ -31,7 +32,7 @@ export class IntroperabilityClasses {
     constructor(options : SatuSehatFunctionClassParsing) {
         IntroperabilityClasses.finalConfig = options.config;
         IntroperabilityClasses.hostConfig = options.hostConfig;
-        IntroperabilityClasses.token = options.accessToken;
+        IntroperabilityClasses.credential = options.credential;
     }
 
     /**
@@ -41,7 +42,7 @@ export class IntroperabilityClasses {
      * Data klasifikasi diet dari pasien yang bersangkutan akan dipetakan dengan menggunakan standar IntroperabilityClasses DomainResource dengan tipe Composition.
      */
     Composition () : CompositionClasses {
-        return new CompositionClasses({config: IntroperabilityClasses.finalConfig, accessToken: IntroperabilityClasses.token, hostConfig: IntroperabilityClasses.hostConfig});
+        return new CompositionClasses({config: IntroperabilityClasses.finalConfig, credential: IntroperabilityClasses.credential, hostConfig: IntroperabilityClasses.hostConfig});
     }
 
     /**
@@ -53,7 +54,7 @@ export class IntroperabilityClasses {
      * Sehingga apabila pasien memiliki 2 diagnosis, maka dikirimkan 2 payload Condition dengan 2 kode ICD-10 yang berbeda.
      */
     Condition () : ConditionClasses {
-        return new ConditionClasses({config: IntroperabilityClasses.finalConfig, accessToken: IntroperabilityClasses.token, hostConfig: IntroperabilityClasses.hostConfig});
+        return new ConditionClasses({config: IntroperabilityClasses.finalConfig, credential: IntroperabilityClasses.credential, hostConfig: IntroperabilityClasses.hostConfig});
     }
 
     /**
@@ -63,13 +64,13 @@ export class IntroperabilityClasses {
      * Kunjungan pasien dapat didefinisikan sebagai interaksi pasien terhadap suatu layanan Fasyankes. Sebagai contoh, dalam satu rangkaian rawat jalan, seluruh rangkaian dapat didefinisikan sebagai satu “Encounter”. Data-data kunjungan pasien yang direkam meliputi kapan pertemuan tersebut mulai dan selesai, siapa tenaga kesehatan yang melayani, siapa subjek dari pelayanannya, dan informasi pendukung lainnya.
      */
     Encounter () : EncounterClassses {
-        return new EncounterClassses({config: IntroperabilityClasses.finalConfig, accessToken: IntroperabilityClasses.token, hostConfig: IntroperabilityClasses.hostConfig});
+        return new EncounterClassses({config: IntroperabilityClasses.finalConfig, credential: IntroperabilityClasses.credential, hostConfig: IntroperabilityClasses.hostConfig});
     }
     Medication () : MedicationClasses {
-        return new MedicationClasses({config: IntroperabilityClasses.finalConfig, accessToken: IntroperabilityClasses.token, hostConfig: IntroperabilityClasses.hostConfig});
+        return new MedicationClasses({config: IntroperabilityClasses.finalConfig, credential: IntroperabilityClasses.credential, hostConfig: IntroperabilityClasses.hostConfig});
     }
 
     Observation () : ObservationClasses {
-        return new ObservationClasses({config: IntroperabilityClasses.finalConfig, accessToken: IntroperabilityClasses.token, hostConfig: IntroperabilityClasses.hostConfig});
+        return new ObservationClasses({config: IntroperabilityClasses.finalConfig, credential: IntroperabilityClasses.credential, hostConfig: IntroperabilityClasses.hostConfig});
     }
 }

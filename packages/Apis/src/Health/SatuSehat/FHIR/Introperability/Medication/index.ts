@@ -2,6 +2,7 @@ import SatuSehatHostType from "../../../Interfaces/SatuSehatHost.type";
 import {SatuSehatConstructorConfig} from "../../../Interfaces/SatuSehatConstructor.type";
 import {DefaultContructorConfig} from "../../../Config";
 import {SatuSehatFunctionClassParsing} from "../../../Interfaces/SatuSehatFunctionClassParsing";
+import {SatuSehatCallbackProduction} from "../../../Interfaces/SatuSehatCallback.type";
 
 
 export class MedicationClasses {
@@ -13,7 +14,7 @@ export class MedicationClasses {
     /**
      * @internal
      */
-    static token: string = "";
+    static credential : SatuSehatCallbackProduction;
 
     /**
      *
@@ -24,6 +25,6 @@ export class MedicationClasses {
     constructor(options: SatuSehatFunctionClassParsing) {
         MedicationClasses.finalConfig = options.config;
         MedicationClasses.hostConfig = options.hostConfig;
-        MedicationClasses.token = options.accessToken;
+        MedicationClasses.credential = options.credential;
     }
 }

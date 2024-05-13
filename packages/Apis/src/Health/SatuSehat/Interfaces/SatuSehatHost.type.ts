@@ -1,7 +1,7 @@
 import {SatuSehatConfigConstructorState} from "../Types/SatuSehatConfigConstructor";
 
 export interface SatuSehatHostTypeResource {
-    patient : {
+    fhir : {
         [ name : number ] : string
     };
     masterData : {
