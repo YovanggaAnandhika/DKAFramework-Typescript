@@ -26,6 +26,7 @@ import SocketIOEngineHeaders from "./Component/SocketIOEngineHeaders";
 import {SocketIOMiddleware} from "./Component/SocketIOMiddleware";
 import tcpPortUsed from "tcp-port-used";
 import moment, { Moment } from "moment-timezone";
+import {io} from "socket.io-client";
 
 function moduleIsExists(packageName : string){
     try {
@@ -163,6 +164,11 @@ export async function SocketIOServerInstances<Config extends ConfigSocketIOServe
                                     }
                                 });
 
+                                /** Event on Connection Data **/
+                                if (config.io !== undefined){
+                                    await config.io(io);
+                                }
+
                                 if (config.events?.socket?.onConnection !== undefined){
                                     await config.events?.socket?.onConnection?.(io, SocketIO);
                                 }
@@ -175,11 +181,6 @@ export async function SocketIOServerInstances<Config extends ConfigSocketIOServe
                                 }
                                 //** End Event On Disconnection Data **/
                             });
-
-                            /** Event on Connection Data **/
-                            if (config.io !== undefined){
-                                await config.io?.(SocketIO)
-                            }
 
                             mHTTP.on("listening", async () => {
                                 await config.events?.server?.onListening?.();
@@ -323,6 +324,11 @@ export async function SocketIOServerInstances<Config extends ConfigSocketIOServe
                                     }
                                 });
 
+                                /** Event on Connection Data **/
+                                if (config.io !== undefined){
+                                    await config.io(io);
+                                }
+
                                 if (config.events?.socket?.onConnection !== undefined){
                                     await config.events?.socket?.onConnection?.(io, SocketIO);
                                 }
@@ -336,10 +342,6 @@ export async function SocketIOServerInstances<Config extends ConfigSocketIOServe
                                 //** End Event On Disconnection Data **/
                             });
 
-                            /** Event on Connection Data **/
-                            if (config.io !== undefined){
-                                await config.io?.(SocketIO)
-                            }
                             mHTTP2.on("listening", async () => {
                                 await config.events?.server?.onListening?.();
                             })
@@ -479,6 +481,11 @@ export async function SocketIOServerInstances<Config extends ConfigSocketIOServe
                                     }
                                 });
 
+                                /** Event on Connection Data **/
+                                if (config.io !== undefined){
+                                    await config.io(io);
+                                }
+
                                 if (config.events?.socket?.onConnection !== undefined){
                                     await config.events?.socket?.onConnection?.(io, SocketIO);
                                 }
@@ -491,10 +498,6 @@ export async function SocketIOServerInstances<Config extends ConfigSocketIOServe
                                 //** End Event On Disconnection Data **/
                             });
 
-                            /** Event on Connection Data **/
-                            if (config.io !== undefined){
-                                await config.io?.(SocketIO)
-                            }
                             mHTTPS.on("error", async (err : Error) => {
                                 delete err.stack;
                                 await rejected(require("error-to-json")(err))
@@ -624,6 +627,12 @@ export async function SocketIOServerInstances<Config extends ConfigSocketIOServe
 
                                     }
                                 });
+
+                                /** Event on Connection Data **/
+                                if (config.io !== undefined){
+                                    await config.io(io);
+                                }
+
                                 if (config.events?.socket?.onConnection !== undefined){
                                     await config.events?.socket?.onConnection?.(io, SocketIO);
                                 }
@@ -635,11 +644,6 @@ export async function SocketIOServerInstances<Config extends ConfigSocketIOServe
                                 }
                                 //** End Event On Disconnection Data **/
                             });
-
-
-                            if (config.io !== undefined){
-                                await config.io?.(SocketIO)
-                            }
 
                             mHTTP.on("listening", async () => {
                                 await config.events?.server?.onListening?.();

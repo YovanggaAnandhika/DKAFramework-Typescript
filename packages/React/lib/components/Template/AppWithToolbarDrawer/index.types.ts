@@ -1,6 +1,6 @@
 import {ToolbarProps, IconButtonProps, BoxProps, DrawerProps} from "@mui/material";
 import { ThemeOptions } from '@material-ui/core/styles';
-import React from "react";
+import React, {LazyExoticComponent} from "react";
 
 
 export interface AppWithToolbarDrawerConfigLayoutDrawer {

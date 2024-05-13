@@ -1,9 +1,8 @@
 import React, { FC, useEffect, useState } from "react";
 import { styled } from '@mui/material/styles';
 import Check from '@mui/icons-material/Check';
-import SettingsIcon from '@mui/icons-material/Settings';
-import GroupAddIcon from '@mui/icons-material/GroupAdd';
-import VideoLabelIcon from '@mui/icons-material/VideoLabel';
+import Alert from '@mui/material/Alert';
+import AlertTitle from '@mui/material/AlertTitle';
 import StepConnector, { stepConnectorClasses } from '@mui/material/StepConnector';
 import { StepIconProps } from '@mui/material/StepIcon';
 import Stepper from '@mui/material/Stepper';
@@ -141,7 +140,7 @@ const StepperLayout : FC<StepperLayoutConfig> = (config) => {
     useEffect(() => {
         if (IsMounted){
             if (activeState < config.item.length - 1) setNextButtonText("Selanjutnya");
-            if (activeState === config.item.length - 1) setNextButtonText("Selesai");
+            if (activeState === config.item.length - 1 || config.item.length === 1) setNextButtonText("Selesai");
             if (activeState === 0) setBackButtonEnabled(false);
             if (activeState > 0) setBackButtonEnabled(true);
         }
@@ -174,23 +173,30 @@ const StepperLayout : FC<StepperLayoutConfig> = (config) => {
 
 
     return (
-        <Paper sx={{ p : 2, m : 2}}>
-            <Stepper alternativeLabel activeStep={activeState} connector={<ColorlibConnector />}>
+        <React.Fragment>
+            <Stepper alternativeLabel activeStep={activeState} connector={<ColorlibConnector />} sx={{ p : 2, m : 2}}>
                 { config.item.map((item, index) => (
                     <Step key={index}>
                         <StepLabel StepIconComponent={ColorlibStepIcon}>{item.title}</StepLabel>
                     </Step>
                 ))}
             </Stepper>
-            <React.Suspense  fallback={<div>Loading...</div>}>
+            <React.Suspense  fallback={
+                <>
+                    <Alert severity="info">
+                        <AlertTitle>Sedang Memuat Halaman ...</AlertTitle>
+                        Harap Tunggu.
+                    </Alert>
+                </>
+            }>
                 { LayoutContainer }
             </React.Suspense>
-            <Box sx={{ display: 'flex', flexDirection: 'row', pt: 2 }}>
+            <Box sx={{ display: 'flex', flexDirection: 'row', p: 2, m : 2 }}>
                 <Button sx={{ mr: 1 }} disabled={!BackButtonEnabled} onClick={onBackOnClick}>{BackButtonText}</Button>
                 <Box sx={{ flex: '1 1 auto' }} />
                 <Button onClick={onNextClick}>{NextButtonText}</Button>
             </Box>
-        </Paper>
+        </React.Fragment>
     )
 }
 

@@ -1,24 +1,22 @@
 import * as React from "react";
-import { useEffect, useState, FC } from "react";
+import {FC, useEffect} from "react";
 import {
-    GeoAdministrative,
     AppWithToolbarDrawer,
-    useSelector,
-    useDispatch,
-    GeoAdministrativeConfig,
-    GeoAdministrativeType, StepperLayout, StepperLayoutItem
+    useWindowSize,
+    useSocketIOState,
+    SocketIOStates,
+    useSocketIOConnector,
 } from "../../lib";
-import {Typography, Button } from "@mui/material";
-import {actions} from "../Reducer/ExampleReducer";
-import {Model} from "../Model";
-import SettingsIcon from "@mui/icons-material/Settings";
+import Box from "@mui/material/Box";
 
 const Pages : FC = () =>{
 
     const [IsMounted, setIsMounted] = React.useState(false);
+    const [ witdh, height ] = useWindowSize();
 
-    const Example = useSelector<typeof Model>(state => state.example);
-    const Dispatch = useDispatch();
+    const state = useSocketIOState();
+
+    const socket = useSocketIOConnector({ host : "127.0.0.1", port : 53333 });
 
     useEffect(() => {
         setIsMounted(true);
@@ -27,66 +25,21 @@ const Pages : FC = () =>{
         }
     });
 
-    useEffect(() => {
-        console.log(JSON.stringify(Example))
-    }, [Example]);
-
+    /**
+     * Function For Effect Simulation Data On Controllable
+     */
     useEffect(() => {
         if (IsMounted){
-            Dispatch(actions.save("test"))
+            socket.emit("test", "halo")
         }
-    },[ Dispatch, IsMounted]);
+    },[IsMounted]);
 
-    const Items : StepperLayoutItem = [
-        {
-            title : "Step 1",
-            icon : <SettingsIcon />,
-            children : (
-                <>
-                    <GeoAdministrative/>
-                </>
-            ),
-            onNext : () => {
-                console.log("next 1")
-            },
-        },
-        {
-            title : "Step 1",
-            icon : <SettingsIcon />,
-            children : <></>,
-            onNext : () => {
-                console.log("next 2")
-            },
-            onBack : () => {
-                console.log("back")
-            }
-        },
-        {
-            title : "Step 1",
-            icon : <SettingsIcon />,
-            children : (
-                <>
-                    <GeoAdministrative/>
-                </>
-            )
-        },
-        {
-            title : "Step 1",
-            icon : <SettingsIcon />,
-            children : <></>
-        },
-        {
-            title : "Step 1",
-            icon : <SettingsIcon />,
-            children : <></>
-        }
-    ]
     return (
         <>
             <AppWithToolbarDrawer>
-                <StepperLayout item={Items} onFinish={() => {
+                <Box>
 
-                }}/>
+                </Box>
             </AppWithToolbarDrawer>
         </>
     )

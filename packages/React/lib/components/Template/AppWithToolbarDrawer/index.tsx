@@ -4,7 +4,6 @@ import { ThemeProvider, createTheme, makeStyles, Theme } from '@material-ui/core
 import { Menu } from "@material-ui/icons";
 import {AppWithToolbarDrawerConfig} from "./index.types.ts";
 import {TemplateDefaultConfig} from "./index.config.tsx";
-
 const AppWithToolbarDrawer : FC<AppWithToolbarDrawerConfig> = (props) => {
 
     /**
@@ -54,7 +53,9 @@ const AppWithToolbarDrawer : FC<AppWithToolbarDrawerConfig> = (props) => {
                     </Drawer>
                 </Box>
                 <Box component="main">
-                    { (Props.children !== undefined) ? Props.children : <></> }
+                    <React.Suspense>
+                        { (Props.children !== undefined) ? Props.children : <></> }
+                    </React.Suspense>
                 </Box>
             </ThemeProvider>;
         </React.Fragment>

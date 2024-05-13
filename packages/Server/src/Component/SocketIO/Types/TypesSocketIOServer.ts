@@ -22,6 +22,6 @@ export type SocketIOError = (error ?: ExtendedError) => void | undefined;
 export type SocketIOSocketServer = Server<DefaultEventsMap, DefaultEventsMap, DefaultEventsMap, any>;
 export type SocketIOSocketMiddlewareSocket = Socket<DefaultEventsMap, DefaultEventsMap, DefaultEventsMap, any>;
 export type SocketIOMiddlewareUse = (socket : SocketIOSocketMiddlewareSocket, next : SocketIOError) => void | undefined | Promise<void>;
-export type SocketIOSocketIO = (io : SocketIOSocketServer) => Promise<void> | void;
+export type SocketIOSocketIO = (io : SocketIOSocketMiddlewareSocket) => Promise<void> | void;
 export type SocketIONamespace = Namespace<DefaultEventsMap,DefaultEventsMap, DefaultEventsMap, any>;
 export type SocketIOFunctionNamespace = (namespace : SocketIONamespace) => void | Promise<void> | undefined;

@@ -1,14 +1,17 @@
+import { StrictMode } from "react";
 import Pages from "./Pages";
-import { Redux, Reducers, Provider } from "../lib";
+import {Redux, Reducers, ReduxProvider, SocketIOProvider} from "../lib";
 import {Model} from "./Model";
+
 function App() {
     const DaftarReducers = Reducers<typeof Model>(Model);
     return (
         <>
-            <Provider reducers={DaftarReducers} >
-                <Pages/>
-            </Provider>
-
+            <ReduxProvider reducers={DaftarReducers} >
+                <SocketIOProvider>
+                    <Pages/>
+                </SocketIOProvider>
+            </ReduxProvider>
         </>
     )
 }

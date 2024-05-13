@@ -1,6 +1,6 @@
 import React from "react";
 import { Provider as ProviderStore } from "react-redux";
-import { Reducer,combineReducers, StateFromReducersMapObject,  ActionFromReducer, ReducerFromReducersMapObject, ReducersMapObject } from "@reduxjs/toolkit";
+import { Reducer,StateFromReducersMapObject,  ActionFromReducer, ReducerFromReducersMapObject, ReducersMapObject } from "@reduxjs/toolkit";
 import Store from "../Store";
 
 export type ProviderReducer = Reducer;
