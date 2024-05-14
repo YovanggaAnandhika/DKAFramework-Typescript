@@ -1,7 +1,7 @@
 import React from "react";
 import {AppWithToolbarDrawerConfig} from "./index.types.ts";
 import {Menu} from "@material-ui/icons";
-import {Typography} from "@mui/material";
+import {Container, Typography} from "@mui/material";
 
 
 export const TemplateDefaultConfig : AppWithToolbarDrawerConfig = {
@@ -10,19 +10,15 @@ export const TemplateDefaultConfig : AppWithToolbarDrawerConfig = {
             variant : "dense"
         },
         iconButton : {
-            sx : { fontSize : 16, color : "black"},
+            sx : { fontSize : 16 },
         },
         icon : <Menu/>,
         layout : {
-            Toolbar : <Typography sx={{ color : "black" }}>Portfolio</Typography>
+            Toolbar : <Typography>Portfolio</Typography>
         }
     },
     themeOptions : {
-      palette : {
-        primary : {
-          main : "#ffffff"
-        }
-      }
+
     },
     drawer : {
         container : {
@@ -32,5 +28,5 @@ export const TemplateDefaultConfig : AppWithToolbarDrawerConfig = {
             Menu : <></>,
         }
     },
-    children : <></>
+    children : <Container></Container>
 }

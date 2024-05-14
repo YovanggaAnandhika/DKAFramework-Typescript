@@ -8,10 +8,9 @@ import {useDispatch, useSelector} from "./components/Redux/Hook";
 import GeoAdministrative from "./components/Widget/GeoAdministrative";
 import AppWithToolbarDrawer from "./components/Template/AppWithToolbarDrawer";
 import StepperLayout from "./components/Template/StepperLayout";
-import { useWindowSize } from "./components/Hook/useWindowSize";
+import { useWindowSize, useSocketIOState, useSocketIOConnector } from "./components/Hook";
 import { SocketIOProvider } from "./components/Provider";
-import { useSocketIOState } from "./components/Hook/useSocketIOState";
-import { useSocketIOConnector } from "./components/Hook/useSocketIOConnector";
+import { SignInSide } from "./components/Template";
 
 export * from "./components/Widget/GeoAdministrative/index.types.ts";
 export * from "./components/Widget/GeoAdministrative/index.enum.ts";
@@ -37,5 +36,6 @@ export {
     useSelector,
     createAction,
     createSlice,
+    SignInSide,
     createAsyncThunk
 };

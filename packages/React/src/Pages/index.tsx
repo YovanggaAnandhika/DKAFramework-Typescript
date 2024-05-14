@@ -5,7 +5,7 @@ import {
     useWindowSize,
     useSocketIOState,
     SocketIOStates,
-    useSocketIOConnector,
+    useSocketIOConnector, SignInSide,
 } from "../../lib";
 import Box from "@mui/material/Box";
 
@@ -36,11 +36,7 @@ const Pages : FC = () =>{
 
     return (
         <>
-            <AppWithToolbarDrawer>
-                <Box>
-
-                </Box>
-            </AppWithToolbarDrawer>
+            <SignInSide/>
         </>
     )
 }

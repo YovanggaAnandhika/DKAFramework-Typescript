@@ -1,21 +1,23 @@
 import React, { FC, useEffect, useState } from "react";
-import {Box, AppBar, Toolbar, IconButton, Drawer, Typography, CssBaseline, Container} from "@mui/material";
-import { ThemeProvider, createTheme, makeStyles, Theme } from '@material-ui/core/styles';
+import {Box, AppBar, Toolbar, IconButton, Drawer, Typography, CssBaseline, Container, PaletteMode} from "@mui/material";
+import {createTheme, ThemeProvider} from "@mui/material/styles";
 import { Menu } from "@material-ui/icons";
 import {AppWithToolbarDrawerConfig} from "./index.types.ts";
 import {TemplateDefaultConfig} from "./index.config.tsx";
+import DKAThemes from "./Themes/DKAThemes.tsx";
 const AppWithToolbarDrawer : FC<AppWithToolbarDrawerConfig> = (props) => {
 
     /**
      * declare State
      */
+    const [mode, setMode] = React.useState<PaletteMode>('dark');
     const [ IsMounted, setIsMounted ] = React.useState(false);
     const [ IsDrawerOpen, setIsDrawerOpen ] = React.useState(false);
     /**
      *  Merge Config and Props
      */
     let Props = { ...TemplateDefaultConfig, ...props }
-    const Themes = createTheme(props.themeOptions);
+    const Themes = createTheme(DKAThemes(mode));
     const onHandlerClick = () => {
         if (IsMounted){
             setIsDrawerOpen((open) => !open);
@@ -35,7 +37,7 @@ const AppWithToolbarDrawer : FC<AppWithToolbarDrawerConfig> = (props) => {
             <ThemeProvider theme={Themes}>
                 <Box component="header">
                     <AppBar position="static">
-                        <Toolbar { ... Props.toolbar?.options } sx={{ backgroundColor: "white" }}>
+                        <Toolbar { ... Props.toolbar?.options }>
                             <IconButton { ...Props.toolbar?.iconButton} onClick={onHandlerClick}>
                                 { (Props.toolbar?.icon !== undefined) ? Props.toolbar.icon : <Menu/> }
                             </IconButton>
@@ -57,7 +59,7 @@ const AppWithToolbarDrawer : FC<AppWithToolbarDrawerConfig> = (props) => {
                         { (Props.children !== undefined) ? Props.children : <></> }
                     </React.Suspense>
                 </Box>
-            </ThemeProvider>;
+            </ThemeProvider>
         </React.Fragment>
     )
 }
