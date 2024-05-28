@@ -1,17 +1,16 @@
 import { StrictMode } from "react";
 import Pages from "./Pages";
-import {Redux, Reducers, ReduxProvider, SocketIOProvider} from "../lib";
+import {Redux, Reducers, ReduxProvider, SocketIOProvider, AppWithToolbarDrawer} from "../lib";
 import {Model} from "./Model";
+import Paper from "@mui/material/Paper";
 
 function App() {
     const DaftarReducers = Reducers<typeof Model>(Model);
     return (
         <>
-            <ReduxProvider reducers={DaftarReducers} >
-                <SocketIOProvider>
-                    <Pages/>
-                </SocketIOProvider>
-            </ReduxProvider>
+            <Paper sx={{p : 3}}>
+                <Pages/>
+            </Paper>
         </>
     )
 }

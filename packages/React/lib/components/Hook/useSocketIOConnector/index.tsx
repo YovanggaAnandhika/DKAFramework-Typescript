@@ -84,7 +84,7 @@ export function useSocketIOConnector(props : SocketIOConfig = SocketIOConfigDefa
                     };
                 });
             });
-            if (!props.settings?.autoConnect && !SocketIO.connected) SocketIO.connect();
+            if (props.settings?.autoConnect && !SocketIO.connected) SocketIO.connect();
         }
     }, [IsMounted, SocketIO]);
 

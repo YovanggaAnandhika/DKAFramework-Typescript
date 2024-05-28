@@ -5,7 +5,7 @@ import {
     useWindowSize,
     useSocketIOState,
     SocketIOStates,
-    useSocketIOConnector, SignInSide,
+    useSocketIOConnector, SignInSide, NumberFormat,
 } from "../../lib";
 import Box from "@mui/material/Box";
 
@@ -13,10 +13,7 @@ const Pages : FC = () =>{
 
     const [IsMounted, setIsMounted] = React.useState(false);
     const [ witdh, height ] = useWindowSize();
-
-    const state = useSocketIOState();
-
-    const socket = useSocketIOConnector({ host : "127.0.0.1", port : 53333 });
+    const [ Value, setValue ] = React.useState("");
 
     useEffect(() => {
         setIsMounted(true);
@@ -25,18 +22,18 @@ const Pages : FC = () =>{
         }
     });
 
-    /**
-     * Function For Effect Simulation Data On Controllable
-     */
     useEffect(() => {
         if (IsMounted){
-            socket.emit("test", "halo")
+            console.log("dka", Value)
         }
-    },[IsMounted]);
-
+    },[IsMounted, Value])
     return (
         <>
-            <SignInSide/>
+            <NumberFormat
+                onChange={(event, value) => {
+                    setValue(value)
+                }}
+            />
         </>
     )
 }

@@ -10,7 +10,7 @@ const AppWithToolbarDrawer : FC<AppWithToolbarDrawerConfig> = (props) => {
     /**
      * declare State
      */
-    const [mode, setMode] = React.useState<PaletteMode>('dark');
+    const [mode, setMode] = React.useState<PaletteMode>('light');
     const [ IsMounted, setIsMounted ] = React.useState(false);
     const [ IsDrawerOpen, setIsDrawerOpen ] = React.useState(false);
     /**

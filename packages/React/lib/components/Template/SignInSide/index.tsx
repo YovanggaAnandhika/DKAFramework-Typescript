@@ -9,8 +9,9 @@ import { PaletteMode } from '@mui/material';
 import AutoAwesomeRoundedIcon from '@mui/icons-material/AutoAwesomeRounded';
 import getSignInSideTheme from './Component/getSignInSideTheme';
 import ToggleColorMode from './Component/ToggleColorMode';
-import SignInCard from './Component/SignInCard';
 import Content from './Component/Content';
+import {SignInSideConfiguration} from "./Interfaces/SignInSideConfiguration.ts";
+import {useEffect, useState} from "react";
 
 interface ToggleCustomThemeProps {
     showCustomTheme: boolean;
@@ -49,12 +50,28 @@ function ToggleCustomTheme({ showCustomTheme, toggleCustomTheme }: ToggleCustomT
     );
 }
 
-export default function SignInSide() {
+const SignInCard = React.lazy(() => import("./Component/SignInCard"));
+export default function SignInSide(config ?: SignInSideConfiguration) {
+    const [ IsMounted, setIsMounted ] = React.useState(false);
     const [mode, setMode] = React.useState<PaletteMode>('light');
     const [showCustomTheme, setShowCustomTheme] = React.useState(true);
     const defaultTheme = createTheme({ palette: { mode } });
     const SignInSideTheme = createTheme(getSignInSideTheme(mode));
+    const [ LoginForm, setLoginForm ] = useState<React.JSX.Element>(<></>);
 
+
+    useEffect(() => {
+        setIsMounted(true);
+        return () => {
+            setIsMounted(false);
+        }
+    },[]);
+
+    useEffect(() => {
+        if (IsMounted){
+            setLoginForm(<SignInCard { ... config } />);
+        }
+    },[IsMounted])
     const toggleColorMode = () => {
         setMode((prev) => (prev === 'dark' ? 'light' : 'dark'));
     };
@@ -90,13 +107,6 @@ export default function SignInSide() {
                     }}
                 >
                     <Box></Box>
-                    {/*<Button
-                        startIcon={<ArrowBackRoundedIcon />}
-                        component="a"
-                        href="/material-ui/getting-started/templates/"
-                    >
-                        Back
-                    </Button>*/}
                     <ToggleColorMode mode={mode} toggleColorMode={toggleColorMode} />
                 </Stack>
                 <Stack
@@ -106,7 +116,9 @@ export default function SignInSide() {
                     sx={{ height: { xs: '100%', md: '100dvh' }, p: 2 }}
                 >
                     <Content />
-                    <SignInCard />
+                    <React.Suspense>
+                        { LoginForm }
+                    </React.Suspense>
                 </Stack>
             </Stack>
             <ToggleCustomTheme

@@ -1,3 +1,3 @@
 import GeoAdministrative from "./GeoAdministrative";
-
-export { GeoAdministrative };
+import NumberFormat from "./NumberFormat";
+export { GeoAdministrative, NumberFormat };

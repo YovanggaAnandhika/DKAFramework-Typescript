@@ -13,6 +13,7 @@ import Typography from '@mui/material/Typography';
 import { styled } from '@mui/material/styles';
 import ForgotPassword from './ForgotPassword';
 import { GoogleIcon, FacebookIcon, SitemarkIcon } from './CustomIcons';
+import {SignInSideConfiguration} from "../Interfaces/SignInSideConfiguration.ts";
 
 const Card = styled(MuiCard)(({ theme }) => ({
     display: 'flex',
@@ -31,55 +32,15 @@ const Card = styled(MuiCard)(({ theme }) => ({
     },
 }));
 
-export default function SignInCard() {
-    const [emailError, setEmailError] = React.useState(false);
-    const [emailErrorMessage, setEmailErrorMessage] = React.useState('');
-    const [passwordError, setPasswordError] = React.useState(false);
-    const [passwordErrorMessage, setPasswordErrorMessage] = React.useState('');
-    const [open, setOpen] = React.useState(false);
-
-    const handleClickOpen = () => {
-        setOpen(true);
-    };
-
-    const handleClose = () => {
-        setOpen(false);
-    };
+export default function SignInCard(config ?: SignInSideConfiguration) {
 
     const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
         const data = new FormData(event.currentTarget);
-        console.log({
-            email: data.get('email'),
-            password: data.get('password'),
+        config?.onSubmit?.({
+            username : data.get('username')?.toString(),
+            password : data.get("password")?.toString()
         });
-    };
-
-    const validateInputs = () => {
-        const email = document.getElementById('email') as HTMLInputElement;
-        const password = document.getElementById('password') as HTMLInputElement;
-
-        let isValid = true;
-
-        if (!email.value || !/\S+@\S+\.\S+/.test(email.value)) {
-            setEmailError(true);
-            setEmailErrorMessage('Please enter a valid email address.');
-            isValid = false;
-        } else {
-            setEmailError(false);
-            setEmailErrorMessage('');
-        }
-
-        if (!password.value || password.value.length < 6) {
-            setPasswordError(true);
-            setPasswordErrorMessage('Password must be at least 6 characters long.');
-            isValid = false;
-        } else {
-            setPasswordError(false);
-            setPasswordErrorMessage('');
-        }
-
-        return isValid;
     };
 
     return (
@@ -109,18 +70,13 @@ export default function SignInCard() {
                 <FormControl>
                     <FormLabel htmlFor="email">Nama Pengguna</FormLabel>
                     <TextField
-                        error={emailError}
-                        helperText={emailErrorMessage}
-                        id="email"
-                        type="email"
-                        name="email"
-                        placeholder="your@email.com"
-                        autoComplete="email"
+                        name="username"
+                        placeholder="Nama Pengguna Anda"
                         autoFocus
                         required
                         fullWidth
                         variant="outlined"
-                        color={emailError ? 'error' : 'primary'}
+                        color={'primary'}
                         sx={{ ariaLabel: 'email' }}
                     />
                 </FormControl>
@@ -134,7 +90,6 @@ export default function SignInCard() {
                         <FormLabel htmlFor="password">Kata Sandi</FormLabel>
                         <Link
                             component="button"
-                            onClick={handleClickOpen}
                             variant="body2"
                             sx={{ alignSelf: 'baseline' }}
                         >
@@ -142,8 +97,6 @@ export default function SignInCard() {
                         </Link>
                     </Box>
                     <TextField
-                        error={passwordError}
-                        helperText={passwordErrorMessage}
                         name="password"
                         placeholder="••••••"
                         type="password"
@@ -153,22 +106,22 @@ export default function SignInCard() {
                         required
                         fullWidth
                         variant="outlined"
-                        color={passwordError ? 'error' : 'primary'}
+                        color={ 'primary'}
                     />
                 </FormControl>
-                <FormControlLabel
+                {/*<FormControlLabel
                     control={<Checkbox value="remember" color="primary" />}
                     label="Remember me"
-                />
-                <ForgotPassword open={open} handleClose={handleClose} />
-                <Button type="submit" fullWidth variant="contained" onClick={validateInputs}>
-                    Masuk s
+                />*/}
+                {/*<ForgotPassword open={open} handleClose={handleClose} />*/}
+                <Button type="submit" fullWidth variant="contained">
+                    Masuk
                 </Button>
-                <Link variant="body2" sx={{ alignSelf: 'center' }}>
+                {/*<Link variant="body2" sx={{ alignSelf: 'center' }}>
                     Belum Punya Akun? Daftar Sekarang
-                </Link>
+                </Link>*/}
             </Box>
-            <Divider>or</Divider>
+            {/*<Divider>or</Divider>
             <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
                 <Button
                     type="submit"
@@ -190,7 +143,7 @@ export default function SignInCard() {
                 >
                     Login Dengan Facebook
                 </Button>
-            </Box>
+            </Box>*/}
         </Card>
-    );
+    )
 }
