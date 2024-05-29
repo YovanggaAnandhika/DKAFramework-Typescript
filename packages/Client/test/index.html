@@ -1,0 +1,26 @@
+<script>
+
+    const socket = io("http://localhost:53310",{
+        timeout : 1000
+    });
+
+
+    // Event Jika Socket IO Terhubung
+    socket.on("connect", () => {
+        // Event Jika Socket Listen
+        socket.on("nama_event", (data) => {
+            console.log(data)
+        });
+    });
+
+    socket.on("disconnect", () => {
+        // disini codeta
+    });
+
+    socket.connect();
+
+    // kirim data ke server
+    socket.emit("nama event", { data });
+
+
+</script>
