@@ -13,8 +13,8 @@ const AlerterHelper : FC<AlerterHelperProps> = (props) => {
 
     return (
         <>
-            <Alert variant={"outlined"} sx={{ mb : 1, mt : 1 }}  { ... props.alerterProps}>
-                <AlertTitle>{ props.title }</AlertTitle>
+            <Alert variant={"outlined"} sx={{ mb : 1, mt : 1, fontFamily: 'Raleway'}}  { ... props.alerterProps}>
+                <AlertTitle sx={{fontFamily: 'Raleway'}}>{ props.title }</AlertTitle>
                 { props.message}
             </Alert>
         </>

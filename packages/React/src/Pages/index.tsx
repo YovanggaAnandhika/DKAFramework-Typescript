@@ -8,6 +8,7 @@ import {
     useSocketIOConnector, SignInSide, NumberFormat, CrudDataTable,
 } from "../../lib";
 import Box from "@mui/material/Box";
+import Edit from "./Component/Edit";
 
 const Pages : FC = () =>{
 
@@ -27,71 +28,31 @@ const Pages : FC = () =>{
             console.log("dka", Value)
         }
     },[IsMounted, Value])
+
     return (
         <>
-            <CrudDataTable endpoint={"http://localhost:5000/base/location/provinces"} view={{
-                tableProps : {
-                  columns : [
+            <CrudDataTable
+                endpoint={"http://api.clinic.syncmed.co.id/data/pasien"}
+                view={{
+                    tableProps : {
+                        columns : [
                       {
-                          field: 'name',
-                          headerName: 'Unit Layanan',
+                          field: 'id',
+                          headerName: 'ID',
+                          maxWidth : 100,
+                          flex : 1
                       },
                       {
                           field: 'name',
                           headerName: 'Unit Layanan',
-                      },
-                      {
-                          field: 'name',
-                          headerName: 'Unit Layanan',
-                      },
-                      {
-                          field: 'name',
-                          headerName: 'Unit Layanan',
-                      },
-                      {
-                          field: 'name',
-                          headerName: 'Unit Layanan',
-                      },
-                      {
-                          field: 'name',
-                          headerName: 'Unit Layanan',
-                      },
-                      {
-                          field: 'name',
-                          headerName: 'Unit Layanan',
-                      },
-                      {
-                          field: 'name',
-                          headerName: 'Unit Layanan',
-                      },
-                      {
-                          field: 'name',
-                          headerName: 'Unit Layanan',
-                      },
-                      {
-                          field: 'name',
-                          headerName: 'Unit Layanan',
-                      },
-                      {
-                          field: 'name',
-                          headerName: 'Unit Layanan',
-                      },
-                      {
-                          field: 'name',
-                          headerName: 'Unit Layanan',
-                      },
-                      {
-                          field: 'name',
-                          headerName: 'Unit Layanan',
-                      },
-                      {
-                          field: 'name',
-                          headerName: 'Unit Layanan',
+                          flex : 1
                       }
                   ]
-                },
-                isGrants : true
-            }}/>
+                    },
+                    isGrants : true
+                }}
+                edit={{ component : Edit}}
+                delete={{ isGrants : true}}/>
         </>
     )
 }
