@@ -11,6 +11,7 @@ import StepperLayout from "./components/Template/StepperLayout";
 import { useWindowSize, useSocketIOState, useSocketIOConnector } from "./components/Hook";
 import { SocketIOProvider } from "./components/Provider";
 import { SignInSide } from "./components/Template";
+import { CrudDataTable } from "./components/Template";
 import {NumberFormat} from "./components/Widget";
 
 export * from "./components/Widget/GeoAdministrative/index.types.ts";
@@ -20,12 +21,14 @@ export * from "./components/Template/StepperLayout/index.types.ts";
 export * from "./components/Hook/useSocketIOState/index.types.ts";
 export * from "./components/Provider/SocketIO/index.types.ts";
 export * from "./components/Widget/NumberFormat/index.types.ts";
+export * from "./components/Template/CrudDataTable/Interfaces/CrudDataTable.Ifaces.ts";
 
 export {
     DKA,
     GeoAdministrative,
     Widget,
     AppWithToolbarDrawer,
+    CrudDataTable,
     StepperLayout,
     useWindowSize,
     useSocketIOState,

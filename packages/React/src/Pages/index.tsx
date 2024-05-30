@@ -5,7 +5,7 @@ import {
     useWindowSize,
     useSocketIOState,
     SocketIOStates,
-    useSocketIOConnector, SignInSide, NumberFormat,
+    useSocketIOConnector, SignInSide, NumberFormat, CrudDataTable,
 } from "../../lib";
 import Box from "@mui/material/Box";
 
@@ -29,11 +29,69 @@ const Pages : FC = () =>{
     },[IsMounted, Value])
     return (
         <>
-            <NumberFormat
-                onChange={(event, value) => {
-                    setValue(value)
-                }}
-            />
+            <CrudDataTable endpoint={"http://localhost:5000/base/location/provinces"} view={{
+                tableProps : {
+                  columns : [
+                      {
+                          field: 'name',
+                          headerName: 'Unit Layanan',
+                      },
+                      {
+                          field: 'name',
+                          headerName: 'Unit Layanan',
+                      },
+                      {
+                          field: 'name',
+                          headerName: 'Unit Layanan',
+                      },
+                      {
+                          field: 'name',
+                          headerName: 'Unit Layanan',
+                      },
+                      {
+                          field: 'name',
+                          headerName: 'Unit Layanan',
+                      },
+                      {
+                          field: 'name',
+                          headerName: 'Unit Layanan',
+                      },
+                      {
+                          field: 'name',
+                          headerName: 'Unit Layanan',
+                      },
+                      {
+                          field: 'name',
+                          headerName: 'Unit Layanan',
+                      },
+                      {
+                          field: 'name',
+                          headerName: 'Unit Layanan',
+                      },
+                      {
+                          field: 'name',
+                          headerName: 'Unit Layanan',
+                      },
+                      {
+                          field: 'name',
+                          headerName: 'Unit Layanan',
+                      },
+                      {
+                          field: 'name',
+                          headerName: 'Unit Layanan',
+                      },
+                      {
+                          field: 'name',
+                          headerName: 'Unit Layanan',
+                      },
+                      {
+                          field: 'name',
+                          headerName: 'Unit Layanan',
+                      }
+                  ]
+                },
+                isGrants : true
+            }}/>
         </>
     )
 }

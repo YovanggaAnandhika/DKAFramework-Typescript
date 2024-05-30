@@ -8,9 +8,7 @@ function App() {
     const DaftarReducers = Reducers<typeof Model>(Model);
     return (
         <>
-            <Paper sx={{p : 3}}>
-                <Pages/>
-            </Paper>
+            <Pages/>
         </>
     )
 }
