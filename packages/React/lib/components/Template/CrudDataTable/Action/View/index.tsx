@@ -222,7 +222,6 @@ const View: FC<CrudDataTableIfaces> = (props) => {
                             p : 2,
                             height : 650
                         }}
-                        density={"compact"}
                         scrollbarSize={20}
                         loading={IsLoading}
                         { ... props.view?.tableProps }

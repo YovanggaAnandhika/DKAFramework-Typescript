@@ -4,6 +4,7 @@ import View from "./Action/View";
 import { Grid } from "@mui/material";
 import {CrudDataTableIfaces} from "./Interfaces/CrudDataTable.Ifaces.ts";
 import {createTheme, ThemeProvider} from "@mui/material/styles";
+// @ts-ignore
 import RalewayMedium from "./Font/raleway.medium.ttf";
 import CssBaseline from "@mui/material/CssBaseline";
 
