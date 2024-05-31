@@ -3,16 +3,15 @@ import Grid from "@mui/material/Grid";
 import Button from "@mui/material/Button";
 import * as React from "react";
 import {FC, useEffect} from "react";
-import {EditConfigPropsConfigurator} from "../../../lib";
+import {CreateConfigPropsConfigurator, EditConfigPropsConfigurator} from "../../../lib";
 import TextField from "@mui/material/TextField";
-import Box from "@mui/material/Box";
+import Create from "../../../lib/components/Template/CrudDataTable/Action/Create";
 
 
-const Edit : FC<EditConfigPropsConfigurator> = (props) => {
+const Edit : FC<CreateConfigPropsConfigurator> = (props) => {
 
     const [ IsMounted, setIsMounted ] = React.useState(false);
-    const Data = props.data;
-    const [ ValueName, setValueName ] = React.useState(Data.name);
+    const [ ValueName, setValueName ] = React.useState("");
 
 
     useEffect(() => {
@@ -43,9 +42,6 @@ const Edit : FC<EditConfigPropsConfigurator> = (props) => {
                         />
                 </Grid>
                 <Grid item xs={6} md={6} lg={6}>
-                    <Box flex={1}>
-
-                    </Box>
                     <Button variant="outlined" color={"primary"} onClick={onHandlerButton}>
                         Ubah
                     </Button>

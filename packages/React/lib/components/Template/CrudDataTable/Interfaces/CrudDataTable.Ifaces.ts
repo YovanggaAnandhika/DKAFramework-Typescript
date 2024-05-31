@@ -1,6 +1,7 @@
 import React, {FC} from "react";
-import {DataGrid} from "@mui/x-data-grid";
+import {DataGrid, GridColDef} from "@mui/x-data-grid";
 import {AxiosRequestConfig} from "axios";
+
 
 
 export interface ViewConfigProps {

@@ -1,6 +1,7 @@
 import React, {FC, useContext, useEffect, useMemo} from "react";
 import {
     DataGrid,
+    DataGridProps,
     GridToolbarContainer,
     GridSlots,
 } from '@mui/x-data-grid';
@@ -71,14 +72,14 @@ const View: FC<CrudDataTableIfaces> = (props) => {
 
     useEffect(() => {
         if (IsMounted){
-            if (!props.delete?.isGrants) return setDeleteIsEnable(false);
+            if (props.delete !== undefined && !props.delete.isGrants) return setDeleteIsEnable(false);
             (checkedItem.length > 0) ? setDeleteIsEnable(true) : setDeleteIsEnable(false);
         }
     },[IsMounted, checkedItem, props]);
 
     useEffect(() => {
         if (IsMounted){
-            if (!props.delete?.isGrants) return setEditIsEnable(false);
+            if (props.edit !== undefined && !props.edit.isGrants) return setEditIsEnable(false);
             (checkedItem.length == 1) ? setEditIsEnable(true) : setEditIsEnable(false);
         }
     },[IsMounted, checkedItem, props]);
@@ -190,8 +191,8 @@ const View: FC<CrudDataTableIfaces> = (props) => {
                     </Typography>
 
                     <DataGrid
-                        rows={RowsData}
                         columns={[]}
+                        { ... props.view?.tableProps }
                         slots={{
                             loadingOverlay: LinearProgress as GridSlots['loadingOverlay'],
                             noRowsOverlay: CustomNoRowsOverlay,
@@ -222,9 +223,9 @@ const View: FC<CrudDataTableIfaces> = (props) => {
                             p : 2,
                             height : 650
                         }}
+                        rows={RowsData}
                         scrollbarSize={20}
                         loading={IsLoading}
-                        { ... props.view?.tableProps }
                     />
                 </BlockUi>
 
