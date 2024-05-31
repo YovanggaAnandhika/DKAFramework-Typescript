@@ -8,10 +8,11 @@ import {
 import LinearProgress from '@mui/material/LinearProgress';
 import {StyledGridOverlay} from "../../Helper/TableHelper.tsx";
 import axios from "axios";
-import {faEdit, faPlus, faTrash, faBan } from "@fortawesome/free-solid-svg-icons";
+import moment, { Moment, Duration } from "moment-timezone";
+import {faEdit, faPlus, faTrash, faBan, faEye} from "@fortawesome/free-solid-svg-icons";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import AlerterHelper from "../../Helper/AlerterHelper.tsx";
-import {Badge, Grid, Typography} from "@mui/material";
+import {Badge, Grid, Typography, useMediaQuery, useTheme} from "@mui/material";
 import Button from "@mui/material/Button";
 import {CrudDataTableContext} from "../../Context/CrudDataTableContext.tsx";
 import {CrudDataTableIfaces} from "../../Interfaces/CrudDataTable.Ifaces.ts";
@@ -20,49 +21,30 @@ import Edit from "../Edit";
 import Create from "../Create";
 import AccessDenied from "../../Icons/AccessDenied.tsx";
 import NotFound from "../../Icons/NotFound.tsx";
-import BlockUi from 'react-block-ui';
-import 'react-block-ui/style.css';
+import BlockUi from '@availity/block-ui';
+import "@availity/block-ui/dist/index.css"
+import LoadingComponent from "../../Helper/LoadingComponent.tsx";
+
 const View: FC<CrudDataTableIfaces> = (props) => {
 
+    /** Declare Variables **/
     const [IsMounted, setIsMounted] = React.useState(false);
     const [IsLoading, setIsLoading] = React.useState(false);
-    const [RowsData, setRowsData ] = React.useState<Array<any>>([]);
+    const [RowsData, setRowsData] = React.useState<Array<any>>([]);
+    const [ResponseTime, setResponseTime] = React.useState<Moment>();
+    const [ DiffResponseTime, setDiffResponseTime ] = React.useState<Duration>();
     const [Alerter, setAlerter] = React.useState<typeof AlerterHelper | React.JSX.Element>(<></>);
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const [ContainerLayout, setContainerLayout] = useContext(CrudDataTableContext);
-    const [ checkedItem, setCheckedItem ] = React.useState<Array<any>>([]);
+    const [checkedItem, setCheckedItem] = React.useState<Array<any>>([]);
 
-    const [ DeleteIsEnable, setDeleteIsEnable ] = React.useState<boolean>(false);
-    const [ EditIsEnable, setEditIsEnable ] = React.useState<boolean>(false);
+    const [DeleteIsEnable, setDeleteIsEnable] = React.useState<boolean>(false);
+    const [EditIsEnable, setEditIsEnable] = React.useState<boolean>(false);
 
+    /** Add Memorize Props **/
     props = useMemo(() => props, [props]);
-    const ToolbarCostum = () => {
-        return (
-            <GridToolbarContainer sx={{ p : 2 }}>
-                <Button onClick={() => {
-                    setContainerLayout(<Create { ... props } />)
-                }} variant="outlined" color={"success"} autoCapitalize={"false"} size="medium" sx={{ marginTop : 1, marginBottom : 1, justifyContent: 'right', textTransform : "none" }} startIcon={<FontAwesomeIcon icon={faPlus} size={"sm"} />}>
-                    <Typography sx={{fontSize : 10, fontFamily: 'Raleway'}}>Data Baru</Typography>
-                </Button>
-                <Button disabled={!EditIsEnable} onClick={() => {
-                    setContainerLayout(<Edit data={checkedItem[0]} props={props} />)
-                }} variant="outlined" color={"warning"} autoCapitalize={"false"} size="medium" sx={{ marginTop : 1, marginBottom : 1, justifyContent: 'right', textTransform : "none" }} startIcon={<FontAwesomeIcon icon={faTrash} size={"sm"} />}>
-                    <Typography sx={{fontSize : 10, fontFamily: 'Raleway'}}>Edit Data Terpilih</Typography>
-                </Button>
-                <Badge color="error" overlap="circular" badgeContent={checkedItem.length}>
-                    <Button disabled={!DeleteIsEnable} onClick={() => {
-                    }} variant="outlined" color={"error"} autoCapitalize={"false"} size="medium" sx={{ marginTop : 1, marginBottom : 1, justifyContent: 'right', textTransform : "none" }} startIcon={<FontAwesomeIcon icon={faTrash} size={"sm"} />}>
-                        <Typography sx={{fontSize : 10, fontFamily: 'Raleway'}}>
-                            Hapus Data Terpilih
-                        </Typography>
-                    </Button>
-                </Badge>
 
-                <Box sx={{ flexGrow: 1 }} />
-            </GridToolbarContainer>
-        )
-    }
-
+    /** Use Effect Is Component Didmount or Not **/
     useEffect(() => {
         setIsMounted(true);
         return () => {
@@ -70,32 +52,126 @@ const View: FC<CrudDataTableIfaces> = (props) => {
         }
     }, []);
 
+    /**
+     * @todo Function Button OnClick Block
+     */
+    /** Create Button On Click **/
+    const CreateHandlerButtons : React.MouseEventHandler<HTMLButtonElement> = (event) => {
+        event.preventDefault();
+        setContainerLayout(<Create {...props} />)
+    }
+    /** Edit Button On Click ***/
+    const EditHandlerButtons : React.MouseEventHandler<HTMLButtonElement> = (event) => {
+        event.preventDefault();
+        setContainerLayout(<Edit data={checkedItem[0]} props={props}/>)
+    }
+    const EditHandlerButtonsFromRow = (event : React.MouseEvent<HTMLButtonElement, MouseEvent>, row : any) => {
+        event.preventDefault();
+        setContainerLayout(<Edit data={row} props={props}/>)
+    }
+    const DeleteHandlerButtons : React.MouseEventHandler<HTMLButtonElement> = (event) => {
+        event.preventDefault();
+    }
+    /**
+     * End Function Button OnClick Block
+     */
+
+    const theme = useTheme();
+    const ToolbarCostum = () => {
+        return (
+            <GridToolbarContainer sx={{p: 1}}>
+                { /** Create Action **/}
+                <Button
+                    onClick={CreateHandlerButtons}
+                    variant="outlined"
+                    color={"success"}
+                    autoCapitalize={"false"}
+                    size={useMediaQuery(theme.breakpoints.down("sm")) ? "small" : useMediaQuery(theme.breakpoints.down("md")) ? "medium" : "large"}
+                    sx={{marginTop: 1, marginBottom: 1, justifyContent: 'right', textTransform: "none"}}
+                    startIcon={<FontAwesomeIcon icon={faPlus} size={"sm"}/>
+                }>
+                    <Typography sx={{
+                        fontSize: useMediaQuery(theme.breakpoints.down("sm")) ? 10 : useMediaQuery(theme.breakpoints.down("md")) ? 14 : 16,
+                        fontFamily: 'Raleway',
+                        display : useMediaQuery(theme.breakpoints.down("sm")) ? "none" : "block"
+                    }}>Data Baru</Typography>
+                </Button>
+                { /** Edit Action **/}
+                <Button
+                    disabled={!EditIsEnable}
+                    onClick={EditHandlerButtons}
+                    variant="outlined"
+                    color={"warning"}
+                    autoCapitalize={"false"}
+                    size={useMediaQuery(theme.breakpoints.down("sm")) ? "small" : useMediaQuery(theme.breakpoints.down("md")) ? "medium" : "large"}
+                    sx={{marginTop: 1, marginBottom: 1, justifyContent: 'right', textTransform: "none"}}
+                    startIcon={<FontAwesomeIcon icon={faEdit} size={"sm"}/>
+                }>
+                    <Typography sx={{
+                        fontSize: useMediaQuery(theme.breakpoints.down("sm")) ? 10 : useMediaQuery(theme.breakpoints.down("md")) ? 14 : 16,
+                        fontFamily: 'Raleway',
+                        display : useMediaQuery(theme.breakpoints.down("sm")) ? "none" : "block"
+                    }}>Edit Data Terpilih</Typography>
+                </Button>
+                { /** Delete Action **/}
+                <Badge color="error" overlap="circular" badgeContent={checkedItem.length}>
+                    <Button
+                        disabled={!DeleteIsEnable}
+                        onClick={DeleteHandlerButtons}
+                        variant="outlined" color={"error"}
+                        autoCapitalize={"false"}
+                        size={useMediaQuery(theme.breakpoints.down("sm")) ? "small" : useMediaQuery(theme.breakpoints.down("md")) ? "medium" : "large"}
+                        sx={{marginTop: 1, marginBottom: 1, justifyContent: 'right', textTransform: "none"}}
+                        startIcon={<FontAwesomeIcon icon={faTrash} size={"sm"}/>
+                    }>
+                        <Typography sx={{
+                            fontSize: useMediaQuery(theme.breakpoints.down("sm")) ? 10 : useMediaQuery(theme.breakpoints.down("md")) ? 14 : 16,
+                            fontFamily: 'Raleway',
+                            display : useMediaQuery(theme.breakpoints.down("sm")) ? "none" : "block"
+                        }}>Hapus Data Terpilih</Typography>
+                    </Button>
+                </Badge>
+
+                <Box sx={{flexGrow: 1}}/>
+            </GridToolbarContainer>
+        )
+    }
+
+    /** Checked If Delete Enable & Checkend State Disable / Unable Delete Button **/
     useEffect(() => {
-        if (IsMounted){
+        if (IsMounted) {
             if (props.delete !== undefined && !props.delete.isGrants) return setDeleteIsEnable(false);
             (checkedItem.length > 0) ? setDeleteIsEnable(true) : setDeleteIsEnable(false);
         }
-    },[IsMounted, checkedItem, props]);
+    }, [IsMounted, checkedItem, props]);
+
+    /** Checked If Edit Enable & Checkend State Disable / Unable Edit Button **/
 
     useEffect(() => {
-        if (IsMounted){
+        if (IsMounted) {
             if (props.edit !== undefined && !props.edit.isGrants) return setEditIsEnable(false);
             (checkedItem.length == 1) ? setEditIsEnable(true) : setEditIsEnable(false);
         }
-    },[IsMounted, checkedItem, props]);
+    }, [IsMounted, checkedItem, props]);
 
+    /** Custom No Rows Overlay **/
     const CustomNoRowsOverlay = () => {
         return (
             <StyledGridOverlay>
-                { (props.view !== undefined && props.view.isGrants) ? <NotFound/> : <AccessDenied/> }
-                <Box sx={{ mt: 1 }}>{ (props.view !== undefined && props.view.isGrants) ? "Tidak Ada Data" : "Tidak Memiliki Hak Akses"}</Box>
+                {(props.view !== undefined && props.view.isGrants) ? <NotFound/> : <AccessDenied/>}
+                <Box
+                    sx={{mt: 1}}>{(props.view !== undefined && props.view.isGrants) ? "Tidak Ada Data" : "Tidak Memiliki Hak Akses"}</Box>
             </StyledGridOverlay>
         );
     }
 
+    /**
+     * Running If First Load Component
+     */
     useEffect(() => {
         if (IsMounted && props.view !== undefined && props.view.isGrants) {
             setIsLoading(true);
+            setResponseTime(moment(moment.now()));
             setAlerter(
                 <AlerterHelper
                     alerterProps={{
@@ -127,12 +203,12 @@ const View: FC<CrudDataTableIfaces> = (props) => {
                             severity: "success",
                         }}
                         title={"OK"}
-                        message={"Data Berhasil Di Dapatkan"}
+                        message={`Data Berhasil Di Dapatkan (${moment.duration(moment(moment.now()).diff(moment(ResponseTime))).asSeconds()})`}
                     />
                 );
                 setTimeout(() => {
                     setAlerter(<></>)
-                },2000);
+                }, 2000);
 
                 /**
                  * Function Yang Akan Berjalan Jika Response Berstatus 200 Dan Tidak Ada Error;
@@ -177,34 +253,80 @@ const View: FC<CrudDataTableIfaces> = (props) => {
         }
     }, [IsMounted, props]);
 
+    /** Adding Component To Data Grid Option **/
+    useEffect(() => {
+        if (IsMounted && props.view !== undefined && props.view.tableProps !== undefined && props.view.tableProps.columns !== undefined) {
+            if (props.options?.useActionMenuOnRow !== undefined && props.options.useActionMenuOnRow.enabled) {
+                const newColumn = {
+                    field: "Aksi",
+                    headerName: "Aksi",
+                    flex: 1,
+                    maxWidth: 300,
+                    renderCell: (params : any) => {
+                        return (
+                            <>
+                                {
+                                    (props.options?.useActionMenuOnRow?.settings?.showView) ? (<>
+                                        <Button variant="outlined" color={"success"}>
+                                            <FontAwesomeIcon icon={faEye} size={"sm"}/>
+                                            {/*<Typography variant={"caption"} fontSize={8} textTransform={"none"} sx={{ml : 1}}>Lihat</Typography>*/}
+                                        </Button> &nbsp;
+                                    </>) : <></>
+                                }
+                                {
+                                    (props.options?.useActionMenuOnRow?.settings?.showEdit) ? (<>
+                                        <Button variant="outlined" color={"warning"} onClick={(event) => EditHandlerButtonsFromRow(event, params.row)}>
+                                            <FontAwesomeIcon icon={faEdit} size={"sm"}/>
+                                            {/*<Typography variant={"caption"} fontSize={8} textTransform={"none"} sx={{ml : 1}}>Ubah</Typography>*/}
+                                        </Button> &nbsp;
+                                    </>) : <></>
+                                }
+                                {
+                                    (props.options?.useActionMenuOnRow?.settings?.showDelete) ? (<>
+                                        <Button variant="outlined" color={"error"}>
+                                            <FontAwesomeIcon icon={faTrash} size={"sm"}/>
+                                            {/*<Typography variant={"caption"} fontSize={8} textTransform={"none"} sx={{ml : 1}}>Hapus</Typography>*/}
+                                        </Button>
+                                    </>) : <></>
+                                }
+                            </>
+                        )
+                    }
+                }
+                /** Inject New Columns in Array Coloumn **/
+                props.view.tableProps.columns = [...props.view.tableProps.columns, newColumn];
+                /** Prevent Remove Duplicate Column **/
+                props.view.tableProps.columns = props.view.tableProps.columns.filter((obj1, i, arr) => arr.findIndex(obj2 => (obj2.field === obj1.field)) === i)
+            }
+        }
+    }, [IsMounted, props]);
 
-
+    /** Return Layout **/
     return (
         <>
-            <Box sx={{p: 2, height : 700, m : 2 }}>
+            <Box sx={{height: 700}}>
+                <Typography gutterBottom sx={{fontFamily: 'Raleway', fontWeight : "bolder", fontSmooth : "always", mb : 3, mt : 3, ml : 2}}>
+                    Semua Data {props.title}
+                </Typography>
                 <>
                     {Alerter}
                 </>
-                <BlockUi tag="div" blocking={IsLoading}>
-                    <Typography variant="h6" gutterBottom sx={{fontFamily: 'Raleway'}}>
-                        Semua Data { props.title }
-                    </Typography>
-
+                <BlockUi tag="div" blocking={IsLoading} message={<LoadingComponent/>} >
                     <DataGrid
                         columns={[]}
-                        { ... props.view?.tableProps }
+                        {...props.view?.tableProps}
                         slots={{
                             loadingOverlay: LinearProgress as GridSlots['loadingOverlay'],
                             noRowsOverlay: CustomNoRowsOverlay,
-                            toolbar : ToolbarCostum
+                            toolbar: ToolbarCostum
                         }}
                         checkboxSelection
                         disableRowSelectionOnClick
-                        getRowId={(row : any) => {
+                        getRowId={(row: any) => {
                             return row._id || row.id
                         }}
-                        onRowSelectionModelChange={(ids : Array<any>) => {
-                            const selectedRowsData : Array<any> = RowsData.filter((data) => ids.includes(data._id) || ids.includes(data.id))
+                        onRowSelectionModelChange={(ids: Array<any>) => {
+                            const selectedRowsData: Array<any> = RowsData.filter((data) => ids.includes(data._id) || ids.includes(data.id))
                             if (selectedRowsData.length > 0) return setCheckedItem(selectedRowsData);
                             setCheckedItem([]);
                         }}
@@ -220,15 +342,14 @@ const View: FC<CrudDataTableIfaces> = (props) => {
                                 backgroundColor: "#f5f5f5"
                             },
                             fontFamily: 'Raleway',
-                            p : 2,
-                            height : 650
+                            p: 2,
+                            height: 650
                         }}
                         rows={RowsData}
                         scrollbarSize={20}
                         loading={IsLoading}
                     />
                 </BlockUi>
-
             </Box>
         </>
     )

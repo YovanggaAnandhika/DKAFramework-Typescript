@@ -33,9 +33,12 @@ const Pages : FC = () =>{
     return (
         <>
             <CrudDataTable
-                endpoint={"https://api.clinic.syncmed.co.id/base/location/provinces"}
+                endpoint={"http://localhost:5000/base/location/districts"}
                 create={{ component : Create }}
                 view={{
+                    requestProps : {
+                      timeout : 90 * 1000
+                    },
                     tableProps : {
                         columns : [
                       {
@@ -55,7 +58,19 @@ const Pages : FC = () =>{
                     isGrants : true
                 }}
                 edit={{ component : Edit, isGrants : true}}
-                delete={{ isGrants : true}}/>
+                delete={{ isGrants : true}}
+                options={{
+                    useActionMenuOnRow : {
+                        enabled : true,
+                        settings : {
+                            showView : true,
+                            showEdit : true,
+                            showDelete : true
+                        }
+                    }
+                }}
+
+            />
         </>
     )
 }

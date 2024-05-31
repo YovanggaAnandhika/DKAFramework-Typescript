@@ -10,8 +10,9 @@ import {CrudDataTableContext} from "../../Context/CrudDataTableContext.tsx";
 import View from "../View";
 import AlerterHelper from "../../Helper/AlerterHelper.tsx";
 import axios from "axios";
-import BlockUi from 'react-block-ui';
-import 'react-block-ui/style.css';
+import BlockUi from '@availity/block-ui';
+import "@availity/block-ui/dist/index.css"
+import LoadingComponent from "../../Helper/LoadingComponent.tsx";
 const Create: FC<CrudDataTableIfaces> = (props) => {
 
     // eslint-disable-next-line react-hooks/rules-of-hooks
@@ -126,7 +127,7 @@ const Create: FC<CrudDataTableIfaces> = (props) => {
                 </Grid>
             </Grid>
             { Alerter }
-            <BlockUi tag="div" blocking={IsHidden}>
+            <BlockUi tag="div" blocking={IsHidden} message={<LoadingComponent/>}>
                 <Typography variant="h6" gutterBottom sx={{fontFamily: 'Raleway'}}>
                     Buat Data Baru { props.title }
                 </Typography>
@@ -134,7 +135,6 @@ const Create: FC<CrudDataTableIfaces> = (props) => {
                     { Component?.({callback : OnSubmit}) }
                 </Paper>
             </BlockUi>
-
         </>
     )
 }

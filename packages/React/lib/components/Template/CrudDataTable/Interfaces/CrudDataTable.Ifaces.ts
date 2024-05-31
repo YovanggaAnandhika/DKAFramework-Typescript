@@ -10,9 +10,6 @@ export interface ViewConfigProps {
     isGrants ?: boolean
 }
 
-export interface DeleteConfigProps {
-    isGrants ?: boolean
-}
 
 export interface EditConfigPropsConfigurator {
     data : any,
@@ -36,11 +33,37 @@ export interface CreateConfigProps {
     isGrants ?: boolean;
 }
 
+export interface DeleteConfigPropsConfigurator {
+    data : any,
+    callback ?: (data : any) => void | undefined;
+}
+
+export interface DeleteConfigProps {
+    component ?: FC<DeleteConfigPropsConfigurator>;
+    requestProps ?: AxiosRequestConfig,
+    isGrants ?: boolean;
+}
+
+export interface CrudDataTableIfacesOptionsUseActionMenuOnRowSettings {
+    showView ?: boolean,
+    showEdit ?: boolean,
+    showDelete ?: boolean
+}
+
+export interface CrudDataTableIfacesOptionsUseActionMenuOnRow {
+    enabled ?: boolean,
+    settings ?: CrudDataTableIfacesOptionsUseActionMenuOnRowSettings
+}
+export interface CrudDataTableIfacesOptions {
+    useActionMenuOnRow ?: CrudDataTableIfacesOptionsUseActionMenuOnRow
+}
+
 export interface CrudDataTableIfaces {
     endpoint ?: string,
     title ?: string,
     create ?: CreateConfigProps,
     view ?: ViewConfigProps,
     edit ?: EditConfigProps,
-    delete ?: DeleteConfigProps
+    delete ?: DeleteConfigProps,
+    options ?: CrudDataTableIfacesOptions
 }
