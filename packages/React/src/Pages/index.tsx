@@ -9,6 +9,7 @@ import {
 } from "../../lib";
 import Box from "@mui/material/Box";
 import Edit from "./Component/Edit";
+import Create from "./Component/Create";
 
 const Pages : FC = () =>{
 
@@ -32,7 +33,8 @@ const Pages : FC = () =>{
     return (
         <>
             <CrudDataTable
-                endpoint={"http://api.clinic.syncmed.co.id/data/pasien"}
+                endpoint={"https://api.clinic.syncmed.co.id/base/location/provinces"}
+                create={{ component : Create }}
                 view={{
                     tableProps : {
                         columns : [
@@ -40,7 +42,8 @@ const Pages : FC = () =>{
                           field: 'id',
                           headerName: 'ID',
                           maxWidth : 100,
-                          flex : 1
+                          flex : 1,
+
                       },
                       {
                           field: 'name',
@@ -51,7 +54,7 @@ const Pages : FC = () =>{
                     },
                     isGrants : true
                 }}
-                edit={{ component : Edit}}
+                edit={{ component : Edit, isGrants : true}}
                 delete={{ isGrants : true}}/>
         </>
     )
