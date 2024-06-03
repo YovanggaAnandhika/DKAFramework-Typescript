@@ -56,8 +56,7 @@ const View: FC<CrudDataTableIfaces> = (props) => {
 
     useEffect(() => {
         if (IsMounted){
-            // @ts-ignore
-            import("@availity/block-ui/dist/index.css");
+
         }
     },[IsMounted])
 
