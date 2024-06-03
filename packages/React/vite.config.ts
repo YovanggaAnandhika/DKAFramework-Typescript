@@ -40,7 +40,6 @@ export default defineConfig({
       apply: "build",
       options: {
         ignoreImports: true,
-        debugProtection: true,
         controlFlowFlattening: true,
         controlFlowFlatteningThreshold: 1,
         numbersToExpressions: true,
