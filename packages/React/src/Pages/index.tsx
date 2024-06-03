@@ -33,7 +33,7 @@ const Pages : FC = () =>{
     return (
         <>
             <CrudDataTable
-                endpoint={"http://localhost:5000/base/location/districts"}
+                endpoint={"http://localhost:5000/data/pasien"}
                 create={{ component : Create }}
                 view={{
                     requestProps : {

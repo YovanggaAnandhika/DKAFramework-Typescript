@@ -17,8 +17,11 @@ export interface EditConfigPropsConfigurator {
 }
 
 export interface EditConfigProps {
-    component ?: FC<EditConfigPropsConfigurator>;
-    requestProps ?: AxiosRequestConfig,
+    component : FC<EditConfigPropsConfigurator>;
+    requestProps ?: {
+        prehandler ?: AxiosRequestConfig,
+        forSubmit ?: AxiosRequestConfig
+    }
     isGrants ?: boolean;
 }
 
@@ -28,7 +31,7 @@ export interface CreateConfigPropsConfigurator {
 }
 
 export interface CreateConfigProps {
-    component ?: FC<CreateConfigPropsConfigurator>;
+    component : FC<CreateConfigPropsConfigurator>;
     requestProps ?: AxiosRequestConfig,
     isGrants ?: boolean;
 }
@@ -61,9 +64,9 @@ export interface CrudDataTableIfacesOptions {
 export interface CrudDataTableIfaces {
     endpoint ?: string,
     title ?: string,
-    create ?: CreateConfigProps,
-    view ?: ViewConfigProps,
-    edit ?: EditConfigProps,
+    create : CreateConfigProps,
+    view : ViewConfigProps,
+    edit : EditConfigProps,
     delete ?: DeleteConfigProps,
     options ?: CrudDataTableIfacesOptions
 }

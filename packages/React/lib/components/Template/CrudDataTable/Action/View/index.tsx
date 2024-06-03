@@ -22,7 +22,7 @@ import Create from "../Create";
 import AccessDenied from "../../Icons/AccessDenied.tsx";
 import NotFound from "../../Icons/NotFound.tsx";
 import BlockUi from '@availity/block-ui';
-import "@availity/block-ui/dist/index.css"
+import useScreenType from "react-screentype-hook";
 import LoadingComponent from "../../Helper/LoadingComponent.tsx";
 
 const View: FC<CrudDataTableIfaces> = (props) => {
@@ -31,8 +31,6 @@ const View: FC<CrudDataTableIfaces> = (props) => {
     const [IsMounted, setIsMounted] = React.useState(false);
     const [IsLoading, setIsLoading] = React.useState(false);
     const [RowsData, setRowsData] = React.useState<Array<any>>([]);
-    const [ResponseTime, setResponseTime] = React.useState<Moment>();
-    const [ DiffResponseTime, setDiffResponseTime ] = React.useState<Duration>();
     const [Alerter, setAlerter] = React.useState<typeof AlerterHelper | React.JSX.Element>(<></>);
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const [ContainerLayout, setContainerLayout] = useContext(CrudDataTableContext);
@@ -40,9 +38,13 @@ const View: FC<CrudDataTableIfaces> = (props) => {
 
     const [DeleteIsEnable, setDeleteIsEnable] = React.useState<boolean>(false);
     const [EditIsEnable, setEditIsEnable] = React.useState<boolean>(false);
+    const [ DetectScreenSize, setDetectScreenSize ] = React.useState<boolean>(false);
+
+    const screenType = useScreenType();
 
     /** Add Memorize Props **/
     props = useMemo(() => props, [props]);
+
 
     /** Use Effect Is Component Didmount or Not **/
     useEffect(() => {
@@ -51,6 +53,13 @@ const View: FC<CrudDataTableIfaces> = (props) => {
             setIsMounted(false);
         }
     }, []);
+
+    useEffect(() => {
+        if (IsMounted){
+            // @ts-ignore
+            import("@availity/block-ui/dist/index.css");
+        }
+    },[IsMounted])
 
     /**
      * @todo Function Button OnClick Block
@@ -76,7 +85,7 @@ const View: FC<CrudDataTableIfaces> = (props) => {
      * End Function Button OnClick Block
      */
 
-    const theme = useTheme();
+
     const ToolbarCostum = () => {
         return (
             <GridToolbarContainer sx={{p: 1}}>
@@ -86,14 +95,14 @@ const View: FC<CrudDataTableIfaces> = (props) => {
                     variant="outlined"
                     color={"success"}
                     autoCapitalize={"false"}
-                    size={useMediaQuery(theme.breakpoints.down("sm")) ? "small" : useMediaQuery(theme.breakpoints.down("md")) ? "medium" : "large"}
+                    size={(screenType.isMobile) ? "small" : (screenType.isTablet) ? "medium" : "large"}
                     sx={{marginTop: 1, marginBottom: 1, justifyContent: 'right', textTransform: "none"}}
                     startIcon={<FontAwesomeIcon icon={faPlus} size={"sm"}/>
                 }>
                     <Typography sx={{
-                        fontSize: useMediaQuery(theme.breakpoints.down("sm")) ? 10 : useMediaQuery(theme.breakpoints.down("md")) ? 14 : 16,
+                        fontSize: (screenType.isMobile) ? 10 : (screenType.isTablet) ? 14 : 16,
                         fontFamily: 'Raleway',
-                        display : useMediaQuery(theme.breakpoints.down("sm")) ? "none" : "block"
+                        display : (screenType.isMobile) ? "none" : "block"
                     }}>Data Baru</Typography>
                 </Button>
                 { /** Edit Action **/}
@@ -103,14 +112,14 @@ const View: FC<CrudDataTableIfaces> = (props) => {
                     variant="outlined"
                     color={"warning"}
                     autoCapitalize={"false"}
-                    size={useMediaQuery(theme.breakpoints.down("sm")) ? "small" : useMediaQuery(theme.breakpoints.down("md")) ? "medium" : "large"}
+                    size={(screenType.isMobile) ? "small" : (screenType.isTablet) ? "medium" : "large"}
                     sx={{marginTop: 1, marginBottom: 1, justifyContent: 'right', textTransform: "none"}}
                     startIcon={<FontAwesomeIcon icon={faEdit} size={"sm"}/>
                 }>
                     <Typography sx={{
-                        fontSize: useMediaQuery(theme.breakpoints.down("sm")) ? 10 : useMediaQuery(theme.breakpoints.down("md")) ? 14 : 16,
+                        fontSize: (screenType.isMobile) ? 10 : (screenType.isTablet) ? 14 : 16,
                         fontFamily: 'Raleway',
-                        display : useMediaQuery(theme.breakpoints.down("sm")) ? "none" : "block"
+                        display : (screenType.isMobile) ? "none" : "block"
                     }}>Edit Data Terpilih</Typography>
                 </Button>
                 { /** Delete Action **/}
@@ -120,14 +129,14 @@ const View: FC<CrudDataTableIfaces> = (props) => {
                         onClick={DeleteHandlerButtons}
                         variant="outlined" color={"error"}
                         autoCapitalize={"false"}
-                        size={useMediaQuery(theme.breakpoints.down("sm")) ? "small" : useMediaQuery(theme.breakpoints.down("md")) ? "medium" : "large"}
+                        size={(screenType.isMobile) ? "small" : (screenType.isTablet) ? "medium" : "large"}
                         sx={{marginTop: 1, marginBottom: 1, justifyContent: 'right', textTransform: "none"}}
                         startIcon={<FontAwesomeIcon icon={faTrash} size={"sm"}/>
                     }>
                         <Typography sx={{
-                            fontSize: useMediaQuery(theme.breakpoints.down("sm")) ? 10 : useMediaQuery(theme.breakpoints.down("md")) ? 14 : 16,
+                            fontSize: (screenType.isMobile) ? 10 : (screenType.isTablet) ? 14 : 16,
                             fontFamily: 'Raleway',
-                            display : useMediaQuery(theme.breakpoints.down("sm")) ? "none" : "block"
+                            display : (screenType.isMobile) ? "none" : "block"
                         }}>Hapus Data Terpilih</Typography>
                     </Button>
                 </Badge>
@@ -171,7 +180,6 @@ const View: FC<CrudDataTableIfaces> = (props) => {
     useEffect(() => {
         if (IsMounted && props.view !== undefined && props.view.isGrants) {
             setIsLoading(true);
-            setResponseTime(moment(moment.now()));
             setAlerter(
                 <AlerterHelper
                     alerterProps={{
@@ -203,7 +211,7 @@ const View: FC<CrudDataTableIfaces> = (props) => {
                             severity: "success",
                         }}
                         title={"OK"}
-                        message={`Data Berhasil Di Dapatkan (${moment.duration(moment(moment.now()).diff(moment(ResponseTime))).asSeconds()})`}
+                        message={`Data Berhasil Di Dapatkan`}
                     />
                 );
                 setTimeout(() => {
@@ -240,7 +248,6 @@ const View: FC<CrudDataTableIfaces> = (props) => {
                             break;
                     }
                 } else {
-                    console.log(error)
                     // Something happened in setting up the request that triggered an Error
                     setAlerter(
                         <AlerterHelper

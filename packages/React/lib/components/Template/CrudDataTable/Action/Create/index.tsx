@@ -11,7 +11,6 @@ import View from "../View";
 import AlerterHelper from "../../Helper/AlerterHelper.tsx";
 import axios from "axios";
 import BlockUi from '@availity/block-ui';
-import "@availity/block-ui/dist/index.css"
 import LoadingComponent from "../../Helper/LoadingComponent.tsx";
 const Create: FC<CrudDataTableIfaces> = (props) => {
 
@@ -33,6 +32,13 @@ const Create: FC<CrudDataTableIfaces> = (props) => {
             setIsMounted(false);
         }
     }, []);
+
+    useEffect(() => {
+        if (IsMounted){
+            // @ts-ignore
+            import("@availity/block-ui/dist/index.css");
+        }
+    },[IsMounted])
 
     const Component = useMemo(() => props.create?.component, [props.create?.component]);
 

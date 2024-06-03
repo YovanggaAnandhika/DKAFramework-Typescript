@@ -1,7 +1,7 @@
 {
   "name": "@dkaframework/react",
   "private": false,
-  "version": "1.0.36",
+  "version": "1.0.41",
   "author": {
     "name": "Yovangga Anandhika Hadi Putra",
     "email": "dka.tech.dev@gmail.com",
@@ -50,6 +50,7 @@
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-redux": "^9.1.1",
+    "react-screentype-hook": "^1.0.18",
     "redux": "^5.0.1",
     "socket.io-client": "^4.7.5"
   },
@@ -70,6 +71,7 @@
     "vite": "^5.0.8",
     "vite-plugin-compression": "^0.5.1",
     "vite-plugin-dts": "^3.9.0",
+    "vite-plugin-javascript-obfuscator": "^3.1.0",
     "vite-plugin-minify": "^1.5.2"
   }
 }

@@ -11,7 +11,6 @@ import View from "../View";
 import AlerterHelper from "../../Helper/AlerterHelper.tsx";
 import axios from "axios";
 import BlockUi from '@availity/block-ui';
-import "@availity/block-ui/dist/index.css"
 import LoadingComponent from "../../Helper/LoadingComponent.tsx";
 const Edit: FC<{ data : any, props : CrudDataTableIfaces}> = (props) => {
 
@@ -21,6 +20,7 @@ const Edit: FC<{ data : any, props : CrudDataTableIfaces}> = (props) => {
     const [ ContainerLayout, setContainerLayout ] = useContext(CrudDataTableContext);
     const [IsHidden, setIsHidden] = React.useState(false);
     const [Alerter, setAlerter] = React.useState<typeof AlerterHelper | React.JSX.Element>(<></>);
+    const [ InitializeLayout, setInitializeLayout ] = React.useState<React.ReactNode>(<></>);
 
     const ButtonBackOnClick : React.MouseEventHandler<HTMLButtonElement> = (event) => {
         setContainerLayout(<View {... props.props } />);
@@ -32,6 +32,90 @@ const Edit: FC<{ data : any, props : CrudDataTableIfaces}> = (props) => {
             setIsMounted(false);
         }
     }, []);
+
+    useEffect(() => {
+        if (IsMounted){
+            // @ts-ignore
+            import("@availity/block-ui/dist/index.css");
+        }
+    },[IsMounted])
+
+    useEffect(() => {
+        if (IsMounted){
+            setIsHidden(true);
+            setAlerter(<AlerterHelper
+                alerterProps={{
+                    variant: "filled",
+                    severity: "info",
+                }}
+                title={"Sedang Memuat Data"}
+                message={"Sedang Mengecek Integritas Data ..."}
+            />);
+            axios({
+                url: `${props.props.endpoint}/search/${props.data._id}`,
+                headers: {
+                    "Content-Type": "application/json",
+                    "Accept": "application/json",
+                    "Cache-Control": "no-cache",
+                },
+                method: "GET",
+                timeout: 1000 * 10,
+                ... props.props.edit?.requestProps?.prehandler,
+            }).then(({request, headers, status, data}) => {
+                setIsHidden(false);
+                setAlerter(
+                    <AlerterHelper
+                        alerterProps={{
+                            variant: "outlined",
+                            severity: "success",
+                        }}
+                        title={"OK"}
+                        message={"Berhasil Mengecek Integritas Data"}
+                    />
+                );
+                setTimeout(() => {
+                    setAlerter(<></>);
+                    setInitializeLayout(<props.props.edit.component data={data.data[0]} callback={OnSubmit} />);
+                },800);
+            }).catch((error) => {
+                setIsHidden(false);
+                if (error.response) {
+                    // The request was made and the server responded with a status code
+                    // that falls out of the range of 2xx
+                    switch (error.response.status) {
+                        case 404 :
+                            setAlerter(<AlerterHelper
+                                alerterProps={{
+                                    variant: "outlined",
+                                    severity: "error",
+                                }}
+                                title={"URL Tidak Ditemukan"}
+                                message={"Periksa Backend URL Anda"}
+                            />);
+                            break;
+                        default :
+                            setAlerter(
+                                <AlerterHelper
+                                    alerterProps={{variant: "outlined", severity: "error"}}
+                                    title={`CODE [${error.response.status}]`}
+                                    message={error.response.data.msg}
+                                />
+                            )
+                            break;
+                    }
+                } else {
+                    // Something happened in setting up the request that triggered an Error
+                    setAlerter(
+                        <AlerterHelper
+                            alerterProps={{variant: "outlined", severity: "error"}}
+                            title={"Fatal Error"}
+                            message={error.message}/>
+                    )
+                }
+            })
+        }
+
+    }, [IsMounted]);
 
 
     const OnSubmit : (data : any) => void = (data) => {
@@ -55,7 +139,7 @@ const Edit: FC<{ data : any, props : CrudDataTableIfaces}> = (props) => {
             method: "PUT",
             timeout: 1000 * 10,
             data : data,
-            ... props.props.edit?.requestProps,
+            ... props.props.edit?.requestProps?.forSubmit,
         }).then(({request, headers, status, data}) => {
             setIsHidden(false);
             setAlerter(
@@ -123,12 +207,15 @@ const Edit: FC<{ data : any, props : CrudDataTableIfaces}> = (props) => {
                 </Grid>
             </Grid>
             { Alerter }
-            <BlockUi tag="div" blocking={IsHidden} message={<LoadingComponent/>}>
+            <BlockUi tag="div" blocking={IsHidden} style={{ minHeight : 400 }} message={<LoadingComponent/>}>
                 <Typography variant="h6" gutterBottom sx={{fontFamily: 'Raleway'}}>
                     Edit Data { props.props.title }
                 </Typography>
                 <Paper sx={{ p : 2 }}>
-                    { props.props.edit?.component?.({ data : props.data, callback : OnSubmit }) }
+                    <React.Suspense>
+                        { InitializeLayout }
+                    </React.Suspense>
+                    { /** props.props.edit?.component?.({ data : props.data, callback : OnSubmit }) */ }
                 </Paper>
             </BlockUi>
 

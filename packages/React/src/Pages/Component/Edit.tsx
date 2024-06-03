@@ -11,8 +11,6 @@ import Box from "@mui/material/Box";
 const Edit : FC<EditConfigPropsConfigurator> = (props) => {
 
     const [ IsMounted, setIsMounted ] = React.useState(false);
-    const Data = props.data;
-    const [ ValueName, setValueName ] = React.useState(Data.name);
 
 
     useEffect(() => {
@@ -25,9 +23,6 @@ const Edit : FC<EditConfigPropsConfigurator> = (props) => {
 
     const onHandlerButton : React.MouseEventHandler<HTMLButtonElement> = (event) => {
         event.preventDefault();
-        props.callback({
-            name : ValueName
-        });
     }
 
     return (
@@ -35,10 +30,6 @@ const Edit : FC<EditConfigPropsConfigurator> = (props) => {
             <Grid container spacing={2}>
                 <Grid item xs={6} md={6} lg={6}>
                     <TextField
-                        value={ValueName}
-                        onChange={(event) => {
-                            setValueName(event.target.value);
-                        }}
                         label={"Nama"}
                         />
                 </Grid>
