@@ -8,23 +8,24 @@ import {
 import LinearProgress from '@mui/material/LinearProgress';
 import {StyledGridOverlay} from "../../Helper/TableHelper.tsx";
 import axios from "axios";
-import moment, { Moment, Duration } from "moment-timezone";
 import {faEdit, faPlus, faTrash, faBan, faEye} from "@fortawesome/free-solid-svg-icons";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import AlerterHelper from "../../Helper/AlerterHelper.tsx";
 import SweetAlert2, {SweetAlert2Props} from "react-sweetalert2";
-import {Badge, Grid, Typography, useMediaQuery, useTheme} from "@mui/material";
+import {Badge, Grid, Typography} from "@mui/material";
 import Button from "@mui/material/Button";
 import {CrudDataTableContext} from "../../Context/CrudDataTableContext.tsx";
 import {CrudDataTableIfaces} from "../../Interfaces/CrudDataTable.Ifaces.ts";
 import Box from "@mui/material/Box";
-import Edit from "../Edit";
-import Create from "../Create";
 import AccessDenied from "../../Icons/AccessDenied.tsx";
 import NotFound from "../../Icons/NotFound.tsx";
 import BlockUi from '@availity/block-ui';
 import useScreenType from "react-screentype-hook";
 import LoadingComponent from "../../Helper/LoadingComponent.tsx";
+
+
+const Edit = React.lazy(() => import('../Edit'));
+const Create = React.lazy(() => import('../Create'));
 
 const View: FC<CrudDataTableIfaces> = (props) => {
 

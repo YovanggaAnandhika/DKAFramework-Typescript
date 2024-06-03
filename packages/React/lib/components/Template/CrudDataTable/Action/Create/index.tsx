@@ -7,11 +7,13 @@ import Grid from "@mui/material/Grid";
 import Button from "@mui/material/Button";
 import {Typography} from "@mui/material";
 import {CrudDataTableContext} from "../../Context/CrudDataTableContext.tsx";
-import View from "../View";
 import AlerterHelper from "../../Helper/AlerterHelper.tsx";
 import axios from "axios";
 import BlockUi from '@availity/block-ui';
 import LoadingComponent from "../../Helper/LoadingComponent.tsx";
+
+const View = React.lazy(() => import('../View'));
+
 const Create: FC<CrudDataTableIfaces> = (props) => {
 
     // eslint-disable-next-line react-hooks/rules-of-hooks
