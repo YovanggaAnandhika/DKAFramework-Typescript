@@ -135,6 +135,27 @@ const View: FC<CrudDataTableIfaces> = (props) => {
                             }
                         })
                         break;
+                    case 400 :
+                        // eslint-disable-next-line no-case-declarations
+                        let msg = error.response.data.msg;
+                        if (error.response.error !== undefined && error.response.error.errorResponse !== undefined) {
+                            msg = `${error.response.error.errorResponse.errmsg}`;
+                        }
+                        setSweetAlertProps({
+                            show : true,
+                            title : "Data Tidak Ditemukan",
+                            text : msg,
+                            icon : "error",
+                            timer : 2000,
+                            didClose() {
+                                setIsLoading(false);
+                                setRowsData((prevState) => prevState.filter(x => !checkedItem.includes(x)));
+                                setSweetAlertProps({
+                                    show : false
+                                });
+                            }
+                        })
+                        break;
                     default :
                         setSweetAlertProps({
                             show : true,

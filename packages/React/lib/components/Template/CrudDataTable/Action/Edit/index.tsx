@@ -176,6 +176,20 @@ const Edit: FC<{ data : any, props : CrudDataTableIfaces}> = (props) => {
                             message={"Periksa Backend URL Anda"}
                         />);
                         break;
+                    case 400 :
+                        // eslint-disable-next-line no-case-declarations
+                        let msg = error.response.data.msg;
+                        if (error.response.error !== undefined && error.response.error.errorResponse !== undefined) {
+                            msg = `${error.response.error.errorResponse.errmsg}`;
+                        }
+                        setAlerter(
+                            <AlerterHelper
+                                alerterProps={{variant: "outlined", severity: "error"}}
+                                title={`400 [BAD REQUEST]`}
+                                message={msg}
+                            />
+                        )
+                        break;
                     default :
                         setAlerter(
                             <AlerterHelper
