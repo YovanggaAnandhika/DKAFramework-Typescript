@@ -137,13 +137,24 @@ const View: FC<CrudDataTableIfaces> = (props) => {
                         break;
                     case 400 :
                         // eslint-disable-next-line no-case-declarations
+                        let title = `400 [BAD REQUEST]`;
+                        // eslint-disable-next-line no-case-declarations
                         let msg = error.response.data.msg;
-                        if (error.response.error !== undefined && error.response.error.errorResponse !== undefined) {
-                            msg = `${error.response.error.errorResponse.errmsg}`;
+
+                        // If From Database Error
+                        if (error.response.data.error !== undefined && error.response.data.error.errorResponse !== undefined) {
+                            msg = `${error.response.data.error.errorResponse.errmsg}`;
+                        }
+
+                        if (error.response.data.error !== undefined && error.response.data.error.errors !== undefined){
+                            title = `${error.response.data.error.message}`
+                            Object.keys(error.response.data.error.errors).forEach((keys) => {
+                                msg += `${error.response.data.error.errors[keys].message}`;
+                            })
                         }
                         setSweetAlertProps({
                             show : true,
-                            title : "Data Tidak Ditemukan",
+                            title : title,
                             text : msg,
                             icon : "error",
                             timer : 2000,
@@ -297,13 +308,29 @@ const View: FC<CrudDataTableIfaces> = (props) => {
                     // that falls out of the range of 2xx
                     switch (error.response.status) {
                         case 404 :
+                            // eslint-disable-next-line no-case-declarations
+                            let title = `400 [BAD REQUEST]`;
+                            // eslint-disable-next-line no-case-declarations
+                            let msg = error.response.data.msg;
+
+                            // If From Database Error
+                            if (error.response.data.error !== undefined && error.response.data.error.errorResponse !== undefined) {
+                                msg = `${error.response.data.error.errorResponse.errmsg}`;
+                            }
+
+                            if (error.response.data.error !== undefined && error.response.data.error.errors !== undefined){
+                                title = `${error.response.data.error.message}`
+                                Object.keys(error.response.data.error.errors).forEach((keys) => {
+                                    msg += `${error.response.data.error.errors[keys].message}`;
+                                })
+                            }
                             setAlerter(<AlerterHelper
                                 alerterProps={{
                                     variant: "outlined",
                                     severity: "error",
                                 }}
-                                title={"URL Tidak Ditemukan"}
-                                message={"Periksa Backend URL Anda"}
+                                title={`${title}`}
+                                message={`${msg}`}
                             />);
                             break;
                         default :
@@ -465,6 +492,7 @@ const View: FC<CrudDataTableIfaces> = (props) => {
                         getRowId={(row: any) => {
                             return row._id || row.id
                         }}
+                        density={"standard"}
                         onRowSelectionModelChange={(ids: Array<any>) => {
                             const selectedRowsData: Array<any> = RowsData.filter((data) => ids.includes(data._id) || ids.includes(data.id))
                             if (selectedRowsData.length > 0) return setCheckedItem(selectedRowsData);

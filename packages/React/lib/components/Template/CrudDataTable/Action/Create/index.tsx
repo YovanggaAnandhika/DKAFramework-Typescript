@@ -103,14 +103,26 @@ const Create: FC<CrudDataTableIfaces> = (props) => {
                             break;
                         case 400 :
                             // eslint-disable-next-line no-case-declarations
+                            let title = `400 [BAD REQUEST]`;
+                            // eslint-disable-next-line no-case-declarations
                             let msg = error.response.data.msg;
-                            if (error.response.error !== undefined && error.response.error.errorResponse !== undefined) {
-                                msg = `${error.response.error.errorResponse.errmsg}`;
+
+                            // If From Database Error
+                            if (error.response.data.error !== undefined && error.response.data.error.errorResponse !== undefined) {
+                                msg = `${error.response.data.error.errorResponse.errmsg}`;
                             }
+
+                            if (error.response.data.error !== undefined && error.response.data.error.errors !== undefined){
+                                title = `${error.response.data.error.message}`
+                                Object.keys(error.response.data.error.errors).forEach((keys) => {
+                                    msg += `${error.response.data.error.errors[keys].message}`;
+                                })
+                            }
+                            if (error.response.data)
                             setAlerter(
                                 <AlerterHelper
                                     alerterProps={{variant: "outlined", severity: "error"}}
-                                    title={`400 [BAD REQUEST]`}
+                                    title={title}
                                     message={msg}
                                 />
                             )
