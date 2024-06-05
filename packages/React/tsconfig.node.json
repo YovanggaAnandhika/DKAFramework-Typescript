@@ -5,7 +5,7 @@
     "module": "ESNext",
     "moduleResolution": "bundler",
     "allowUnusedLabels": true,
-    "noImplicitAny": true,
+    "noImplicitAny": false,
     "declaration": true,
     "allowSyntheticDefaultImports": true,
     "allowImportingTsExtensions": true,
