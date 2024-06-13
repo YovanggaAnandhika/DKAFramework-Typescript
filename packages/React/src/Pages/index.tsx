@@ -55,10 +55,14 @@ const Pages : FC = () =>{
                       }
                   ]
                     },
-                    isGrants : true
+                    isGrants : true,
+                    setData : (data) => {
+                        console.log("dhika",data)
+                        return data.filter((data) => data.name.includes("Mona Bergnaum"))
+                    }
                 }}
                 edit={{ component : Edit, isGrants : true}}
-                delete={{ isGrants : true}}
+                delete={{ isGrants : true, isHidden : true }}
                 options={{
                     useActionMenuOnRow : {
                         enabled : true,

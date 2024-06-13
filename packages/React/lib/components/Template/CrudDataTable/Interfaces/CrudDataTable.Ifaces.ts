@@ -5,9 +5,11 @@ import {AxiosRequestConfig} from "axios";
 
 
 export interface ViewConfigProps {
-    tableProps ?: React.ComponentProps<typeof DataGrid>,
-    requestProps ?: AxiosRequestConfig,
-    isGrants ?: boolean
+    tableProps ?: React.ComponentProps<typeof DataGrid>;
+    requestProps ?: AxiosRequestConfig;
+    setData ?: (data : Array<any>) => Array<any>;
+    isGrants ?: boolean;
+    isHidden ?: boolean;
 }
 
 
@@ -23,6 +25,7 @@ export interface EditConfigProps {
         forSubmit ?: AxiosRequestConfig
     }
     isGrants ?: boolean;
+    isHidden ?: boolean;
 }
 
 
@@ -34,6 +37,7 @@ export interface CreateConfigProps {
     component : FC<CreateConfigPropsConfigurator>;
     requestProps ?: AxiosRequestConfig,
     isGrants ?: boolean;
+    isHidden ?: boolean;
 }
 
 export interface DeleteConfigPropsConfigurator {
@@ -45,6 +49,7 @@ export interface DeleteConfigProps {
     component ?: FC<DeleteConfigPropsConfigurator>;
     requestProps ?: AxiosRequestConfig,
     isGrants ?: boolean;
+    isHidden ?: boolean;
 }
 
 export interface CrudDataTableIfacesOptionsUseActionMenuOnRowSettings {
@@ -58,7 +63,8 @@ export interface CrudDataTableIfacesOptionsUseActionMenuOnRow {
     settings ?: CrudDataTableIfacesOptionsUseActionMenuOnRowSettings
 }
 export interface CrudDataTableIfacesOptions {
-    useActionMenuOnRow ?: CrudDataTableIfacesOptionsUseActionMenuOnRow
+    useActionMenuOnRow ?: CrudDataTableIfacesOptionsUseActionMenuOnRow;
+
 }
 
 export interface CrudDataTableIfaces {

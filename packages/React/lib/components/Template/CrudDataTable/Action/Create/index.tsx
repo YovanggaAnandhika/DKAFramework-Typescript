@@ -7,11 +7,13 @@ import Grid from "@mui/material/Grid";
 import Button from "@mui/material/Button";
 import {Typography} from "@mui/material";
 import {CrudDataTableContext} from "../../Context/CrudDataTableContext.tsx";
-import View from "../View";
 import AlerterHelper from "../../Helper/AlerterHelper.tsx";
 import axios from "axios";
 import BlockUi from '@availity/block-ui';
 import LoadingComponent from "../../Helper/LoadingComponent.tsx";
+
+const View = React.lazy(() => import('../View'));
+
 const Create: FC<CrudDataTableIfaces> = (props) => {
 
     // eslint-disable-next-line react-hooks/rules-of-hooks
@@ -35,8 +37,7 @@ const Create: FC<CrudDataTableIfaces> = (props) => {
 
     useEffect(() => {
         if (IsMounted){
-            // @ts-ignore
-            import("@availity/block-ui/dist/index.css");
+
         }
     },[IsMounted])
 
@@ -99,6 +100,32 @@ const Create: FC<CrudDataTableIfaces> = (props) => {
                                 title={"URL Tidak Ditemukan"}
                                 message={"Periksa Backend URL Anda"}
                             />);
+                            break;
+                        case 400 :
+                            // eslint-disable-next-line no-case-declarations
+                            let title = `400 [BAD REQUEST]`;
+                            // eslint-disable-next-line no-case-declarations
+                            let msg = error.response.data.msg;
+
+                            // If From Database Error
+                            if (error.response.data.error !== undefined && error.response.data.error.errorResponse !== undefined) {
+                                msg = `${error.response.data.error.errorResponse.errmsg}`;
+                            }
+
+                            if (error.response.data.error !== undefined && error.response.data.error.errors !== undefined){
+                                title = `${error.response.data.error.message}`
+                                Object.keys(error.response.data.error.errors).forEach((keys) => {
+                                    msg += `${error.response.data.error.errors[keys].message}`;
+                                })
+                            }
+                            if (error.response.data)
+                            setAlerter(
+                                <AlerterHelper
+                                    alerterProps={{variant: "outlined", severity: "error"}}
+                                    title={title}
+                                    message={msg}
+                                />
+                            )
                             break;
                         default :
                             setAlerter(

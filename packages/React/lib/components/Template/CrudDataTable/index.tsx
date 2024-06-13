@@ -1,6 +1,5 @@
 import React, {FC, useEffect, useMemo, useState} from "react";
 import {CrudDataTableContext} from "./Context/CrudDataTableContext.tsx";
-import View from "./Action/View";
 import {Grid, responsiveFontSizes} from "@mui/material";
 import {CrudDataTableIfaces} from "./Interfaces/CrudDataTable.Ifaces.ts";
 import {createTheme, ThemeProvider} from "@mui/material/styles";
@@ -9,6 +8,7 @@ import RalewayMedium from "./Font/raleway.medium.ttf";
 import CssBaseline from "@mui/material/CssBaseline";
 
 
+const View = React.lazy(() => import("./Action/View"));
 const CrudDataTable : FC<CrudDataTableIfaces> = (props) => {
 
     const [ IsMounted, setIsMounted] = useState(false);

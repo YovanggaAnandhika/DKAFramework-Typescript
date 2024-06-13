@@ -1,29 +1,31 @@
-import React, {FC, useContext, useEffect, useMemo} from "react";
+import React, {FC, useContext, useEffect, useMemo, useState} from "react";
 import {
     DataGrid,
     DataGridProps,
     GridToolbarContainer,
-    GridSlots,
+    GridSlots, GridToolbar,
 } from '@mui/x-data-grid';
 import LinearProgress from '@mui/material/LinearProgress';
 import {StyledGridOverlay} from "../../Helper/TableHelper.tsx";
 import axios from "axios";
-import moment, { Moment, Duration } from "moment-timezone";
 import {faEdit, faPlus, faTrash, faBan, faEye} from "@fortawesome/free-solid-svg-icons";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import AlerterHelper from "../../Helper/AlerterHelper.tsx";
-import {Badge, Grid, Typography, useMediaQuery, useTheme} from "@mui/material";
+import SweetAlert2, {SweetAlert2Props} from "react-sweetalert2";
+import {Badge, Grid, Typography} from "@mui/material";
 import Button from "@mui/material/Button";
 import {CrudDataTableContext} from "../../Context/CrudDataTableContext.tsx";
 import {CrudDataTableIfaces} from "../../Interfaces/CrudDataTable.Ifaces.ts";
 import Box from "@mui/material/Box";
-import Edit from "../Edit";
-import Create from "../Create";
 import AccessDenied from "../../Icons/AccessDenied.tsx";
 import NotFound from "../../Icons/NotFound.tsx";
 import BlockUi from '@availity/block-ui';
 import useScreenType from "react-screentype-hook";
 import LoadingComponent from "../../Helper/LoadingComponent.tsx";
+
+
+const Edit = React.lazy(() => import('../Edit'));
+const Create = React.lazy(() => import('../Create'));
 
 const View: FC<CrudDataTableIfaces> = (props) => {
 
@@ -39,6 +41,13 @@ const View: FC<CrudDataTableIfaces> = (props) => {
     const [DeleteIsEnable, setDeleteIsEnable] = React.useState<boolean>(false);
     const [EditIsEnable, setEditIsEnable] = React.useState<boolean>(false);
     const [ DetectScreenSize, setDetectScreenSize ] = React.useState<boolean>(false);
+    const [ SweetAlertProps, setSweetAlertProps ] = useState<SweetAlert2Props>({
+        didClose() {
+            setSweetAlertProps({
+                show : false
+            })
+        }
+    });
 
     const screenType = useScreenType();
 
@@ -56,8 +65,7 @@ const View: FC<CrudDataTableIfaces> = (props) => {
 
     useEffect(() => {
         if (IsMounted){
-            // @ts-ignore
-            import("@availity/block-ui/dist/index.css");
+
         }
     },[IsMounted])
 
@@ -78,73 +86,147 @@ const View: FC<CrudDataTableIfaces> = (props) => {
         event.preventDefault();
         setContainerLayout(<Edit data={row} props={props}/>)
     }
+
+
+
+    const OnDeletionData = (data : any) => {
+        axios({
+            url: `${props.endpoint}`,
+            headers: {
+                "Content-Type": "application/json",
+                "Accept": "application/json",
+                "Cache-Control": "no-cache",
+            },
+            method: "DELETE",
+            timeout: 1000 * 10,
+            data : data,
+            ...props.delete?.requestProps,
+        }).then(() => {
+            setIsLoading(true);
+            setSweetAlertProps({
+                show : true,
+                title : "Berhasil Hapus Data",
+                icon : "success",
+                timer : 1000,
+                didClose() {
+                    setIsLoading(false);
+                    setRowsData((prevState) => prevState.filter(x => !checkedItem.includes(x)));
+                    setSweetAlertProps({
+                        show : false
+                    });
+                }
+            })
+        }).catch((error) => {
+            if (error.response) {
+                // The request was made and the server responded with a status code
+                // that falls out of the range of 2xx
+                switch (error.response.status) {
+                    case 404 :
+                        setSweetAlertProps({
+                            show : true,
+                            title : "Data Tidak Ditemukan",
+                            text : "Periksa Backend URL Anda",
+                            icon : "error",
+                            timer : 2000,
+                            didClose() {
+                                setIsLoading(false);
+                                setRowsData((prevState) => prevState.filter(x => !checkedItem.includes(x)));
+                                setSweetAlertProps({
+                                    show : false
+                                });
+                            }
+                        })
+                        break;
+                    case 400 :
+                        // eslint-disable-next-line no-case-declarations
+                        let title = `400 [BAD REQUEST]`;
+                        // eslint-disable-next-line no-case-declarations
+                        let msg = error.response.data.msg;
+
+                        // If From Database Error
+                        if (error.response.data.error !== undefined && error.response.data.error.errorResponse !== undefined) {
+                            msg = `${error.response.data.error.errorResponse.errmsg}`;
+                        }
+
+                        if (error.response.data.error !== undefined && error.response.data.error.errors !== undefined){
+                            title = `${error.response.data.error.message}`
+                            Object.keys(error.response.data.error.errors).forEach((keys) => {
+                                msg += `${error.response.data.error.errors[keys].message}`;
+                            })
+                        }
+                        setSweetAlertProps({
+                            show : true,
+                            title : title,
+                            text : msg,
+                            icon : "error",
+                            timer : 2000,
+                            didClose() {
+                                setIsLoading(false);
+                                setRowsData((prevState) => prevState.filter(x => !checkedItem.includes(x)));
+                                setSweetAlertProps({
+                                    show : false
+                                });
+                            }
+                        })
+                        break;
+                    default :
+                        setSweetAlertProps({
+                            show : true,
+                            title : `CODE [${error.response.status}]`,
+                            text : `${error.response.data.msg}`,
+                            icon : "error",
+                            timer : 1000,
+                            didClose() {
+                                setIsLoading(false);
+                                setRowsData((prevState) => prevState.filter(x => !checkedItem.includes(x)));
+                                setSweetAlertProps({
+                                    show : false
+                                });
+                            }
+                        })
+                        break;
+                }
+            } else {
+                setSweetAlertProps({
+                    show : true,
+                    title : `Fatal Error`,
+                    text : `${error.message}`,
+                    icon : "error",
+                    timer : 1000,
+                    didClose() {
+                        setIsLoading(false);
+                        setRowsData((prevState) => prevState.filter(x => !checkedItem.includes(x)));
+                        setSweetAlertProps({
+                            show : false
+                        });
+                    }
+                })
+            }
+        });
+    }
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const DeleteHandlerButtons : React.MouseEventHandler<HTMLButtonElement> = (event) => {
-        event.preventDefault();
+        setSweetAlertProps({
+            show : true,
+            title : "Hapus Data ?",
+            text : "Yakin Ingin Menghapus Data Yang Dipilih",
+            showCancelButton : true,
+            onConfirm()  {
+                OnDeletionData(checkedItem);
+                setSweetAlertProps({
+                    show : false
+                })
+            },
+            didClose() {
+                setSweetAlertProps({
+                    show : false
+                });
+            }
+        });
     }
     /**
      * End Function Button OnClick Block
      */
-
-
-    const ToolbarCostum = () => {
-        return (
-            <GridToolbarContainer sx={{p: 1}}>
-                { /** Create Action **/}
-                <Button
-                    onClick={CreateHandlerButtons}
-                    variant="outlined"
-                    color={"success"}
-                    autoCapitalize={"false"}
-                    size={(screenType.isMobile) ? "small" : (screenType.isTablet) ? "medium" : "large"}
-                    sx={{marginTop: 1, marginBottom: 1, justifyContent: 'right', textTransform: "none"}}
-                    startIcon={<FontAwesomeIcon icon={faPlus} size={"sm"}/>
-                }>
-                    <Typography sx={{
-                        fontSize: (screenType.isMobile) ? 10 : (screenType.isTablet) ? 14 : 16,
-                        fontFamily: 'Raleway',
-                        display : (screenType.isMobile) ? "none" : "block"
-                    }}>Data Baru</Typography>
-                </Button>
-                { /** Edit Action **/}
-                <Button
-                    disabled={!EditIsEnable}
-                    onClick={EditHandlerButtons}
-                    variant="outlined"
-                    color={"warning"}
-                    autoCapitalize={"false"}
-                    size={(screenType.isMobile) ? "small" : (screenType.isTablet) ? "medium" : "large"}
-                    sx={{marginTop: 1, marginBottom: 1, justifyContent: 'right', textTransform: "none"}}
-                    startIcon={<FontAwesomeIcon icon={faEdit} size={"sm"}/>
-                }>
-                    <Typography sx={{
-                        fontSize: (screenType.isMobile) ? 10 : (screenType.isTablet) ? 14 : 16,
-                        fontFamily: 'Raleway',
-                        display : (screenType.isMobile) ? "none" : "block"
-                    }}>Edit Data Terpilih</Typography>
-                </Button>
-                { /** Delete Action **/}
-                <Badge color="error" overlap="circular" badgeContent={checkedItem.length}>
-                    <Button
-                        disabled={!DeleteIsEnable}
-                        onClick={DeleteHandlerButtons}
-                        variant="outlined" color={"error"}
-                        autoCapitalize={"false"}
-                        size={(screenType.isMobile) ? "small" : (screenType.isTablet) ? "medium" : "large"}
-                        sx={{marginTop: 1, marginBottom: 1, justifyContent: 'right', textTransform: "none"}}
-                        startIcon={<FontAwesomeIcon icon={faTrash} size={"sm"}/>
-                    }>
-                        <Typography sx={{
-                            fontSize: (screenType.isMobile) ? 10 : (screenType.isTablet) ? 14 : 16,
-                            fontFamily: 'Raleway',
-                            display : (screenType.isMobile) ? "none" : "block"
-                        }}>Hapus Data Terpilih</Typography>
-                    </Button>
-                </Badge>
-
-                <Box sx={{flexGrow: 1}}/>
-            </GridToolbarContainer>
-        )
-    }
 
     /** Checked If Delete Enable & Checkend State Disable / Unable Delete Button **/
     useEffect(() => {
@@ -162,6 +244,14 @@ const View: FC<CrudDataTableIfaces> = (props) => {
             (checkedItem.length == 1) ? setEditIsEnable(true) : setEditIsEnable(false);
         }
     }, [IsMounted, checkedItem, props]);
+
+    useEffect(() => {
+        if (IsMounted){
+            if (RowsData.length > 0 && props.view.setData !== undefined){
+                setRowsData(props.view.setData);
+            }
+        }
+    }, [IsMounted, props, RowsData]);
 
     /** Custom No Rows Overlay **/
     const CustomNoRowsOverlay = () => {
@@ -228,13 +318,29 @@ const View: FC<CrudDataTableIfaces> = (props) => {
                     // that falls out of the range of 2xx
                     switch (error.response.status) {
                         case 404 :
+                            // eslint-disable-next-line no-case-declarations
+                            let title = `400 [BAD REQUEST]`;
+                            // eslint-disable-next-line no-case-declarations
+                            let msg = error.response.data.msg;
+
+                            // If From Database Error
+                            if (error.response.data.error !== undefined && error.response.data.error.errorResponse !== undefined) {
+                                msg = `${error.response.data.error.errorResponse.errmsg}`;
+                            }
+
+                            if (error.response.data.error !== undefined && error.response.data.error.errors !== undefined){
+                                title = `${error.response.data.error.message}`
+                                Object.keys(error.response.data.error.errors).forEach((keys) => {
+                                    msg += `${error.response.data.error.errors[keys].message}`;
+                                })
+                            }
                             setAlerter(<AlerterHelper
                                 alerterProps={{
                                     variant: "outlined",
                                     severity: "error",
                                 }}
-                                title={"URL Tidak Ditemukan"}
-                                message={"Periksa Backend URL Anda"}
+                                title={`${title}`}
+                                message={`${msg}`}
                             />);
                             break;
                         default :
@@ -318,6 +424,68 @@ const View: FC<CrudDataTableIfaces> = (props) => {
                 <>
                     {Alerter}
                 </>
+                <Grid container spacing={2}>
+                    <Grid item xs={12} md={12} lg={12}>
+                        { /** Create Action **/}
+                        <Button
+                            onClick={CreateHandlerButtons}
+                            variant="outlined"
+                            color={"success"}
+                            autoCapitalize={"false"}
+                            style={{ visibility : (props.create !== undefined && props.create.isHidden !== undefined && props.create.isHidden) ? "hidden" : "visible"}}
+                            size={(screenType.isMobile) ? "small" : (screenType.isTablet) ? "medium" : "large"}
+                            sx={{marginTop: 1, marginBottom: 1, justifyContent: 'right', textTransform: "none"}}
+                            startIcon={<FontAwesomeIcon icon={faPlus} size={"sm"}/>
+                            }>
+                            <Typography sx={{
+                                fontSize: (screenType.isMobile) ? 10 : (screenType.isTablet) ? 14 : 16,
+                                fontFamily: 'Raleway',
+                                display : (screenType.isMobile) ? "none" : "block"
+                            }}>Data Baru</Typography>
+                        </Button>
+                        &nbsp;
+                        { /** Edit Action **/}
+                        <Button
+                            disabled={!EditIsEnable}
+                            onClick={EditHandlerButtons}
+                            variant="outlined"
+                            color={"warning"}
+                            autoCapitalize={"false"}
+                            size={(screenType.isMobile) ? "small" : (screenType.isTablet) ? "medium" : "large"}
+                            style={{ visibility : (props.edit !== undefined && props.edit.isHidden !== undefined && props.edit.isHidden) ? "hidden" : "visible"}}
+                            sx={{marginTop: 1, marginBottom: 1, justifyContent: 'right', textTransform: "none"}}
+                            startIcon={<FontAwesomeIcon icon={faEdit} size={"sm"}/>
+                            }>
+                            <Typography sx={{
+                                fontSize: (screenType.isMobile) ? 10 : (screenType.isTablet) ? 14 : 16,
+                                fontFamily: 'Raleway',
+                                display : (screenType.isMobile) ? "none" : "block"
+                            }}>Edit Data Terpilih</Typography>
+                        </Button>
+                        &nbsp;
+                        { /** Delete Action **/}
+                        <Badge color="error" overlap="circular" badgeContent={checkedItem.length}>
+                            <Button
+                                disabled={!DeleteIsEnable}
+                                onClick={DeleteHandlerButtons}
+                                variant="outlined" color={"error"}
+                                autoCapitalize={"false"}
+                                size={(screenType.isMobile) ? "small" : (screenType.isTablet) ? "medium" : "large"}
+                                sx={{marginTop: 1, marginBottom: 1, justifyContent: 'right', textTransform: "none"}}
+                                style={{ visibility : (props.delete !== undefined && props.delete.isHidden !== undefined && props.delete.isHidden) ? "hidden" : "visible"}}
+                                startIcon={<FontAwesomeIcon icon={faTrash} size={"sm"}/>
+                                }>
+                                <Typography sx={{
+                                    fontSize: (screenType.isMobile) ? 10 : (screenType.isTablet) ? 14 : 16,
+                                    fontFamily: 'Raleway',
+                                    display : (screenType.isMobile) ? "none" : "block"
+                                }}>Hapus Data Terpilih</Typography>
+                            </Button>
+                        </Badge>
+
+                        <Box sx={{flexGrow: 1}}/>
+                    </Grid>
+                </Grid>
                 <BlockUi tag="div" blocking={IsLoading} message={<LoadingComponent/>} >
                     <DataGrid
                         columns={[]}
@@ -325,13 +493,19 @@ const View: FC<CrudDataTableIfaces> = (props) => {
                         slots={{
                             loadingOverlay: LinearProgress as GridSlots['loadingOverlay'],
                             noRowsOverlay: CustomNoRowsOverlay,
-                            toolbar: ToolbarCostum
+                            toolbar: GridToolbar
+                        }}
+                        slotProps={{
+                            toolbar : {
+                                showQuickFilter: true,
+                            }
                         }}
                         checkboxSelection
                         disableRowSelectionOnClick
                         getRowId={(row: any) => {
                             return row._id || row.id
                         }}
+                        density={"standard"}
                         onRowSelectionModelChange={(ids: Array<any>) => {
                             const selectedRowsData: Array<any> = RowsData.filter((data) => ids.includes(data._id) || ids.includes(data.id))
                             if (selectedRowsData.length > 0) return setCheckedItem(selectedRowsData);
@@ -357,6 +531,7 @@ const View: FC<CrudDataTableIfaces> = (props) => {
                         loading={IsLoading}
                     />
                 </BlockUi>
+                <SweetAlert2 {... SweetAlertProps } />
             </Box>
         </>
     )
