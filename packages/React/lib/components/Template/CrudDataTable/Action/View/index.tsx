@@ -87,6 +87,8 @@ const View: FC<CrudDataTableIfaces> = (props) => {
         setContainerLayout(<Edit data={row} props={props}/>)
     }
 
+
+
     const OnDeletionData = (data : any) => {
         axios({
             url: `${props.endpoint}`,
@@ -242,6 +244,14 @@ const View: FC<CrudDataTableIfaces> = (props) => {
             (checkedItem.length == 1) ? setEditIsEnable(true) : setEditIsEnable(false);
         }
     }, [IsMounted, checkedItem, props]);
+
+    useEffect(() => {
+        if (IsMounted){
+            if (RowsData.length > 0 && props.view.setData !== undefined){
+                setRowsData(props.view.setData);
+            }
+        }
+    }, [IsMounted, props, RowsData]);
 
     /** Custom No Rows Overlay **/
     const CustomNoRowsOverlay = () => {
@@ -422,6 +432,7 @@ const View: FC<CrudDataTableIfaces> = (props) => {
                             variant="outlined"
                             color={"success"}
                             autoCapitalize={"false"}
+                            style={{ visibility : (props.create !== undefined && props.create.isHidden !== undefined && props.create.isHidden) ? "hidden" : "visible"}}
                             size={(screenType.isMobile) ? "small" : (screenType.isTablet) ? "medium" : "large"}
                             sx={{marginTop: 1, marginBottom: 1, justifyContent: 'right', textTransform: "none"}}
                             startIcon={<FontAwesomeIcon icon={faPlus} size={"sm"}/>
@@ -441,6 +452,7 @@ const View: FC<CrudDataTableIfaces> = (props) => {
                             color={"warning"}
                             autoCapitalize={"false"}
                             size={(screenType.isMobile) ? "small" : (screenType.isTablet) ? "medium" : "large"}
+                            style={{ visibility : (props.edit !== undefined && props.edit.isHidden !== undefined && props.edit.isHidden) ? "hidden" : "visible"}}
                             sx={{marginTop: 1, marginBottom: 1, justifyContent: 'right', textTransform: "none"}}
                             startIcon={<FontAwesomeIcon icon={faEdit} size={"sm"}/>
                             }>
@@ -460,6 +472,7 @@ const View: FC<CrudDataTableIfaces> = (props) => {
                                 autoCapitalize={"false"}
                                 size={(screenType.isMobile) ? "small" : (screenType.isTablet) ? "medium" : "large"}
                                 sx={{marginTop: 1, marginBottom: 1, justifyContent: 'right', textTransform: "none"}}
+                                style={{ visibility : (props.delete !== undefined && props.delete.isHidden !== undefined && props.delete.isHidden) ? "hidden" : "visible"}}
                                 startIcon={<FontAwesomeIcon icon={faTrash} size={"sm"}/>
                                 }>
                                 <Typography sx={{
