@@ -13,7 +13,6 @@ const Edit : FC<CreateConfigPropsConfigurator> = (props) => {
     const [ IsMounted, setIsMounted ] = React.useState(false);
     const [ ValueName, setValueName ] = React.useState("");
 
-
     useEffect(() => {
         setIsMounted(true);
         return () => {

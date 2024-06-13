@@ -8,8 +8,6 @@ import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { PaletteMode } from '@mui/material';
 import AutoAwesomeRoundedIcon from '@mui/icons-material/AutoAwesomeRounded';
 import getSignInSideTheme from './Component/getSignInSideTheme';
-import ToggleColorMode from './Component/ToggleColorMode';
-import Content from './Component/Content';
 import {SignInSideConfiguration} from "./Interfaces/SignInSideConfiguration.ts";
 import {useEffect, useState} from "react";
 
@@ -18,7 +16,10 @@ interface ToggleCustomThemeProps {
     toggleCustomTheme: () => void;
 }
 
-function ToggleCustomTheme({ showCustomTheme, toggleCustomTheme }: ToggleCustomThemeProps) {
+const Content = React.lazy(() => import("./Component/Content"));
+const ToggleColorMode = React.lazy(() => import('./Component/ToggleColorMode'));
+
+export function ToggleCustomTheme({ showCustomTheme, toggleCustomTheme } : ToggleCustomThemeProps) {
     return (
         <Box
             sx={{
@@ -107,7 +108,9 @@ export default function SignInSide(config ?: SignInSideConfiguration) {
                     }}
                 >
                     <Box></Box>
-                    <ToggleColorMode mode={mode} toggleColorMode={toggleColorMode} />
+                    <React.Suspense>
+                        <ToggleColorMode mode={mode} toggleColorMode={toggleColorMode} />
+                    </React.Suspense>
                 </Stack>
                 <Stack
                     direction={{ xs: 'column-reverse', md: 'row' }}
@@ -115,7 +118,9 @@ export default function SignInSide(config ?: SignInSideConfiguration) {
                     gap={{ xs: 6, sm: 12 }}
                     sx={{ height: { xs: '100%', md: '100dvh' }, p: 2 }}
                 >
-                    <Content />
+                    <React.Suspense>
+                        <Content />
+                    </React.Suspense>
                     <React.Suspense>
                         { LoginForm }
                     </React.Suspense>

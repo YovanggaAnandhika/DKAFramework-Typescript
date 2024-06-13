@@ -51,6 +51,14 @@ export interface RulesSelectJoinSearch {
     conditionFromParents : "AND" | "OR" | undefined
 }
 
+/**
+ *  @param {{undefined | "INNER" | "ALTER" | "OUTER"}} mode,
+ *     column ?: Array<RulesSelectJoinColumn> | Array<string> | undefined,
+ *     TableName ?: string | undefined,
+ *     search ?: RulesSelectJoinSearch | undefined,
+ *     as ?: string | undefined,
+ *     on ?: RulesSelectJoinOn | undefined
+ */
 export interface RulesSelectJoin {
     mode ?: | undefined | "INNER" | "ALTER" | "OUTER",
     column ?: Array<RulesSelectJoinColumn> | Array<string> | undefined,
@@ -64,7 +72,12 @@ export interface RulesSelectColumn {
     as ?: string,
     name ?: string
 }
+
+
 export interface RulesSelect extends Rules {
+    /**
+     * @param { RulesSelectJoin | undefined } join
+     */
     join ?: RulesSelectJoin | undefined,
     database ?: string | undefined,
     search? : Array<RulesSelectSearch | string> | RulesSelectSearch | undefined,

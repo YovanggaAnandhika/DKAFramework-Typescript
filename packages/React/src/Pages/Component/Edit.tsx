@@ -12,14 +12,12 @@ const Edit : FC<EditConfigPropsConfigurator> = (props) => {
 
     const [ IsMounted, setIsMounted ] = React.useState(false);
 
-
     useEffect(() => {
         setIsMounted(true);
         return () => {
             setIsMounted(false);
         }
     }, []);
-
 
     const onHandlerButton : React.MouseEventHandler<HTMLButtonElement> = (event) => {
         event.preventDefault();

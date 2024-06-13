@@ -207,7 +207,7 @@ const getDesignTokens = (mode: PaletteMode) => ({
     },
 });
 
-export default function getSignInSideTheme(mode: PaletteMode): ThemeOptions {
+export function getSignInSideTheme(mode: PaletteMode): ThemeOptions {
     return {
         ...getDesignTokens(mode),
         components: {
@@ -659,3 +659,5 @@ export default function getSignInSideTheme(mode: PaletteMode): ThemeOptions {
         },
     };
 }
+
+export default getSignInSideTheme;

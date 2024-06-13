@@ -1,7 +1,6 @@
 import React, {useState, useEffect, useMemo, useContext} from "react";
 import {SocketIOProviderProps} from "./index.types.ts";
 import {SocketIOStateContext} from "../../Context/SocketIO/SocketIOStateContext.ts";
-import {SocketIOInstanceContext} from "../../Context/SocketIO/SocketIOInstanceContext.ts";
 import {SocketIOState, SocketIOStates} from "../../Hook/useSocketIOState/index.types.ts";
 
 export function SocketIOProvider(props: SocketIOProviderProps) {

@@ -1,4 +1,4 @@
-import { defineConfig } from "vite";
+import { defineConfig, PluginOption } from "vite";
 import react from "@vitejs/plugin-react-swc";
 import { resolve } from "path";
 import dts from "vite-plugin-dts";
@@ -6,6 +6,7 @@ import viteCompression from 'vite-plugin-compression';
 import obfuscatorPlugin from "vite-plugin-javascript-obfuscator";
 import { ViteMinifyPlugin } from 'vite-plugin-minify'
 import tailwindcss from "tailwindcss";
+import { visualizer } from "rollup-plugin-visualizer";
 
 // https://vitejs.dev/config/
 export default defineConfig({
@@ -36,7 +37,8 @@ export default defineConfig({
     obfuscatorPlugin({
       options: {
         // your javascript-obfuscator options
-        debugProtection: true,
+        debugProtection: false,
+        ignoreImports: true,
         // ...  [See more options](https://github.com/javascript-obfuscator/javascript-obfuscator)
       },
     }),
@@ -48,6 +50,13 @@ export default defineConfig({
       preserveLineBreaks : true,
       removeRedundantAttributes : true
     }),
+    visualizer({
+      template: "treemap", // or sunburst
+      open: true,
+      gzipSize: true,
+      brotliSize: true,
+      filename: "analyse.html", // will be saved in project's root
+    }) as PluginOption,
     viteCompression({
       algorithm : "brotliCompress"
     })],
