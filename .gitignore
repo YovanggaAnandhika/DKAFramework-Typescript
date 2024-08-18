@@ -16,3 +16,4 @@ lerna-debug.log
 yarn.lock
 /packages/IoT/test/
 /packages/Database/build/
+/packages/React/analyse.html
