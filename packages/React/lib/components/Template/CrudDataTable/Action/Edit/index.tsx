@@ -61,7 +61,7 @@ const Edit: FC<{ data : any, props : CrudDataTableIfaces}> = (props) => {
                 },
                 method: "GET",
                 timeout: 1000 * 10,
-                ... props.props.edit?.requestProps?.prehandler,
+                ... props.props.view?.requestProps,
             }).then(({request, headers, status, data}) => {
                 setIsHidden(false);
                 setAlerter(

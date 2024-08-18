@@ -3,7 +3,7 @@ import {
     DataGrid,
     DataGridProps,
     GridToolbarContainer,
-    GridSlots, GridToolbar,
+    GridSlots, GridToolbar, GridCallbackDetails,
 } from '@mui/x-data-grid';
 import LinearProgress from '@mui/material/LinearProgress';
 import {StyledGridOverlay} from "../../Helper/TableHelper.tsx";
@@ -36,7 +36,7 @@ const View: FC<CrudDataTableIfaces> = (props) => {
     const [Alerter, setAlerter] = React.useState<typeof AlerterHelper | React.JSX.Element>(<></>);
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const [ContainerLayout, setContainerLayout] = useContext(CrudDataTableContext);
-    const [checkedItem, setCheckedItem] = React.useState<Array<any>>([]);
+    const [checkedItem, setCheckedItem] = React.useState<[]>([]);
 
     const [DeleteIsEnable, setDeleteIsEnable] = React.useState<boolean>(false);
     const [EditIsEnable, setEditIsEnable] = React.useState<boolean>(false);
@@ -80,16 +80,17 @@ const View: FC<CrudDataTableIfaces> = (props) => {
     /** Edit Button On Click ***/
     const EditHandlerButtons : React.MouseEventHandler<HTMLButtonElement> = (event) => {
         event.preventDefault();
+        // @ts-ignore
         setContainerLayout(<Edit data={checkedItem[0]} props={props}/>)
     }
-    const EditHandlerButtonsFromRow = (event : React.MouseEvent<HTMLButtonElement, MouseEvent>, row : any) => {
+    const EditHandlerButtonsFromRow = (event : React.MouseEvent<HTMLButtonElement, MouseEvent>, row) => {
         event.preventDefault();
         setContainerLayout(<Edit data={row} props={props}/>)
     }
 
 
 
-    const OnDeletionData = (data : any) => {
+    const OnDeletionData = (data) => {
         axios({
             url: `${props.endpoint}`,
             headers: {
@@ -100,7 +101,7 @@ const View: FC<CrudDataTableIfaces> = (props) => {
             method: "DELETE",
             timeout: 1000 * 10,
             data : data,
-            ...props.delete?.requestProps,
+            ...props.view?.requestProps,
         }).then(() => {
             setIsLoading(true);
             setSweetAlertProps({
@@ -110,7 +111,8 @@ const View: FC<CrudDataTableIfaces> = (props) => {
                 timer : 1000,
                 didClose() {
                     setIsLoading(false);
-                    setRowsData((prevState) => prevState.filter(x => !checkedItem.includes(x)));
+                    // @ts-ignore
+                    setRowsData((prevState) => prevState.filter((x : any) => !checkedItem.includes(x)));
                     setSweetAlertProps({
                         show : false
                     });
@@ -130,6 +132,7 @@ const View: FC<CrudDataTableIfaces> = (props) => {
                             timer : 2000,
                             didClose() {
                                 setIsLoading(false);
+                                // @ts-ignore
                                 setRowsData((prevState) => prevState.filter(x => !checkedItem.includes(x)));
                                 setSweetAlertProps({
                                     show : false
@@ -162,7 +165,8 @@ const View: FC<CrudDataTableIfaces> = (props) => {
                             timer : 2000,
                             didClose() {
                                 setIsLoading(false);
-                                setRowsData((prevState) => prevState.filter(x => !checkedItem.includes(x)));
+                                // @ts-ignore
+                                setRowsData((prevState : Array<any>) => prevState.filter(x => !checkedItem.includes(x)));
                                 setSweetAlertProps({
                                     show : false
                                 });
@@ -178,7 +182,8 @@ const View: FC<CrudDataTableIfaces> = (props) => {
                             timer : 1000,
                             didClose() {
                                 setIsLoading(false);
-                                setRowsData((prevState) => prevState.filter(x => !checkedItem.includes(x)));
+                                // @ts-ignore
+                                setRowsData((prevState : Array<any>) => prevState.filter(x => !checkedItem.includes(x)));
                                 setSweetAlertProps({
                                     show : false
                                 });
@@ -195,6 +200,7 @@ const View: FC<CrudDataTableIfaces> = (props) => {
                     timer : 1000,
                     didClose() {
                         setIsLoading(false);
+                        // @ts-ignore
                         setRowsData((prevState) => prevState.filter(x => !checkedItem.includes(x)));
                         setSweetAlertProps({
                             show : false
@@ -241,6 +247,7 @@ const View: FC<CrudDataTableIfaces> = (props) => {
     useEffect(() => {
         if (IsMounted) {
             if (props.edit !== undefined && !props.edit.isGrants) return setEditIsEnable(false);
+            // @ts-ignore
             (checkedItem.length == 1) ? setEditIsEnable(true) : setEditIsEnable(false);
         }
     }, [IsMounted, checkedItem, props]);
@@ -375,7 +382,7 @@ const View: FC<CrudDataTableIfaces> = (props) => {
                     headerName: "Aksi",
                     flex: 1,
                     maxWidth: 300,
-                    renderCell: (params : any) => {
+                    renderCell: (params) => {
                         return (
                             <>
                                 {
@@ -502,13 +509,16 @@ const View: FC<CrudDataTableIfaces> = (props) => {
                         }}
                         checkboxSelection
                         disableRowSelectionOnClick
-                        getRowId={(row: any) => {
+                        /* eslint-disable-next-line @typescript-eslint/ban-ts-comment */
+                        getRowId={(row) => {
                             return row._id || row.id
                         }}
                         density={"standard"}
-                        onRowSelectionModelChange={(ids: Array<any>) => {
-                            const selectedRowsData: Array<any> = RowsData.filter((data) => ids.includes(data._id) || ids.includes(data.id))
-                            if (selectedRowsData.length > 0) return setCheckedItem(selectedRowsData);
+                        onRowSelectionModelChange={(ids) => {
+                            const selectedRowsData = RowsData.filter((data) => ids.includes(data._id) || ids.includes(data.id))
+                            if (selectedRowsData.length > 0) { // @ts-ignore
+                                return setCheckedItem(selectedRowsData);
+                            }
                             setCheckedItem([]);
                         }}
                         sx={{

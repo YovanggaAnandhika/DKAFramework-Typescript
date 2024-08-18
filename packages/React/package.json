@@ -1,7 +1,7 @@
 {
   "name": "@dkaframework/react",
   "private": false,
-  "version": "1.0.54",
+  "version": "1.0.56",
   "author": {
     "name": "Yovangga Anandhika Hadi Putra",
     "email": "dka.tech.dev@gmail.com",
@@ -51,6 +51,7 @@
     "react-dom": "^18.2.0",
     "react-redux": "^9.1.1",
     "react-screentype-hook": "^1.0.18",
+    "react-sweetalert2": "^0.6.0",
     "redux": "^5.0.1",
     "socket.io-client": "^4.7.5"
   },

@@ -65,7 +65,7 @@ const Create: FC<CrudDataTableIfaces> = (props) => {
                 method: "POST",
                 timeout: 1000 * 10,
                 data : data,
-                ... props.edit?.requestProps,
+                ... props.create?.requestProps,
             }).then(({request, headers, status, data}) => {
                 setIsHidden(false);
                 setAlerter(

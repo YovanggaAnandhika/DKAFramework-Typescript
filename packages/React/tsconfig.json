@@ -17,7 +17,6 @@
     "declaration": true,
     "jsx": "react-jsx",
     "typeRoots": ["./dist/index.d.ts"],
-
     /* Linting */
     "strict": true,
     "noUnusedLocals": false,

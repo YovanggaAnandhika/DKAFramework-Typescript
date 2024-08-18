@@ -38,6 +38,7 @@
     "build": "yarn run action:clean && yarn run action:compile && yarn run action:copy",
     "login": "npm login",
     "prepublish": "yarn run build",
+    "test": "nodemon --watch test --exec ts-node test/index.ts",
     "test:fastify": "nodemon --watch src --watch test --exec ts-node test/fastify.test.ts",
     "test:socket:client": "nodemon --watch src --watch test --exec ts-node test/socket.io.test.ts"
   },

@@ -13,6 +13,7 @@ export const DefaultConfigSocketIOHTTPServer : ConfigSocketIOServer = {
             autoListen : true,
         },
         socket : {
+            allowEIO3 : true,
             transports : ['websocket','polling'],
             maxHttpBufferSize : 1e8,
             cors : {
@@ -20,8 +21,8 @@ export const DefaultConfigSocketIOHTTPServer : ConfigSocketIOServer = {
             },
             perMessageDeflate : false,
             pingProtocol : "TCP",
-            pingInterval : 1000,
-            pingTimeout : 5000,
+            pingInterval : 8000,
+            pingTimeout : 10000,
             connectTimeout : 8000
         }
     }

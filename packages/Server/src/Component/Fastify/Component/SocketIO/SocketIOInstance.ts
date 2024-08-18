@@ -10,8 +10,6 @@ export const SocketIOInstance = async (fastify : typeof mFastify, config : Confi
     await fastify.register(FastifySocket, config.plugin?.socketIO?.options);
 
     fastify.io.on("connection", (io) => {
-
-
         io.on("_ping", (startTime : Moment, cb) => {
             if (typeof cb === "function") {
                 cb(startTime);

@@ -10,6 +10,7 @@ export const ConfigDefaultSocketIOClient : ConfigSocketIOClient = {
             secure : false,
             timeout : 8000,
             autoConnect : false,
+
             transports : ["websocket", "polling"]
         },
         socket : {
