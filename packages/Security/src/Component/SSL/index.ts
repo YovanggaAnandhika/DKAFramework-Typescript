@@ -14,7 +14,6 @@ export class OpenSSL {
     generateKey(Options : GenerateKeys): KeyPairsData {
         if (Options.privateKeyEncoding.passphrase !== undefined){
             Options.privateKeyEncoding.cipher =  'aes-256-cbc';
-            Options.privateKeyEncoding.passphrase = 'Cyberhack2010';
         }
         let {privateKey, publicKey} = Crypto.generateKeyPairSync("rsa", Options);
         return {
