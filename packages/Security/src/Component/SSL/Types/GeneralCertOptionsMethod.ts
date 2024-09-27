@@ -44,7 +44,34 @@ export interface generateCASettings {
 
 
 export type generateCSRSettingsSubjectFields = Array<generateCACertificateFieldsDataAsLong | generateCACertificateFieldsDataAsShort>
-export type generateCSRSettingsAttrsFields = Array<generateCACertificateFieldsDataAsLong | generateCACertificateFieldsDataAsShort>
+
+
+export interface generateCSRSettingsAttrsFieldsExtensionRequestSubjectAltNamesDNS {
+    type : 2,
+    value : string
+}
+
+export interface generateCSRSettingsAttrsFieldsExtensionRequestSubjectAltNamesIP {
+    type : 7,
+    ip : string
+}
+
+export interface generateCSRSettingsAttrsFieldsExtensionRequestSubjectAltNames {
+    name : "subjectAltName",
+    altNames : Array<generateCSRSettingsAttrsFieldsExtensionRequestSubjectAltNamesIP | generateCSRSettingsAttrsFieldsExtensionRequestSubjectAltNamesDNS>
+}
+
+export interface generateCSRSettingsAttrsFieldsChallengePassword {
+    name : "challengePassword",
+    value : string
+}
+
+export interface generateCSRSettingsAttrsFieldsExtensionRequest{
+    name : "extensionRequest",
+    extensions : Array<generateCSRSettingsAttrsFieldsExtensionRequestSubjectAltNames>
+}
+
+export type generateCSRSettingsAttrsFields = Array<generateCSRSettingsAttrsFieldsExtensionRequest | generateCSRSettingsAttrsFieldsChallengePassword>
 
 export interface generateCSRSettingsKeys extends KeyPairsData {
 
@@ -63,9 +90,7 @@ export interface GenerateCSRSettings {
 }
 
 
-export interface generateCertSettingsKeys extends KeyPairsData {
-
-}
+export interface generateCertSettingsKeys extends KeyPairsData {}
 
 
 export interface generateCertFieldsDataAsShort {
@@ -76,28 +101,45 @@ export interface generateCertFieldsDataAsShort {
 export interface generateCertFieldsDataAsLong {
     name : "commonName" | "countryName" | "localityName" | "organizationName" | "stateOrProvinceName" | "organizationalUnitName" | "serialNumber" | "streetAddress" | "challengePassword" | "extensionRequest"
     value ?: any[] | string | undefined;
-    extensions?: any[] | undefined;
 }
 
 export type generateCertSettingsFields = Array<generateCertFieldsDataAsLong | generateCertFieldsDataAsShort>
 
-export type generateCertSettingsExtensions = Array<
-    CertExtensionsBasicConstraints |
-    CertExtensionsKeyUsageCert |
-    CertExtensionsNSCertType |
-    CertExtensionsSubjectKeyIdentifier |
-    CertExtensionsAuthorityKeyIdentifier |
-    CertExtensionsExtKeyUsage |
-    CertExtensionsSubjectAltName
->;
+// Union type for extension names
+type CertExtensionNames =
+    | "basicConstraints"
+    | "keyUsage"
+    | "nsCertType"
+    | "subjectKeyIdentifier"
+    | "authorityKeyIdentifier"
+    | "extKeyUsage"
+    | "subjectAltName";
+
+// Selector type that maps names to their respective types
+export type generateCertSettingsExtensionsSelector<T extends { name: CertExtensionNames }> =
+    T['name'] extends "basicConstraints" ? CertExtensionsBasicConstraints :
+        T['name'] extends "keyUsage" ? (T extends CertExtensionsKeyUsageCA ? CertExtensionsKeyUsageCA : CertExtensionsKeyUsageCert) :
+            T['name'] extends "nsCertType" ? CertExtensionsNSCertType :
+                T['name'] extends "subjectKeyIdentifier" ? CertExtensionsSubjectKeyIdentifier :
+                    T['name'] extends "authorityKeyIdentifier" ? CertExtensionsAuthorityKeyIdentifier :
+                        T['name'] extends "extKeyUsage" ? CertExtensionsExtKeyUsage :
+                            T['name'] extends "subjectAltName" ? CertExtensionsSubjectAltName :
+                                never;
+
+// Define an array of extension objects
+export type generateCertSettingsExtensions<T extends Array<{ name: CertExtensionNames }>> = {
+    [K in T[number] as K['name']]: generateCertSettingsExtensionsSelector<K>
+}[T[number]['name']][];
+
+
 
 export interface generateCertSettings {
-    keys : generateCASettingsKeys;
+    keys : generateCertSettingsKeys;
     subject : generateCertSettingsFields;
     digest ?: md.MessageDigest | undefined;
     expiresYears ?: number | undefined;
     passphrase ?: string | undefined;
-    extensions ?: generateCertSettingsExtensions
+    extensions ?: generateCertSettingsExtensions<any>;
 }
 
 
@@ -120,6 +162,10 @@ export type CertificateAuthorityData = CertificateAuthorityDataDetails
 
 export interface CertificateRequestDataDetail {
     certificateRequest : string
+    keys : {
+        privateKey : string;
+        publicKey : string;
+    }
 }
 
 export type CertificateRequestData = CertificateRequestDataDetail;
@@ -138,6 +184,7 @@ export interface CertificateDataValidity {
 
 export interface CertificateData {
     certificate ?: string,
+    keys : KeyPairsData,
     validity ?: CertificateDataValidity;
 }
 export interface CertificateComparisonString {

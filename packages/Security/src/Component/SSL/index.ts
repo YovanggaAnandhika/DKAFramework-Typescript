@@ -32,6 +32,14 @@ export class OpenSSL {
             /** Set Subject If Exist Config **/
             if (CSROptions.subject !== undefined) CSR.setSubject(CSROptions.subject);
             /** get Attribut If Exist **/
+            CSR.setAttributes([
+                {
+                    name : "extensionRequest",
+                    extensions : [
+
+                    ]
+                }
+            ])
             if (CSROptions.attrs !== undefined) CSR.setAttributes(CSROptions.attrs);
             //#####################################################################
             let digest = (CSROptions.options?.digest !== undefined) ? CSROptions.options.digest : md.sha512.create();
@@ -43,7 +51,11 @@ export class OpenSSL {
                         let privateKey = pki.privateKeyFromPem(CSROptions.keys.privateKey);
                         CSR.sign(privateKey, digest);
                         return resolve({
-                            certificateRequest : pki.certificationRequestToPem(CSR)
+                            certificateRequest : pki.certificationRequestToPem(CSR),
+                            keys : {
+                                privateKey : CSROptions.keys.privateKey,
+                                publicKey : CSROptions.keys.publicKey
+                            }
                         });
                     case "ENCRYPTED PRIVATE KEY" :
                         if (CSROptions.options?.passphrase !== undefined && CSROptions.options?.passphrase !== ""){
@@ -51,7 +63,11 @@ export class OpenSSL {
                                 let privateKey = pki.decryptRsaPrivateKey(CSROptions.keys.privateKey, CSROptions.options?.passphrase);
                                 CSR.sign(privateKey, digest);
                                 return resolve({
-                                    certificateRequest : pki.certificationRequestToPem(CSR)
+                                    certificateRequest : pki.certificationRequestToPem(CSR),
+                                    keys : {
+                                        privateKey : pki.privateKeyToPem(privateKey),
+                                        publicKey : CSROptions.keys.publicKey
+                                    }
                                 });
                             }catch (error) {
                                 rejected({ status : false, code : 400, msg : `error decode private key with passphrase. passphrase not match`, error : errorToJson(error as Error)});
@@ -164,10 +180,11 @@ export class OpenSSL {
                         let extCert = (CertOptions.extensions !== undefined) ? CertOptions.extensions : [];
                         cert.setExtensions(extCert);
                         //@########################################################################################################
-                        await cert.sign(CA.privateKey, CertOptions.digest);
+                        cert.sign(CA.privateKey, CertOptions.digest);
                         //@########################################################################################################
                         return resolve({
                             certificate : pki.certificateToPem(cert),
+                            keys : CertOptions.keys,
                             validity : {
                                 notBefore : cert.validity.notBefore.toISOString(),
                                 notAfter :  cert.validity.notAfter.toISOString()
@@ -198,6 +215,7 @@ export class OpenSSL {
                             //@########################################################################################################
                             return resolve({
                                 certificate : pki.certificateToPem(cert),
+                                keys : CertOptions.keys,
                                 validity : {
                                     notBefore : cert.validity.notBefore.toISOString(),
                                     notAfter :  cert.validity.notAfter.toISOString()

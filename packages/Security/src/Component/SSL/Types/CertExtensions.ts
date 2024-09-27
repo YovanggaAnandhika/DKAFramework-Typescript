@@ -21,8 +21,13 @@ export interface CertExtensionsKeyUsageCert {
 
 export interface CertExtensionsNSCertType {
     name : "nsCertType",
-    server : boolean,
-    client : boolean
+    server?: boolean,
+    client?: boolean,
+    email?: boolean,
+    objsign?: boolean,
+    sslCA?: boolean,
+    emailCA?: boolean,
+    objCA?: boolean
 }
 
 export interface CertExtensionsSubjectKeyIdentifier {
@@ -37,8 +42,11 @@ export interface CertExtensionsAuthorityKeyIdentifier {
 
 export interface CertExtensionsExtKeyUsage {
     name: "extKeyUsage",
-    serverAuth: boolean,
-    clientAuth: boolean,
+    serverAuth?: boolean,
+    clientAuth?: boolean,
+    codeSigning?: boolean,
+    emailProtection?: boolean,
+    timeStamping?: boolean
 }
 
 export interface CertExtensionsSubjectAltNameTypesDNS {
