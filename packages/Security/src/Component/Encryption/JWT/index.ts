@@ -61,8 +61,8 @@ export class JWT {
                                 /** finish and close encrypt progress step 3 **/
                                 await this.JWEEncryptor.final()
                                     .then(async (encryptText) => {
-                                        let base64 = Buffer.from(encryptText,"utf-8").toString("base64url");
-                                        await resolve(base64);
+                                        //let base64 = Buffer.from(encryptText,"utf-8").toString("base64url");
+                                        await resolve(encryptText);
                                     })
                                     .catch(async (error) => {
                                         await rejected({status: false, code: 503, msg: `error final get Encryption text`, error : error})
@@ -92,8 +92,8 @@ export class JWT {
                     let JWKKey = await JWK.asKey(key, opts?.JWK?.form, opts?.JWK?.extras);
                     await keystore.add(JWKKey);
                     try {
-                        let base64decode = Buffer.from(data,"base64url").toString("utf-8");
-                        let outPut = parse.compact(base64decode)
+                        //let base64decode = Buffer.from(data,"base64url").toString("utf-8");
+                        let outPut = parse.compact(data)
                         let decryptedVal = await outPut.perform(keystore);
                         // @ts-ignore
                         let claims = Buffer.from(decryptedVal.plaintext);

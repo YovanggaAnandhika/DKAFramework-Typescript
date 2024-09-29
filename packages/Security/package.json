@@ -8,7 +8,7 @@
   "private": false,
   "scripts": {
     "test": "ts-node test/index.ts",
-    "test2": "nodemon --watch src --watch test --exec ts-node test/api.dkaserver.my.id.ts",
+    "test2": "ts-node test/index_backup.ts",
     "localhost": "nodemon --watch src --watch test --exec ts-node test/localhost.ts",
     "clean": "rimraf dist",
     "compile": "tsc --build",

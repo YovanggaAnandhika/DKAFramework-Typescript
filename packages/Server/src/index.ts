@@ -29,7 +29,7 @@ async function Server<Config extends ConfigServerInterfaces> (serverConfig ?: Se
                 await require("./Component/SocketIO").default(serverConfig)
                     .then(async (mServerCallbackInstance) => {
                         //################################################################
-                        await resolve({
+                        resolve({
                             status : true,
                             code : 200,
                             msg : `Server Berhasil Dijalankan`,
