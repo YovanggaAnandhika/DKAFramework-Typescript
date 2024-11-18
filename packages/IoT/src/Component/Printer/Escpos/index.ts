@@ -68,7 +68,7 @@ export class Escpos<Config extends EscposConfig> {
     }
     //######################################################
     constructor(escposConfig ?: EscposCheckerConfig<Config>) {
-        let logger = (escposConfig.state === DEVELOPMENT) ?
+        let logger = (escposConfig?.state === DEVELOPMENT) ?
             (Escpos.checkModuleExist("winston")) ? require("winston").createLogger({
                 transports : [ new (require("winston")).transports.Console() ]
             }) : undefined : undefined;
@@ -121,12 +121,6 @@ export class Escpos<Config extends EscposConfig> {
     }
 
     async Job(printer ?: (printer : Printer<any>) => void | undefined) : Promise<any>{
-        //@######################################################################
-        let logger = (this.config.state === DEVELOPMENT) ?
-            (Escpos.checkModuleExist("winston")) ? require("winston").createLogger({
-                transports : [ new (require("winston")).transports.Console() ]
-            }) : undefined : undefined;
-        //@#######################################################################
         return new Promise(async (resolve, rejected) => {
             switch (this.config?.connection) {
                 case ESCPOS_USB:

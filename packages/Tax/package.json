@@ -1,0 +1,16 @@
+{
+  "name": "@dkaframework/tax",
+  "version": "1.0.0",
+  "main": "index.js",
+  "license": "MIT",
+  "scripts": {
+    "build" : "tsc --build",
+    "test": "nodemon --watch src --watch test --exec ts-node test/index.ts"
+  },
+  "devDependencies": {
+    "@types/node": "^22.7.4",
+    "nodemon": "^3.1.7",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.6.2"
+  }
+}
