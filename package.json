@@ -8,12 +8,8 @@
   "workspaces": [
     "packages/*"
   ],
-  "scripts": {
-    "test": "nodemon --watch test --exec ts-node test/index.ts",
-    "workspace:client" : "yarn workspace @dkaframework/client run test"
-  },
   "devDependencies": {
-    "@nrwl/nx-cloud": "^15.2.1",
-    "lerna": "^8.0.2"
+    "lerna": "^8.0.2",
+    "nx-cloud": "^15.2.1"
   }
 }
