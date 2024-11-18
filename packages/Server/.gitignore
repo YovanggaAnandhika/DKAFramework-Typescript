@@ -1,9 +1,0 @@
-node_modules
-.idea
-dist
-test
-yarn.lock
-/yarn-error.log
-/test/Logs/
-/test/REACT/error.log
-/test/REACT/info.log

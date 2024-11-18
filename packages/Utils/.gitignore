@@ -1,7 +1,0 @@
-# Project exclude paths
-/node_modules/
-.idea
-dist
-test
-.wwebjs_cache
-yarn.lock

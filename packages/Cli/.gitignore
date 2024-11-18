@@ -1,6 +1,0 @@
-dist
-test
-.idea
-yarn.lock
-yarn-error.log
-node_modules

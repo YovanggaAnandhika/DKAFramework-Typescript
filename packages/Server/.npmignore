@@ -1,9 +1,0 @@
-node_modules
-.idea
-dka.env
-doc
-src
-.github
-yarn-error.log
-tsconfig.json
-test
