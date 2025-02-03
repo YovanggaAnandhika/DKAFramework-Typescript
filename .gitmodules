@@ -22,3 +22,6 @@
 [submodule "packages/cli"]
 	path = packages/cli
 	url = git@github.com:YovanggaAnandhika/DKAFramework-Packages-cli.git
+[submodule "packages/security"]
+	path = packages/security
+	url = git@github.com:YovanggaAnandhika/DKAFramework-Packages-Security.git
