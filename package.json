@@ -8,8 +8,21 @@
   "workspaces": [
     "packages/*"
   ],
+  "scripts": {
+    "lint": "eslint . --ext .ts,.tsx,.js",
+    "lint:fix": "eslint . --ext .ts,.tsx,.js --fix",
+    "format": "prettier --write \"**/*.{ts,tsx,js,json,md}\""
+  },
   "devDependencies": {
+    "@eslint/js": "^9.35.0",
+    "@typescript-eslint/eslint-plugin": "^8.43.0",
+    "@typescript-eslint/parser": "^8.43.0",
+    "eslint": "^9.35.0",
+    "eslint-config-prettier": "^10.1.8",
+    "eslint-plugin-prettier": "^5.5.4",
     "lerna": "^8.0.2",
-    "nx-cloud": "^15.2.1"
+    "nx-cloud": "^15.2.1",
+    "prettier": "^3.6.2",
+    "typescript-eslint": "^8.43.0"
   }
 }
